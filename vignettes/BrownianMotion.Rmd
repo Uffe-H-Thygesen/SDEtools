@@ -1,0 +1,101 @@
+---
+title: "Simulation of Brownian motion, and path properties"
+author: "Uffe Høgsbro Thygesen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Brownian Motion}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+## Simulation of the maximum of Brownian motion 
+
+We study the maximum of the Brownian motion, as well as its maximum absolute value. 
+
+For the maximum we have the analytical result:
+
+\[
+\mathbf{P}(S_t \geq x) = 2\mathbf{P}( B_t \geq x) 
+\]
+
+where 
+
+\[
+S_t= \max\{ B_s : 0\leq s \leq t \}
+\]
+
+For the max-abs, we have the bound
+
+\[
+\mathbf{P}(\bar S_t \geq x) \leq 4\mathbf{P}( B_t \geq x) 
+\]
+
+where 
+
+\[
+\bar S_t= \max\{ |B_s| : 0\leq s \leq t \}
+\]
+
+The following code simulates a number of sample paths of Brownian motion $B_t$ over a time interval  $t=0,\ldots,Nt$. For each sample path we compute the maximum as well as the maximum absolute value. We plot the the empirical statistics of the maximum, and the max-abs, against analytical approximations. The statistics are the histogram, which should be compared with the probability density function (pdf), and the complementary cumulated distribution function (ccdf), also referred to as the survival function. 
+
+
+```{r, fig.show='hold'}
+require(SDEtools)
+
+hist.maxBM.compare.analytical.Monte.Carlo <- function(Nt,Np)
+{ 
+  ## Simulate Np trajectories of BM on {0,1,...,Nt}
+  B <- rvBM(0:Nt,Np)
+  
+  ## Compute max(B) and max(abs(B))
+  maxB <- apply(B,2,max)
+  maxabsB <- apply(B,2,function(x)max(abs(x)))
+
+  ## Histogram of max(B) vs theoretical p.d.f.  
+  hist(maxB,freq=FALSE,xlab="x",ylab="P.d.f.",
+       main="Pdf of max(BM)")
+  plot(function(x)2*dnorm(x,sd=sqrt(Nt)),from=0,to=max(maxB),add=TRUE)
+
+  ## Empirical vs. theoretical survival function of max(B)
+  plot(sort(maxB),seq(1,0,length=Np),type="s",xlab="x",ylab="Ccdf, P(X>x)",
+       main="Ccdf of max(BM)")
+  plot(function(x)2-2*pnorm(x,sd=sqrt(Nt)),from=0,to=max(maxB),add=TRUE)
+
+  ## Empirical vs. approximate theoretical survival function of max(abs(B))
+  plot(sort(maxabsB),seq(1,0,length=Np),type="s",xlab="x",ylab="Ccdf, P(X>x)",
+    main="Ccdf of max(abs(BM)")
+  plot(function(x)4*(1-pnorm(x,sd=sqrt(Nt))),from=0,to=max(maxB),add=TRUE)
+}
+
+```
+
+We first try the comparison using 1000 sample paths (which is sufficient) and over 1000 time steps: 
+
+```{r, fig.show='hold'}
+hist.maxBM.compare.analytical.Monte.Carlo(Nt=1000,Np=1000)
+```
+
+We see that there is excellent agreement between the maximum and the theoretical prediction. As for the max-abs, we see that there is good agreement in the tail, i.e. for high values of $x$, but poor agreement for low values of $x$. The reason for this disagreement is the bound on $\mathbf{P}(\bar S_t \geq x)$ is obtained by ignoring the probability that the maximum exceeds $x$ and at the same time the minimum exceeds $-x$. When $x$ is small, this error becomes large.
+
+The next graph repeats this for a small number of time steps, $Nt=10$.
+
+```{r, fig.show='hold'}
+hist.maxBM.compare.analytical.Monte.Carlo(Nt=10,Np=1000)
+```
+
+We see that there is poor agreement everywhere now. The reason is the difference between the continuous-time maximum
+
+\[
+\max\{ B_s : 0 \leq s \leq t\}
+\]
+
+and the maximum of the sampled process
+
+\[
+\max\{ B_s : s=0,1,\ldots,t\}
+\]
+
+When $t$ is small, this difference becomes more important. 
+
