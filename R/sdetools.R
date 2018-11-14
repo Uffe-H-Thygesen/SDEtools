@@ -108,6 +108,7 @@ covariation <- function(X,Y)
 #' @param times numeric vector of time points, increasing
 #' @param x0 numeric vector giving the initial condition
 #' @param B sample path of (multivariate) Browniań motion. If omitted, a sample is drawn using rvBM
+#' @param p Optional projection function that at each time poins projects the state, e.g. to enforce non-negativeness
 #' @examples
 #' times <- seq(0,10,0.1)
 #'
@@ -146,7 +147,7 @@ covariation <- function(X,Y)
 #' matplot(times,euler(function(x)0*x,function(x)diag(c(1,x[1])),times,c(0,0),BM2)$X,xlab="Time",ylab="X",type="l",add=TRUE)
 #' 
 #' @export
-heun <- function(f,g,times,x0,B=NULL)
+heun <- function(f,g,times,x0,B=NULL,p=function(x)x)
 {
   nx <- length(x0)
   nt <- length(times)
@@ -199,12 +200,12 @@ heun <- function(f,g,times,x0,B=NULL)
     ## Euler predictor
     fX <- ff(times[i],X[i,])
     gX <- gg(times[i],X[i,])
-    Y <- X[i,] + fX*dt[i] + gX %*% dB[i,]
+    Y <- p(X[i,] + fX*dt[i] + gX %*% dB[i,])
 
     ## Corrector
     fY <- ff(times[i+1],Y)
     gY <- gg(times[i+1],Y)
-    X[i+1,] <- X[i,] + 0.5*(fX+fY)*dt[i] + 0.5*(gX+gY) %*% dB[i,]
+    X[i+1,] <- p(X[i,] + 0.5*(fX+fY)*dt[i] + 0.5*(gX+gY) %*% dB[i,])
   }
 
   colnames(X) <- names(x0)
