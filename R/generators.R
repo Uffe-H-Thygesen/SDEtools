@@ -10,12 +10,14 @@
 #' @param  D function mapping state (numeric scalar) to diffusivity (numeric scalar)
 #' @param  xgrid The numerical grid. Numeric vector of increasing values, giving cell boundaries
 #' @param  bc String indicating boundary conditions. See details.
+#' @param  sparse logical indicating if the result should be returned as a sparse matrix
 #' @return a quadratic matrix, the generator of the approximating continuous-time Markov chain, with length(xgrid)-1 columns
 #'
-#' @details Handling of boundary conditions: Input argument bc is a single character coding boundary conditions as follows:
-#'          'r': Reflecting boundaries
-#'          'p': Periodic boundaries
+#' @details Handling of boundary conditions: Input argument bc is a single character, or a vector of two characters, coding the condition at each boundary as follows:
+#'          'r': Reflecting boundary
+#'          'p': Periodic boundaries: Exit at this boundary to re-enter at the other
 #'          'a': Absorbing boundaries. In this case G will be a sub-generator
+#'          'c': Continue beyond boundary (experimental; read the source)
 #'          'e': Return generator, Extended to include absorbing boundaries
 #'
 #'  Return value: The function fvade returns a generator (or sub-generator) G of a continuous-time Markov Chain. This chain jumps
@@ -36,76 +38,60 @@
 #' plot(xc,phi,type="l",xlab="x",ylab="Stationary density")
 #'
 #' @export
-fvade <- function(u,D,xgrid,bc)
+fvade <- function(u,D,xgrid,bc,sparse=TRUE)
 {
-  # Number of grid cells
-  nc = length(xgrid)-1;
-  dx = diff(xgrid);
+    require(Matrix)
 
-  # Indeces of left and right cell, with wrap around
-  Ileft = c(nc,1:(nc-1))
-  Iright= c(2:nc,1)
+    if(length(bc)==1) bc <- rep(bc,2)
+    
+    ## Number of grid cells
+    nc = length(xgrid)-1;
+    dx = diff(xgrid);
 
-  # Diffusivities at left interfaces
-  Dil = sapply(xgrid[1:nc],D);
-  Dir = sapply(xgrid[2:(nc+1)],D);
+    ## Indeces of left and right cell, with wrap around
+    Ileft = c(nc,1:(nc-1))
+    Iright= c(2:nc,1)
 
-  # Diffusion elements of the generator
-  Dl = 2*Dil/dx/(dx + dx[Ileft]);
-  Dr = 2*Dir/dx/(dx + dx[Iright]);
+    ## Diffusivities at interfaces
+    Di = sapply(xgrid,D);
 
-  # Advection at left and right interfaces
-  Uil = sapply(xgrid[1:nc],u);
-  Uir = sapply(xgrid[2:(nc+1)],u);
+    ## Diffusion elements of the generator
+    Dl = 2*head(Di,-1)/dx/(dx + dx[Ileft]);
+    Dr = 2*tail(Di,-1)/dx/(dx + dx[Iright]);
 
-  # Advection elements of the generator
-  Ul = pmax(-Uil,0)/dx;
-  Ur = pmax( Uir,0)/dx;
+    ## Advection at left and right interfaces
+    Ui <- sapply(xgrid,u);
+    Uil = head(Ui,-1)
+    Uir = tail(Ui,-1)
 
-  # Mimic Matlab for off-diagonals
-  mydiag <- function(v,offset)
-  {
-    Dv <- as.array(diag(v))
-    n <- length(v)
-    if(offset==0) return(Dv)
-    if(offset< 0) return(cbind(rbind(array(0,c(-offset,n)),Dv),array(0,c(n-offset,-offset))))
-    if(offset> 0) return(cbind(array(0,c(n+offset,offset)),rbind(Dv,array(0,c(offset,n)))))
-  }
+    ## Advection elements of the generator
+    Ul = pmax(-Uil,0)/dx;
+    Ur = pmax( Uir,0)/dx;
 
-  # Extended generator
-  Ge = mydiag(c(Dl+Ul,0),-1) + mydiag(c(0,Dr+Ur),1);
-
-  # Handle boundary conditions
-
-  if(bc=='p')
-  {
+    ## Mimic Matlab for off-diagonals
+    mydiag <- function(v,offset=0)
+    {
+        size <- length(v)+abs(offset)
+        j <- (1:length(v)) + max(0,offset)
+        i <- (1:length(v)) + max(0,-offset)
+        return(sparseMatrix(i=i,j=j,x=v,dims=rep(size,2)))
+    }
+    
+    Ge = mydiag(c(Dl+Ul,0),-1) + mydiag(c(0,Dr+Ur),1) -mydiag(c(0,Dl+Ul+Dr+Ur,0));
     G = Ge[2:(nc+1),2:(nc+1)]
-    G[1,nc] = Ge[2,1]
-    G[nc,1] = Ge[nc-1,nc]
 
-    G = G - diag(apply(G,1,sum))
-  }
+    ## Handle boundary conditions
+    if(bc[1]=='p') G[1,nc] = Ge[2,1]         ## Exit at left to re-entry at right
+    if(bc[2]=='p') G[nc,1] = Ge[nc+1,nc+2]   ## Exit at right to re-entry at left
 
+    if(bc[1]=='r') G[1,1] <- -G[1,2]         ## Reflect
+    if(bc[2]=='r') G[nc,nc] <- -G[nc,nc-1]   
 
-  if(bc=='r')
-  {
-    G = Ge[2:(nc+1),2:(nc+1)];
+    ## Experimental: Continue beyod boundary by neglecting diffusivity at that boundary
+    if(bc[1]=='c') G[1,1] <- - (G[1,2] <- Ur[1])
+    if(bc[2]=='c') G[nc,nc] <- - (G[nc,nc-1] <- Ul[nc])
 
-    G = G - diag(apply(G,1,sum))
-  }
-
-  if(bc=='a')
-  {
-    Ge = Ge - diag(apply(Ge,1,sum))
-
-    G = Ge[2:(nc+1),2:(nc+1)];
-  }
-
-  if(bc=='e')
-  {
-    Ge = Ge - diag(apply(Ge,1,sum))
-    G = Ge;
-  }
-
-  return(G)
+    if(bc[1]=='e') G <- Ge;
+    
+    if(sparse) return(G) else return(as.matrix(G))
 }

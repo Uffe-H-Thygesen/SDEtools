@@ -288,6 +288,7 @@ euler <- function(f,g,times,x0,B=NULL,p=function(x)x)
   dB <- apply(B,2,diff)
 
   X <- array(NA,c(nt,nx))
+  colnames(X) <- names(x0)
   X[1,] <- x0
 
   dt <- diff(times)
@@ -324,12 +325,13 @@ euler <- function(f,g,times,x0,B=NULL,p=function(x)x)
 #'
 #' * a numeric array or matrix with same number of rows as A and two columns. In this case u is assumed
 #'   to vary affinely in time, equaling the first column at time 0 and the second column at time t.
+#'
+#' The computations are not optimized for large systems, since they rely on the vector form of the matrix equations and do not use sparsity.
 #' @examples
 #' # A scalar equation with no input
 #' (dLinSDE(-1,1,1))
 #' # A scalar equation with constant input, starting in steady-state
 #' (dLinSDE(A=-1,G=1,t=3,x0=1,u=1,S0=0.5))
-#'
 #' 
 #' @export
 dLinSDE <- function(A,G,t,x0=NULL,u=NULL,S0=0*A)
@@ -373,4 +375,25 @@ dLinSDE <- function(A,G,t,x0=NULL,u=NULL,S0=0*A)
       duuEx <- expm(AAA*t) %*% c((u[,2]-u[,1])/t,u[,1],x0)
       return(list(EX=duuEx[2*nx+(1:nx)],St=St))
     }
+}
+
+#' Algebraic Lyapunov equation A*X+X*t(A)+Q=0
+#' @param A A quadratic matrix without eigenvalues on the imaginary axis
+#' @param Q A symmetric matix of same dimension as A
+#' @return X A symmatric matrix of same dimension as A
+#' @details
+#' If A is asymptotically stable, Q is positive semidefinite and the pair (A,Q) is controllable, then X will be positive definite. Several similar results exist.
+#' The implementation uses vectorization and kronecker products and does not employ sparsity, so is only suitable for small systems. 
+#' @examples
+#' # A scalar example
+#' (lyap(-1,1)))
+#' # A harmonic oscillator
+#' (lyap(array(c(0,-1,1,-0.1),c(2,2)),diag(c(0,1))))
+lyap <- function(A,Q) 
+{
+    A <- as.matrix(A)
+    I <- diag(rep(1,nrow(A)))
+    P <- kronecker(I,A)+kronecker(A,I)
+    X <- -solve(P,as.numeric(Q))
+    return(matrix(X,nrow=nrow(A)))
 }

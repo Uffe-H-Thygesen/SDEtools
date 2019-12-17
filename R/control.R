@@ -59,3 +59,85 @@ lqr <- function(times,A,F,G,Q,R,P=NULL)
   return(list(times=times,A=A,F=F,G=G,Q=Q,R=R,P=P,S=S,s=s,L=L))
 }
 
+## Find the optimal strategy and value function for the case where
+## the uncontrolled system is given by a subgenerator G0
+## (either due to discounting or due to absorbing boundaries)
+PolicyIterationRegular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.minimize=TRUE)
+{
+    if(!is.list(G1)) G1 <- list(G1)
+    if(!is.list(uopt)) uopt <- list(uopt)
+
+    Vold <- (2*do.minimize-1)*Inf
+
+    ## Initial guess on u obtained with a zero value function 
+    nu <- length(uopt)
+    u <- array(NA,c(nrow(G0),nu))
+    for(i in 1:nu) u[,i] <- uopt[[i]](numeric(nrow(G0)))
+
+    iter <- 1
+    
+    while(TRUE)
+    {
+        ## Evaluate performance of current strategy
+        Gcl <- G0
+        for(i in 1:length(G1)) Gcl <- Gcl + Diagonal(x=u[,i]) %*% G1[[i]]
+        V <- as.numeric(solve(Gcl,-k(u)))
+
+        ## Determine optimal strategy in response to the current value
+        for(i in 1:nu) u[,i] <- uopt[[i]](as.numeric(G1[[i]] %*% V))
+        
+        if( xor(print(max(V-Vold))<tol,do.minimize)) break
+        if(iter > iter.max) break
+        
+        Vold <- V
+        iter <- iter + 1
+    }
+
+    return(list(V=V,u=u))
+}
+
+## Find the optimal strategy and value function for the case where
+## the uncontrolled system is given by a generator G0
+PolicyIterationSingular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.minimize=TRUE)
+{
+    if(!is.list(G1)) G1 <- list(G1)
+    if(!is.list(uopt)) uopt <- list(uopt)
+
+    ## Initial guess on the optimal performance
+    gammaold <- (2*do.minimize-1)*Inf
+
+    ## Initial guess on u obtained with a zero value function 
+    nu <- length(uopt)
+    u <- array(NA,c(nrow(G0),nu))
+    for(i in 1:nu) u[,i] <- uopt[[i]](numeric(nrow(G0)))
+
+    e <- rep(1,nrow(G0))
+
+    iter <- 1
+    
+    while(TRUE)
+    {
+        ## Construct closed loop generator
+        Gcl <- G0
+        for(i in 1:length(G1)) Gcl <- Gcl + Diagonal(x=u[,i]) %*% G1[[i]]
+
+        ## Extend with ones right and below; have 0 in the bottom right
+        Ge <- rbind(cbind(Gcl,-e),c(e,0))
+
+        ## Solve for the value function and the average performance
+        Vg <- solve(Ge,c(-k(u),0))
+        V <- as.numeric(head(Vg,-1))
+        gamma <- as.numeric(tail(Vg,1))
+
+        ## Determine optimal strategy in response to the current value
+        for(i in 1:nu) u[,i] <- uopt[[i]](as.numeric(G1[[i]] %*% V))
+
+        if(xor(print(max(gamma-gammaold))<tol,do.minimize)) break
+        if(iter > iter.max) break
+
+        gammaold <- gamma
+        iter <- iter + 1
+    }
+
+    return(list(V=V,u=u,gamma=gamma))
+}
