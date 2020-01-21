@@ -1,5 +1,7 @@
 #' Simulate a sample path of Brownian motion
 #'
+#' @name rBM
+#' 
 #' @param times numeric vector of time points where the Brownian motion should be simulated
 #' @param sigma numeric scalar, noise level in the Brownian motion, defaults to 1
 #' @param B0 numeric scalar, initial condition (at time=0) for the Brownian motion
@@ -21,10 +23,13 @@ rBM <- function(times,sigma=1,B0=0,u=0)
 
 #' Simulate a multivariate Brownian motion
 #'
+#' @name rvBM
+#' 
 #' @param times numeric vector of time points where the Brownian motion should be simulated
 #' @param n numeric scalar, dimension of Brownian motion
 #' @param sigma noise level in the Brownian motion. A vector of length n, one for each dimension, or a scalar, in which case the same level is applied to all dimensions.
 #' @param B0 initial condition, applicable at time t=0. A vector of length n, one for each dimension, or a scalar, in which case the same initial condition is applied to all dimensions.
+#' @param u Drift. An optional numeric n-vector which defaults to a vector of zeros. When supplied, a linear drift (bias) is added to each component.
 #' @return a numeric array, n*length(times), each column containing a sample path
 #' @examples
 #' times <- 0:10
@@ -41,9 +46,12 @@ rvBM <- function(times,n=1,sigma=rep(1,n),B0=rep(0,n),u=rep(0,n))
 }
 
 #' Integrate one sample path of a stochastic process w.r.t. another
+#'
+#' @name stochint
+#' 
 #' @param f numeric vector containing the integrator
 #' @param g numeric vector, same length as f, containing the integrand
-#' @param rule character indicating the rule. Valid choices are "l", "r", or "c" for "left", "right", and "center"
+#' @param rule character vector indicating rule(s). Valid choices are "l", "r", or "c" for "left", "right", and "center", as well as combinations, e.g. c("l","c"). Optional and defaults to "l".
 #' @return A numeric vector, same length as f, giving the "running integral", i.e. the integral as a function of the upper limit.
 #' @examples
 #' ## Integrating a cosine w.r.t. a sine
@@ -56,27 +64,29 @@ rvBM <- function(times,n=1,sigma=rep(1,n),B0=rep(0,n),u=rep(0,n))
 #' ## Integration of Brownian motion w.r.t. itself
 #' times <- seq(0,10,0.01)
 #' BM <- rBM(times)
-#' I <- stochint(BM,BM)
+#' I <- stochint(BM,BM,c("l","c","r"))
 #' matplot(times,cbind(I$l,0.5*BM^2-0.5*times),type="l",xlab="Time",ylab="Left integral (Ito)",
 #'          main="Integral of B.M. w.r.t itself")
 #' matplot(times,cbind(I$r,0.5*BM^2+0.5*times),type="l",xlab="Time",ylab="Right integral",
 #'          main="Integral of B.M. w.r.t itself")
 #' matplot(times,cbind(I$c,0.5*BM^2),type="l",xlab="Time",ylab="Central integral (Stratonovich)",
 #'          main="Integral of B.M. w.r.t itself")
-#'
 #' 
 #' @export
-stochint <- function(f,g)
+stochint <- function(f,g,rule="l")
 {
   n <- length(f)
   dg <- diff(g)
   l <- c(0,cumsum(f[-n]*dg))
   r <- c(0,cumsum(f[-1]*dg))
-  c <- c(0,cumsum(0.5*(f[-n] + f[-1])*diff(g)))
-  return(data.frame(l=l,r=r,c=c))
+  c <- 0.5*(l+r)
+  return(data.frame(l=l,r=r,c=c)[,rule])
 }
 
 #' Covariation of two stochastic processes
+#'
+#' @name covariation
+#'
 #' @param X numeric vector containing the one process
 #' @param Y numeric vector, same length as X, containing the other process
 #' @return A numeric vector, same length as X, giving the covaration as function of time
@@ -93,7 +103,7 @@ stochint <- function(f,g)
 #' Y <- h(X)
 #' plot(times,Y,type="l")
 #'
-#' Yi <- h(X[1]) + stochint(dhdx(X),X)$l + 0.5*stochint(dh2dx2(X),covariation(X,X))$l
+#' Yi <- h(X[1]) + stochint(dhdx(X),X) + 0.5*stochint(dh2dx2(X),covariation(X,X))
 #' lines(times,Yi,col="blue")
 #' 
 #' @export
@@ -103,6 +113,9 @@ covariation <- function(X,Y)
 }
 
 #' Heun's method for simulation of a Stratonovich stochastic differential equation dX = f dt + g dB
+#'
+#' @name heun
+#'
 #' @param f function f(x) or f(t,x) giving the drift term in the SDE
 #' @param g function g(x) or g(t,x) giving the noise term in the SDE
 #' @param times numeric vector of time points, increasing
@@ -141,10 +154,12 @@ covariation <- function(X,Y)
 #'
 #' # Testing a case with non-commutative noise
 #' BM2 <- rvBM(times,2)
-#' matplot(times,heun(function(x)0*x,function(x)diag(c(1,x[1])),times,c(0,0),BM2)$X,xlab="Time",ylab="X",type="l")
+#' matplot(times,heun(function(x)0*x,
+#'   function(x)diag(c(1,x[1])),times,c(0,0),BM2)$X,xlab="Time",ylab="X",type="l")
 #'
 #' # Add solution to the corresponding Ito equation
-#' matplot(times,euler(function(x)0*x,function(x)diag(c(1,x[1])),times,c(0,0),BM2)$X,xlab="Time",ylab="X",type="l",add=TRUE)
+#' matplot(times,euler(function(x)0*x,
+#'   function(x)diag(c(1,x[1])),times,c(0,0),BM2)$X,xlab="Time",ylab="X",type="l",add=TRUE)
 #' 
 #' @export
 heun <- function(f,g,times,x0,B=NULL,p=function(x)x)
@@ -215,6 +230,9 @@ heun <- function(f,g,times,x0,B=NULL,p=function(x)x)
 
 
 #' Euler simulation of an Ito stochastic differential equation dX = f dt + g dB
+#'
+#' @name euler
+#'
 #' @param f function f(x) or f(t,x) giving the drift term in the SDE
 #' @param g function g(x) or g(t,x) giving the noise term in the SDE
 #' @param times numeric vector of time points, increasing
@@ -305,6 +323,10 @@ euler <- function(f,g,times,x0,B=NULL,p=function(x)x)
 
 
 #' Transition probabilities in a linear SDE dX = A*X*dt + u*dt + G*dB
+#'
+#'
+#' @name dLinSDE
+#'
 #' @param A system matrix, quadratic numeric array or matrix
 #' @param G noise matrix, same number of rows as A
 #' @param t time, numeric scalar
@@ -343,25 +365,25 @@ dLinSDE <- function(A,G,t,x0=NULL,u=NULL,S0=0*A)
 
     nx <- nrow(A)
 
-    eAt <- as.matrix(expm(A*t))
+    eAt <- as.matrix(Matrix::expm(A*t))
 
     I <- diag(rep(1,nx))
     M <- A %x% I + I %x% A
     P <- rbind(array(0,c(nx^2,2*nx^2)),cbind(diag(rep(1,nx^2)),M))
-    gs <- expm(P*t) %*% c(as.numeric(GG),rep(0,nx^2))
+    gs <- Matrix::expm(P*t) %*% c(as.numeric(GG),rep(0,nx^2))
     St <-eAt %*% S0 %*% t(eAt) + matrix(gs[nx^2+(1:(nx^2))],nrow=nx)
 
     if(is.null(x0)){
-      return(list(eAt = expm(A*t),St = St))
+      return(list(eAt = Matrix::expm(A*t),St = St))
     }
 
     if(is.null(u)){
-      return(list(EX=expm(A*t) %*% x0,St=St))
+      return(list(EX=Matrix::expm(A*t) %*% x0,St=St))
     }
 
     if(length(u)==nx){
       AA <- rbind(array(0,c(nx,2*nx)),cbind(I,A))
-      uEx <- expm(AA*t) %*% c(u,x0)
+      uEx <- Matrix::expm(AA*t) %*% c(u,x0)
       return(list(EX=uEx[nx+(1:nx)],St=St))
     }
 
@@ -372,23 +394,30 @@ dLinSDE <- function(A,G,t,x0=NULL,u=NULL,S0=0*A)
       AAA <- rbind(cbind(O,O,O),
                    cbind(I,O,O),
                    cbind(O,I,A))
-      duuEx <- expm(AAA*t) %*% c((u[,2]-u[,1])/t,u[,1],x0)
+      duuEx <- Matrix::expm(AAA*t) %*% c((u[,2]-u[,1])/t,u[,1],x0)
       return(list(EX=duuEx[2*nx+(1:nx)],St=St))
     }
 }
 
 #' Algebraic Lyapunov equation A*X+X*t(A)+Q=0
+#'
+#' @name lyap
+#'
 #' @param A A quadratic matrix without eigenvalues on the imaginary axis
 #' @param Q A symmetric matix of same dimension as A
 #' @return X A symmatric matrix of same dimension as A
+#'
 #' @details
 #' If A is asymptotically stable, Q is positive semidefinite and the pair (A,Q) is controllable, then X will be positive definite. Several similar results exist.
 #' The implementation uses vectorization and kronecker products and does not employ sparsity, so is only suitable for small systems. 
+#'
 #' @examples
 #' # A scalar example
-#' (lyap(-1,1)))
+#' (lyap(-1,1))
 #' # A harmonic oscillator
 #' (lyap(array(c(0,-1,1,-0.1),c(2,2)),diag(c(0,1))))
+#'
+#' @export
 lyap <- function(A,Q) 
 {
     A <- as.matrix(A)

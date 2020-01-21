@@ -36,6 +36,7 @@ Riccati <- function(time,Ss,par)
 #' matplot(-times,array(sol$L,c(length(times),length(F))),type="l",
 #'          xlab="Time",ylab="Feedback control",lty=c("solid","dashed"))
 #' legend("topright",c("Position","Velocity"),lty=c("solid","dashed"),col=1:2)
+#' @export
 lqr <- function(times,A,F,G,Q,R,P=NULL)
 {
   RiF <- solve(R,t(F))
@@ -62,6 +63,7 @@ lqr <- function(times,A,F,G,Q,R,P=NULL)
 ## Find the optimal strategy and value function for the case where
 ## the uncontrolled system is given by a subgenerator G0
 ## (either due to discounting or due to absorbing boundaries)
+#' @export
 PolicyIterationRegular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.minimize=TRUE)
 {
     if(!is.list(G1)) G1 <- list(G1)
@@ -98,6 +100,7 @@ PolicyIterationRegular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.m
 
 ## Find the optimal strategy and value function for the case where
 ## the uncontrolled system is given by a generator G0
+#' @export
 PolicyIterationSingular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.minimize=TRUE)
 {
     if(!is.list(G1)) G1 <- list(G1)

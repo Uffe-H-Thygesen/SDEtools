@@ -36,7 +36,7 @@ l <- 0.1
 A <- array(c(-l,w,-w,-l),c(2,2))
 
 tt <- seq(0,30,0.1)
-eAt <- sapply(tt,function(t)as.numeric(expm(A*t)))
+eAt <- sapply(tt,function(t)as.numeric(Matrix::expm(A*t)))
 
 print(class(eAt))
 matplot(tt,t(eAt),type="l",xlab="Time",ylab="Impulse response",ylim=c(-1,1))

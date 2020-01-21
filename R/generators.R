@@ -1,5 +1,7 @@
 #' Discretize scalar advection-diffusion equation using finite volumes
 #'
+#' @name fvade
+#' 
 #' @description
 #' fvade discretizes the advection-diffusion equation
 #'
@@ -33,8 +35,8 @@
 #' G <- fvade(function(x)1,function(x)0.5,seq(0,1,0.05),'r')
 #'
 #' # Find the density of the stationary distribution
-#' phi <- Null(G)         # Find unnormalized stationary probabilities
-#' phi <- phi/sum(phi)/dx # Convert to densities
+#' phi <- StationaryDistribution(G)         # Find stationary probabilities
+#' phi <- phi/dx                            # Convert to densities
 #' plot(xc,phi,type="l",xlab="x",ylab="Stationary density")
 #'
 #' @export
@@ -56,13 +58,13 @@ fvade <- function(u,D,xgrid,bc,sparse=TRUE)
     Di = sapply(xgrid,D);
 
     ## Diffusion elements of the generator
-    Dl = 2*head(Di,-1)/dx/(dx + dx[Ileft]);
-    Dr = 2*tail(Di,-1)/dx/(dx + dx[Iright]);
+    Dl = 2*utils::head(Di,-1)/dx/(dx + dx[Ileft]);
+    Dr = 2*utils::tail(Di,-1)/dx/(dx + dx[Iright]);
 
     ## Advection at left and right interfaces
     Ui <- sapply(xgrid,u);
-    Uil = head(Ui,-1)
-    Uir = tail(Ui,-1)
+    Uil = utils::head(Ui,-1)
+    Uir = utils::tail(Ui,-1)
 
     ## Advection elements of the generator
     Ul = pmax(-Uil,0)/dx;
@@ -110,7 +112,7 @@ fvade <- function(u,D,xgrid,bc,sparse=TRUE)
 #' @param G Generator of a CTMC: A quadratic matrix with non-negative off-diagonal elements and zero row sums
 #'
 #' @examples
-#' G <- arrayc(c(-2,1,2,-1),c(2,2))
+#' G <- array(c(-2,1,2,-1),c(2,2))
 #' phi <- StationaryDistribution(G)
 #'
 #' @export
@@ -149,11 +151,11 @@ StationaryDistribution <- function(G)
 #' @examples
 #' xgrid <- seq(-2,2,length=10)^3
 #' phi <- diff(pnorm(xgrid))
-#' f <- prob2pdf(phi)
-#' plot(head(xgrid,-1),f,type="S")
+#' f <- prob2pdf(phi,xgrid)
+#' plot(utils::head(xgrid,-1),f,type="S")
 #'
 #' @export
-prob2pdf <- function(phi,xgrid=xgrid,ygrid=ygrid)
+prob2pdf <- function(phi,xgrid,ygrid=c(0,1))
     return(phi/rep(diff(ygrid),length(xgrid)-1)/rep(diff(xgrid),rep(length(ygrid)-1,length(xgrid)-1)))
 
 
@@ -165,7 +167,7 @@ prob2pdf <- function(phi,xgrid=xgrid,ygrid=ygrid)
 #' @param phi Array of probabilities for a 2D grid
 #'
 #' @export
-pack.field <- function(C) as.numeric(C)
+pack.field <- function(phi) as.numeric(phi)
 
 
 #' Convert a vector to a function on the plane
@@ -180,12 +182,51 @@ pack.field <- function(C) as.numeric(C)
 #' @details
 #' length(phi) must equal nx * ny. 
 #' @export
-unpack.field <- function(C,nx=length(xc),ny=length(yc)) array(C,c(ny,nx))
+unpack.field <- function(phi,nx,ny) array(phi,c(ny,nx))
 
 
 #' Compute generator for a 2D advection-diffusion equation
+#'
+#' @description
+#' fvade2d discretizes the advection-diffusion equation
+#'
+#'      dC/dt = -div ( u C - D grad C)
+#'
+#' on a rectangular domain using the finite-volume method. Here, u=(ux,uy) and D=diag(Dx,Dy)
+#' @param  ux function mapping state (x,y) to advective term (numeric scalar)
+#' @param  uy function mapping state (x,y) to advective term (numeric scalar)
+#' @param  Dx function mapping state (x,y) to diffusivity (numeric scalar)
+#' @param  Dy function mapping state (x,y) to diffusivity (numeric scalar)
+#' @param  xgrid The numerical grid. Numeric vector of increasing values, giving cell boundaries
+#' @param  ygrid The numerical grid. Numeric vector of increasing values, giving cell boundaries
+#' @return a quadratic matrix, the generator of the approximating continuous-time Markov chain, with (length(xgrid)-1)*(length(ygrid)-1) columns
+#'
+#' @details Handling of boundary conditions: Only reflection is implemented (future versions will exapnd on this).
+#'
+#'  Return value: The function fvade returns a generator (or sub-generator) G of a continuous-time Markov Chain. This chain jumps
+#'  between cells defined by xgrid. When using the generator to solve the Kolmogorov equations, note that G operates on
+#'  probabilities of each cell, not on the probability density in each cell. The distinction is particularly important when the
+#'  grid is non-uniform.
+#'
+#' @examples
+#' # Generator of a predator-prey model
+#' xi <- seq(0,1.5,0.02)    
+#' yi <- seq(0,1.6,0.02)
+#' xc <- 0.5*(utils::head(xi,-1)+utils::tail(xi,-1))
+#' yc <- 0.5*(utils::head(yi,-1)+utils::tail(yi,-1))
+#' 
+#' ux <- function(x,y) x*(1-x)-y*x/(1+x)
+#' uy <- function(x,y) y*x/(1+x)-y/3
+#' D <- function(x,y) 0.01
+#' 
+#' G <- fvade2d(ux,uy,Dx=D,Dy=D,xi,yi)
+#' 
+#' phiv <- StationaryDistribution(G)
+#' phim <- unpack.field(phiv,length(xc),length(yc))
+#' image(xi,yi,t(phim))
+#'
 #' @export
-fvade2d <- function(ux,uy,Dx,Dy,xgrid,ygrid,sparse=TRUE)
+fvade2d <- function(ux,uy,Dx,Dy,xgrid,ygrid)
 {
     require(Matrix)
     
@@ -195,8 +236,8 @@ fvade2d <- function(ux,uy,Dx,Dy,xgrid,ygrid,sparse=TRUE)
     ncy = length(ygrid)-1;
     dy = diff(ygrid);
 
-    xc = 0.5*(head(xgrid,-1)+tail(xgrid,-1))
-    yc = 0.5*(head(ygrid,-1)+tail(ygrid,-1))
+    xc = 0.5*(utils::head(xgrid,-1)+utils::tail(xgrid,-1))
+    yc = 0.5*(utils::head(ygrid,-1)+utils::tail(ygrid,-1))
 
 
     ## Ordering of cells
@@ -229,11 +270,11 @@ fvade2d <- function(ux,uy,Dx,Dy,xgrid,ygrid,sparse=TRUE)
 
     dx <- diff(xgrid)
     dxc <- diff(xc)
-    dxc <- c(dxc[1],dxc,tail(dxc,1))
+    dxc <- c(dxc[1],dxc,utils::tail(dxc,1))
     
     dy <- diff(ygrid)
     dyc <- diff(yc)
-    dyc <- c(dyc[1],dyc,tail(dyc,1))
+    dyc <- c(dyc[1],dyc,utils::tail(dyc,1))
 
     k <- 0
     l <- 0
@@ -301,4 +342,3 @@ fvade2d <- function(ux,uy,Dx,Dy,xgrid,ygrid,sparse=TRUE)
 
     G <- G + Diagonal(n=nrow(G),x=-Matrix::rowSums(G))
 }
-

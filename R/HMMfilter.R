@@ -1,6 +1,9 @@
 ##' Estimate states in a scalar stochastic differential equation based on discretization to a HMM
 ##'
 ##' HMMfilterSDE computes the state estimation for a discretely observed stochastic differential equation
+##'
+##' @name HMMfilterSDE
+##' 
 ##' @param u function mapping state (numeric scalar) to advective term (numeric scalar)
 ##' @param D function mapping state (numeric scalar) to diffusivity (numeric scalar)
 ##' @param xi The numerical grid. Numeric vector of increasing values, giving cell boundaries
@@ -12,11 +15,14 @@
 ##' @param do.smooth Do want smoothing, or only predictive filtering / estimation?
 ##' @param do.Viterbi Do we want the most probable state sequence, found with the Viterbi algorithm?
 ##' @param pfun C.d.f. of observations given states, i.e. pfun(x,y) gives P(Y<=y | X = x). If supplied, pseudo-prediction residuals will be computed
+##' 
 ##' @return a quadratic matrix, the generator of the approximating continuous-time Markov chain, with length(xgrid)-1 columns
+##' 
 ##' @author Uffe Høgsbro Thygesen
 ##'
 ##' @export
-HMMfilterSDE <- function(u,D,xi,bc,x0dist,tvec,yvec,lfun,do.smooth=FALSE,do.Viterbi=FALSE,pfun=NULL)
+HMMfilterSDE <-
+    function(u,D,xi,bc,x0dist,tvec,yvec,lfun,do.smooth=FALSE,do.Viterbi=FALSE,pfun=NULL)
 {
     G <- fvade(u,D,xi,bc);
 
@@ -54,8 +60,7 @@ HMMfilterSDE <- function(u,D,xi,bc,x0dist,tvec,yvec,lfun,do.smooth=FALSE,do.Vite
         
     if(is.null(x0dist))
     {
-        phi0 <- Null(G)
-        phi0 <- phi0 / sum(phi0)
+        phi0 <- StationaryDistribution(G)
     }
 
     if(is.null(phi0)) stop("Initial distribution not specified correctly")
@@ -65,7 +70,7 @@ HMMfilterSDE <- function(u,D,xi,bc,x0dist,tvec,yvec,lfun,do.smooth=FALSE,do.Vite
     phi[1,] <- phi0
     
     ## Transition probabilities 
-    P <- as.matrix(expm(G*dt))
+    P <- as.matrix(Matrix::expm(G*dt))
 
     for(i in 1:(length(tvec)-1))
     {
