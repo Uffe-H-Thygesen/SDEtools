@@ -83,7 +83,8 @@ PolicyIterationRegular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.m
         ## Evaluate performance of current strategy
         Gcl <- G0
         for(i in 1:length(G1)) Gcl <- Gcl + Diagonal(x=u[,i]) %*% G1[[i]]
-        V <- as.numeric(solve(Gcl,-k(u)))
+        rhs <- -k(u)
+        V <- as.numeric(Matrix::solve(Gcl,rhs))
 
         ## Determine optimal strategy in response to the current value
         for(i in 1:nu) u[,i] <- uopt[[i]](as.numeric(G1[[i]] %*% V))
@@ -101,7 +102,7 @@ PolicyIterationRegular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.m
 ## Find the optimal strategy and value function for the case where
 ## the uncontrolled system is given by a generator G0
 #' @export
-PolicyIterationSingular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.minimize=TRUE)
+PolicyIterationSingular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.minimize=TRUE,verbose=FALSE)
 {
     if(!is.list(G1)) G1 <- list(G1)
     if(!is.list(uopt)) uopt <- list(uopt)
@@ -112,7 +113,7 @@ PolicyIterationSingular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.
     ## Initial guess on u obtained with a zero value function 
     nu <- length(uopt)
     u <- array(NA,c(nrow(G0),nu))
-    for(i in 1:nu) u[,i] <- uopt[[i]](numeric(nrow(G0)))
+    V <- numeric(nrow(G0))
 
     e <- rep(1,nrow(G0))
 
@@ -120,6 +121,9 @@ PolicyIterationSingular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.
     
     while(TRUE)
     {
+        ## Determine optimal strategy in response to the current value
+        for(i in 1:nu) u[,i] <- uopt[[i]](as.numeric(G1[[i]] %*% V))
+
         ## Construct closed loop generator
         Gcl <- G0
         for(i in 1:length(G1)) Gcl <- Gcl + Diagonal(x=u[,i]) %*% G1[[i]]
@@ -128,19 +132,19 @@ PolicyIterationSingular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.
         Ge <- rbind(cbind(Gcl,-e),c(e,0))
 
         ## Solve for the value function and the average performance
-        Vg <- solve(Ge,c(-k(u),0))
+        rhs <- c(-k(u),0)
+        Vg <- Matrix::solve(Ge,rhs)
         V <- as.numeric(head(Vg,-1))
         gamma <- as.numeric(tail(Vg,1))
 
-        ## Determine optimal strategy in response to the current value
-        for(i in 1:nu) u[,i] <- uopt[[i]](as.numeric(G1[[i]] %*% V))
-
-        if(xor(print(max(gamma-gammaold))<tol,do.minimize)) break
+        if(xor(print(gamma-gammaold)<tol,do.minimize)) break
         if(iter > iter.max) break
 
         gammaold <- gamma
         iter <- iter + 1
     }
 
-    return(list(V=V,u=u,gamma=gamma))
+    pi <- StationaryDistribution(Gcl)
+    
+    return(list(V=V,u=u,pi=pi,gamma=gamma))
 }

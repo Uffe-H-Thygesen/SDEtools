@@ -16,7 +16,11 @@
 ##' @param do.Viterbi Do we want the most probable state sequence, found with the Viterbi algorithm?
 ##' @param pfun C.d.f. of observations given states, i.e. pfun(x,y) gives P(Y<=y | X = x). If supplied, pseudo-prediction residuals will be computed
 ##' 
-##' @return a quadratic matrix, the generator of the approximating continuous-time Markov chain, with length(xgrid)-1 columns
+##' @return A list containing:
+##' phi A tabulation of the predicitive probability densities
+##' psi A tabulation of the estimated probability densities
+##' pi  (If do.smooth==TRUE) A tabulation of the smoothed probability densities
+##' c   A vector containing the normalization constants at each time step 
 ##' 
 ##' @author Uffe Høgsbro Thygesen
 ##'
@@ -44,7 +48,8 @@ HMMfilterSDE <-
 
     phi <- array(0,c(nt,nx))
     psi <- phi
-
+    c <- numeric(nt)
+    
     ## Set initial distribution
     phi0 <- NULL
     if(is.function(x0dist))
@@ -75,19 +80,58 @@ HMMfilterSDE <-
     for(i in 1:(length(tvec)-1))
     {
         psi[i,] = phi[i,] * ltab[,i];      # Data update
-        psi[i,] = psi[i,] / sum(psi[i,])   # Normalize
+        c[i] <- sum(psi[i,])
+        psi[i,] = psi[i,] / c[i]           # Normalize
         phi[i+1,] = psi[i,] %*% P;         # Time update
     }
     i <- i + 1
     psi[i,] = phi[i,] * ltab[,i];      # Data update
-    psi[i,] = psi[i,] / sum(psi[i,])   # Normalize
+    c[i] <- sum(psi[i,])
+    psi[i,] = psi[i,] / c[i]           # Normalize
 
-    
-    if(do.smooth) print("Smoothing has not been implemented yet.")
+    ans <- list(phi=phi,psi=psi,c=c)
+
+    if(do.smooth) {
+        mu <- array(NA,c(length(xc),length(tvec)))
+        lambda <- mu 
+
+        pi <- t(mu)
+
+        lambda[,length(tvec)] <- ltab[,length(tvec)]
+        cvec <- rep(NA,length(tvec))
+
+        for(i in length(tvec):2)
+        {
+            mu[,i-1] <- as.numeric(P %*% lambda[,i])
+            lambda[,i-1] <- mu[,i-1] * ltab[,i-1];
+
+            cvec[i-1] <- max(lambda[,i-1])
+  
+            lambda[,i-1] <- lambda[,i-1] / cvec[i-1]
+        }
+
+        for(i in 1:length(tm))
+        {
+            pi[i,] <- phi[i,] * lambda[,i]
+            pi[i,] <- pi[i,] / sum(pi[i,])
+        }
+
+        ans <- c(ans,list(pi=pi,lambda=lambda,mu=mu))
+    }
 
     if(do.Viterbi) print("The Viterbi algorithm has not been implemented yet.")
 
-    if(!is.null(pfun)) print("Psuedo-residuals have not been implemented yet.")
+    if(!is.null(pfun))
+    {
+        U <- numeric(length(tvec))
+        for(i in 1:length(tvec))
+        {
+            U[i] <- sum(phi[i,]*pfun(xc,yvec[i]))
+        }
 
-    return(list(phi=phi,psi=psi))
+        ans <- c(ans,list(U=U))
+    }
+
+
+    return(ans)
 }

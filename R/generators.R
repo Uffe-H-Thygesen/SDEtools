@@ -13,6 +13,7 @@
 #' @param  xgrid The numerical grid. Numeric vector of increasing values, giving cell boundaries
 #' @param  bc String indicating boundary conditions. See details.
 #' @param  sparse logical indicating if the result should be returned as a sparse matrix
+#' @param  diagonals logical indicating if the result should be returned as a list of subdiagonal, diagonal, and superdiagonal
 #' @return a quadratic matrix, the generator of the approximating continuous-time Markov chain, with length(xgrid)-1 columns
 #'
 #' @details Handling of boundary conditions: Input argument bc is a single character, or a vector of two characters, coding the condition at each boundary as follows:
@@ -40,7 +41,7 @@
 #' plot(xc,phi,type="l",xlab="x",ylab="Stationary density")
 #'
 #' @export
-fvade <- function(u,D,xgrid,bc,sparse=TRUE)
+fvade <- function(u,D,xgrid,bc,sparse=TRUE,diagonals=FALSE)
 {
     require(Matrix)
 
@@ -70,16 +71,16 @@ fvade <- function(u,D,xgrid,bc,sparse=TRUE)
     Ul = pmax(-Uil,0)/dx;
     Ur = pmax( Uir,0)/dx;
 
-    ## Mimic Matlab for off-diagonals
+    ## Mimic Matlab for off-diagonals (positive offset for sub-diagonal)
     mydiag <- function(v,offset=0)
     {
         size <- length(v)+abs(offset)
-        j <- (1:length(v)) + max(0,offset)
-        i <- (1:length(v)) + max(0,-offset)
+        j <- (1:length(v)) + max(0,-offset)
+        i <- (1:length(v)) + max(0,offset)
         return(sparseMatrix(i=i,j=j,x=v,dims=rep(size,2)))
     }
     
-    Ge = mydiag(c(Dl+Ul,0),-1) + mydiag(c(0,Dr+Ur),1) -mydiag(c(0,Dl+Ul+Dr+Ur,0));
+    Ge = mydiag(c(Dl+Ul,0),1) + mydiag(c(0,Dr+Ur),-1) -mydiag(c(0,Dl+Ul+Dr+Ur,0));
     G = Ge[2:(nc+1),2:(nc+1)]
 
     ## Handle boundary conditions
@@ -89,11 +90,17 @@ fvade <- function(u,D,xgrid,bc,sparse=TRUE)
     if(bc[1]=='r') G[1,1] <- -G[1,2]         ## Reflect
     if(bc[2]=='r') G[nc,nc] <- -G[nc,nc-1]   
 
-    ## Experimental: Continue beyod boundary by neglecting diffusivity at that boundary
+    ## Experimental: Continue beyond boundary by neglecting diffusivity at that boundary
     if(bc[1]=='c') G[1,1] <- - (G[1,2] <- Ur[1])
     if(bc[2]=='c') G[nc,nc] <- - (G[nc,nc-1] <- Ul[nc])
 
     if(bc[1]=='e') G <- Ge;
+
+    if(diagonals)
+    {
+        if(bc[1]=='p') error("With periodic boundary conditions, the system is not tridiagonal")
+        return(list(super=G[seq(nc+1,nc*nc-1,nc+1)],diag=G[seq(1,nc*nc,nc+1)],sub=G[seq(2,nc*(nc-1),nc+1)]))
+    }
     
     if(sparse) return(G) else return(as.matrix(G))
 }
@@ -126,7 +133,7 @@ StationaryDistribution <- function(G)
     b <- sparseMatrix(i = ncol(G)+1,j=1,x=1)
     tG <- Matrix::t(Gpad)
 
-    phiE <- as.numeric(Matrix::solve(tG,b))
+    print(system.time(phiE <- as.numeric(Matrix::solve(tG,b))))
 
     phi <- phiE[1:ncol(G)]
     return(phi)
@@ -184,6 +191,27 @@ pack.field <- function(phi) as.numeric(phi)
 #' @export
 unpack.field <- function(phi,nx,ny) array(phi,c(ny,nx))
 
+#' Get center of grid cells for a retangular grid
+#'
+#' @description
+#' cell.centers takes a rectangular grid and returns coordinates of the cell centers as a field
+#'
+#' @param xgrid Interfaces 
+#' @param ygrid Interfaces 
+#'
+#' @export
+cell.centers <- function(xgrid,ygrid)
+{
+    xc <- 0.5*(head(xgrid,-1)+tail(xgrid,-1))
+    yc <- 0.5*(head(ygrid,-1)+tail(ygrid,-1))
+
+    xx <- rep(xc,rep(length(yc),length(xc)))
+    yy <- rep(yc,length(xc))
+
+    return(list(x=unpack.field(xx,length(xc),length(yc)),
+                y=unpack.field(yy,length(xc),length(yc))))
+                
+}
 
 #' Compute generator for a 2D advection-diffusion equation
 #'
