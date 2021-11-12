@@ -133,7 +133,7 @@ StationaryDistribution <- function(G)
     b <- sparseMatrix(i = ncol(G)+1,j=1,x=1)
     tG <- Matrix::t(Gpad)
 
-    print(system.time(phiE <- as.numeric(Matrix::solve(tG,b))))
+    phiE <- as.numeric(Matrix::solve(tG,b))
 
     phi <- phiE[1:ncol(G)]
     return(phi)
