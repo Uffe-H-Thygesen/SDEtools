@@ -60,9 +60,37 @@ lqr <- function(times,A,F,G,Q,R,P=NULL)
   return(list(times=times,A=A,F=F,G=G,Q=Q,R=R,P=P,S=S,s=s,L=L))
 }
 
-## Find the optimal strategy and value function for the case where
-## the uncontrolled system is given by a subgenerator G0
-## (either due to discounting or due to absorbing boundaries)
+#' Solve the optimal control problem using policy iteration, i.e. find the optimal strategy
+#' and value function for the case where the uncontrolled system is given by a subgenerator G0
+#' (either due to discounting or due to absorbing boundaries)
+#'
+#' @param  G0 The sub-generator of the uncontrolled system 
+#' @param  G1 A list of (sub-)generators for each control
+#' @param  k The running cost 
+#' @param  uopt A list of functions returning optional controls as function of 
+#' @param  iter.max = 1000 Maximum number of iterations
+#' @param  tol = 1e-12 Tolerance for convergence 
+#' @param  do.minimize=TRUE
+#' @return A list containing
+#' V: The value function, as a vector with an element for each state
+#' u: The optimal controls, as a matrix with a row for each state and a column for each control
+#'
+#' @examples
+#' ## Controlling a system to the boundary with minimum effort
+#' xi <- seq(-2,2,length=101)
+#' xc <- as.numeric(cell.centers(xi,c(0,1))$x)
+#' 
+#' G0 <- fvade(function(x)-x,function(x)1,xi,'a')
+#' Gp <- fvade(function(x)1,function(x)0,xi,'a')
+#' Gn <- fvade(function(x)-1,function(x)0,xi,'a')
+#' 
+#' uopt <- function(dV)pmax(0,-dV)
+#' k <- function(u) 1 + 0.5*u[,1]^2 + 0.5*u[,2]^2
+#' sol <- PolicyIterationRegular(G0,list(Gp,Gn),k,list(uopt,uopt))
+#' 
+#' par(mfrow=c(1,2))
+#' plot(xc,sol$V,xlab="x",ylab="Value function",type="l")
+#' plot(xc,sol$u[,1]-sol$u[,2],type="l",xlab="x",ylab="Optimal control")
 #' @export
 PolicyIterationRegular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.minimize=TRUE)
 {
@@ -89,7 +117,7 @@ PolicyIterationRegular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.m
         ## Determine optimal strategy in response to the current value
         for(i in 1:nu) u[,i] <- uopt[[i]](as.numeric(G1[[i]] %*% V))
         
-        if( xor(print(max(V-Vold))<tol,do.minimize)) break
+        if( xor(max(V-Vold)<tol,do.minimize)) break
         if(iter > iter.max) break
         
         Vold <- V
@@ -99,10 +127,48 @@ PolicyIterationRegular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.m
     return(list(V=V,u=u))
 }
 
-## Find the optimal strategy and value function for the case where
-## the uncontrolled system is given by a generator G0
+#' Solve the optimal control problem using policy iteration, i.e. find the optimal strategy
+#' and value function for the case where the uncontrolled system is given by a generator G0
+#'
+#' @param  G0 The generator of the uncontrolled system 
+#' @param  G1 A list of generators for each control
+#' @param  k The running cost 
+#' @param  uopt A list of functions returning optional controls as function of 
+#' @param  iter.max = 1000 Maximum number of iterations
+#' @param  tol = 1e-12 Tolerance for convergence 
+#' @param  do.minimize=TRUE
+#' @return A list containing
+#' V: The value function, as a vector with an element for each state
+#' u: The optimal controls, as a matrix with a row for each state and a column for each control
+#' pi: The stationary distribution for the controlled system
+#' gamma: The expected running cost in stationarity
+#'
+#' @examples
+#' require(SDEtools)
+#' 
+#' u <- function(x)0*x
+#' D <- function(x) 0*x + 0.25
+#' 
+#' 
+#' xi <- seq(-2,2,length=201)
+#' xc <- 0.5*(head(xi,-1) + tail(xi,-1))
+#' 
+#' G0 <- fvade(u,D,xi,'r')
+#' Gp <- fvade(function(x)1,function(x)0,xi,'r')
+#' Gn <- fvade(function(x)-1,function(x)0,xi,'r')
+#' 
+#' uopt <- function(Wp) pmax(0,-Wp)
+#' k <- function(u) 0.5*xc^2 + 0.5*u[,1]^2 + 0.5*u[,2]^2
+#' 
+#' sol <- PolicyIterationSingular(G0,list(Gp,Gn),k,list(uopt,uopt))
+#' 
+#' par(mfrow=c(1,2))
+#' plot(xc,sol$V,type="l",xlab="x",ylab="Value function")
+#' plot(function(x)0.5*x^2+min(sol$V),from=-2,to=2,lty="dashed",add=TRUE)
+#' plot(xc,sol$u[,1]-sol$u[,2],type="l",xlab="x",ylab="Control")
+#' abline(0,-1,lty="dashed")
 #' @export
-PolicyIterationSingular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.minimize=TRUE,verbose=FALSE)
+PolicyIterationSingular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.minimize=TRUE)
 {
     if(!is.list(G1)) G1 <- list(G1)
     if(!is.list(uopt)) uopt <- list(uopt)
@@ -137,7 +203,7 @@ PolicyIterationSingular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.
         V <- as.numeric(head(Vg,-1))
         gamma <- as.numeric(tail(Vg,1))
 
-        if(xor(print(gamma-gammaold)<tol,do.minimize)) break
+        if(xor(gamma-gammaold<tol,do.minimize)) break
         if(iter > iter.max) break
 
         gammaold <- gamma
