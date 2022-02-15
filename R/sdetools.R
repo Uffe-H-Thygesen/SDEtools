@@ -187,13 +187,12 @@ heun <- function(f,g,times,x0,B=NULL,p=function(x)x)
   ## returns a nx-by-nB matrix
   g0 <- ggg(times[1],x0)
 
-  if(is.matrix(g0)){
-    gg<-ggg
-    nB <- ncol(g0)
-  }else
-  {
-    nB <- 1
-    gg <- function(t,x)matrix(ggg(t,x),nrow=nx,ncol=1)
+  if(is.null(dim(g0))) {
+      nB <- 1
+      gg <- function(t,x)matrix(ggg(t,x),nrow=nx,ncol=1)
+  } else {
+      nB <- ncol(g0)
+      gg<-ggg
   }
 
   ## If the sample path of Brownian motion is not specified, then simulate it
@@ -213,14 +212,14 @@ heun <- function(f,g,times,x0,B=NULL,p=function(x)x)
   for(i in 1:(nt-1))
   {
     ## Euler predictor
-    fX <- ff(times[i],X[i,])
+    fX <- as.numeric(ff(times[i],X[i,]))
     gX <- gg(times[i],X[i,])
-    Y <- p(X[i,] + fX*dt[i] + gX %*% dB[i,])
+    Y <- as.numeric(p(X[i,] + fX*dt[i] + gX %*% as.numeric(dB[i,])))
 
     ## Corrector
-    fY <- ff(times[i+1],Y)
+    fY <- as.numeric(ff(times[i+1],Y))
     gY <- gg(times[i+1],Y)
-    X[i+1,] <- p(X[i,] + 0.5*(fX+fY)*dt[i] + 0.5*(gX+gY) %*% dB[i,])
+    X[i+1,] <- as.numeric(p(X[i,] + 0.5*(fX+fY)*dt[i] + 0.5*(gX+gY) %*% as.numeric(dB[i,])))
   }
 
   colnames(X) <- names(x0)
@@ -287,13 +286,12 @@ euler <- function(f,g,times,x0,B=NULL,p=function(x)x)
   ## returns a nx-by-nB matrix
   g0 <- ggg(times[1],x0)
 
-  if(is.matrix(g0)){
-    gg<-ggg
-    nB <- ncol(g0)
-  }else
-  {
-    nB <- 1
-    gg <- function(t,x)matrix(ggg(t,x),nrow=nx,ncol=1)
+  if(is.null(dim(g0))) {
+      nB <- 1
+      gg <- function(t,x)matrix(ggg(t,x),nrow=nx,ncol=1)
+  } else {
+      nB <- ncol(g0)
+      gg<-ggg
   }
 
   ## If the sample path of Brownian motion is not specified, then simulate it
@@ -313,14 +311,13 @@ euler <- function(f,g,times,x0,B=NULL,p=function(x)x)
 
   for(i in 1:(nt-1))
   {
-    X[i+1,] <- p( X[i,] + ff(times[i],X[i,])*dt[i] + gg(times[i],X[i,]) %*% dB[i,] )
+    X[i+1,] <- p( X[i,] + ff(times[i],X[i,])*dt[i] + gg(times[i],X[i,]) %*% as.numeric(dB[i,]) )
   }
 
   colnames(X) <- names(x0)
 
   return(list(times=times,X=X))
 }
-
 
 #' Transition probabilities in a linear SDE dX = A*X*dt + u*dt + G*dB
 #'
