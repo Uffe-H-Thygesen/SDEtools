@@ -227,12 +227,17 @@ cell.centers <- function(xgrid,ygrid)
 #' @param  Dy function mapping state (x,y) to diffusivity (numeric scalar)
 #' @param  xgrid The numerical grid. Numeric vector of increasing values, giving cell boundaries
 #' @param  ygrid The numerical grid. Numeric vector of increasing values, giving cell boundaries
+#' @param  bc Specification of boundary conditions. See details.
 #' @return a quadratic matrix, the generator of the approximating continuous-time Markov chain, with (length(xgrid)-1)*(length(ygrid)-1) columns
 #'
-#' @details Handling of boundary conditions: Only reflection is implemented (future versions will exapnd on this).
+#' @details Boundary conditions: bc is a list with elements N,E,S,W. Each element is either
+#'   "r": Reflective boundary
+#'   "a": Absorbing boundary: Assume an absorbing boundary cell, which is not included
+#'   "e": Extend to include an absorbing boundary cell
+#'   "p": Periodic. When hitting this boundary, the state is immediately transferred to the opposite boundary, e.g. N->S.
 #'
 #'  Return value: The function fvade returns a generator (or sub-generator) G of a continuous-time Markov Chain. This chain jumps
-#'  between cells defined by xgrid. When using the generator to solve the Kolmogorov equations, note that G operates on
+#'  between cells defined by xgrid and ygrid. When using the generator to solve the Kolmogorov equations, note that G operates on
 #'  probabilities of each cell, not on the probability density in each cell. The distinction is particularly important when the
 #'  grid is non-uniform.
 #'
@@ -254,7 +259,7 @@ cell.centers <- function(xgrid,ygrid)
 #' image(xi,yi,t(phim))
 #'
 #' @export
-fvade2d <- function(ux,uy,Dx,Dy,xgrid,ygrid)
+fvade2d <- function(ux,uy,Dx,Dy,xgrid,ygrid,bc=list(N="r",E="r",S="r",W="r"))
 {
     require(Matrix)
     
@@ -266,7 +271,6 @@ fvade2d <- function(ux,uy,Dx,Dy,xgrid,ygrid)
 
     xc = 0.5*(utils::head(xgrid,-1)+utils::tail(xgrid,-1))
     yc = 0.5*(utils::head(ygrid,-1)+utils::tail(ygrid,-1))
-
 
     ## Ordering of cells
     ## Start with the (x,y) plane. Cell #1 is in the lower left corner. Cell #2 is just above it (N).
@@ -288,10 +292,6 @@ fvade2d <- function(ux,uy,Dx,Dy,xgrid,ygrid)
         i <- k - j * (length(yc) +2) - 1
         return(c(i,j))
     }
-
-    ## Test hopping back and forth
-    ## for(i in 0:(length(yc)+1))for(j in 0:(length(xc)+1)) { ij <- ind2ij(C(i,j)) ; print(c(i,j,ij-c(i,j))) }
-
 
     GDentries <- array(0,c(length(xc)*length(yc)*4,3))
     GAentries <- array(0,c(length(xc)*length(yc)*4,3))
@@ -362,11 +362,87 @@ fvade2d <- function(ux,uy,Dx,Dy,xgrid,ygrid)
     
     dims=rep( (length(yc)+2)*(length(xc)+2),2)
     Ge <- sparseMatrix(i=Gent[,1],j=Gent[,2],x=Gent[,3],dims = dims)
+    Ge <- Ge + Diagonal(n=nrow(Ge),x=-Matrix::rowSums(Ge))
 
-    ## Boundary conditions: Reflective, for now
-    Iinner <- as.numeric(outer(1:length(yc),1:length(xc),Vectorize(C)))
+    ## Handle N,S,E,W boundaries.
+    ## First S (given by i==1)
+    SC <- C(1,1:ncx)
+    SS <- S(1,1:ncx)
+
+    NC <- C(ncy,1:ncx)
+    NN <- N(ncy,1:ncx)
+
+    WC <- C(1:ncy,1)
+    WW <- W(1:ncy,1)
+
+    EC <- C(1:ncy,ncx)
+    EE <- E(1:ncy,ncx)
+
+    ## Which cells to include in the generator that is returned?
+    ## The most common choice is only interior cells
+    ilo <- 1
+    ihi <- ncy
+
+    jlo <- 1
+    jhi <- ncx
+    
+    ## Reimplementation of extracting diagonal due to weird error in diag
+    my.diag <- function(A) as.numeric(A[seq(1,(n<-nrow(A))^2,n+1)])
+
+    ## Process South boundary
+    if(bc$S == 'r')
+    {
+        Ge[SC,SC] <- Ge[SC,SC] + Diagonal(n=ncx,x=my.diag(Ge[SC,SS]))
+    }
+
+    if(bc$S == 'e')  ilo <- 0 
+
+    if(bc$S == 'p')
+    {
+        Ge[SC,NC] <- Ge[SC,NC] + Diagonal(n=ncx,x=my.diag(Ge[SC,SS]))
+    }
+
+    ## Process North boundary 
+    if(bc$N == 'r')
+    {
+        Ge[NC,NC] <- Ge[NC,NC] + Diagonal(n=ncx,x=my.diag(Ge[NC,NN]))
+    }
+
+    if(bc$N == 'e')  ihi <- ncy+1 
+
+    if(bc$N == 'p')
+    {
+        Ge[NC,SC] <- Ge[NC,SC] + Diagonal(n=ncx,x=my.diag(Ge[NC,NN]))
+    }
+
+    ## Process West boundary 
+    if(bc$W == 'r')
+    {
+        Ge[WC,WC] <- Ge[WC,WC] + Diagonal(n=ncy,x=my.diag(Ge[WC,WW]))
+    }
+
+    if(bc$W == 'e')  jlo <- 0 
+
+    if(bc$W == 'p')
+    {
+        Ge[WC,EC] <- Ge[WC,EC] + Diagonal(n=ncy,x=my.diag(Ge[WC,WW]))
+    }
+    
+    ## Process East boundary 
+    if(bc$E == 'r')
+    {
+        Ge[EC,EC] <- Ge[EC,EC] + Diagonal(n=ncy,x=my.diag(Ge[EC,EE]))
+    }
+
+    if(bc$E == 'e')  jhi <- ncx + 1
+
+    if(bc$E == 'p')
+    {
+        Ge[EC,WC] <- Ge[EC,WC] + Diagonal(n=ncy,x=my.diag(Ge[EC,EE]))
+    }
+    
+    ## Extract those cells that should be included 
+    Iinner <- as.numeric(outer(ilo:ihi,jlo:jhi,Vectorize(C)))
 
     G <- Ge[Iinner,Iinner]
-
-    G <- G + Diagonal(n=nrow(G),x=-Matrix::rowSums(G))
 }

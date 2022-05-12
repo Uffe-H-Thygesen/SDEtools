@@ -71,14 +71,20 @@ lqr <- function(times,A,F,G,Q,R,P=NULL)
 #' @param  iter.max = 1000 Maximum number of iterations
 #' @param  tol = 1e-12 Tolerance for convergence 
 #' @param  do.minimize=TRUE
+#' @param  do.return.QSD=FALSE Compute and return the quasi-stationary distribution 
 #' @return A list containing
 #' V: The value function, as a vector with an element for each state
 #' u: The optimal controls, as a matrix with a row for each state and a column for each control
 #'
+#' and, if do.return.QSD==TRUE,
+#' qsd.value: The decay rate of the quasi-stationary distribution (decay rate)
+#' qsd.vector: The quasi-stationary distribution
+#' 
 #' @examples
 #' ## Controlling a system to the boundary with minimum effort
 #' xi <- seq(-2,2,length=101)
 #' xc <- as.numeric(cell.centers(xi,c(0,1))$x)
+#' dx <- diff(xi)
 #' 
 #' G0 <- fvade(function(x)-x,function(x)1,xi,'a')
 #' Gp <- fvade(function(x)1,function(x)0,xi,'a')
@@ -86,13 +92,15 @@ lqr <- function(times,A,F,G,Q,R,P=NULL)
 #' 
 #' uopt <- function(dV)pmax(0,-dV)
 #' k <- function(u) 1 + 0.5*u[,1]^2 + 0.5*u[,2]^2
-#' sol <- PolicyIterationRegular(G0,list(Gp,Gn),k,list(uopt,uopt))
+#' sol <- PolicyIterationRegular(G0,list(Gp,Gn),k,list(uopt,uopt),do.return.QSD=TRUE)
 #' 
-#' par(mfrow=c(1,2))
+#' par(mfrow=c(1,3))
 #' plot(xc,sol$V,xlab="x",ylab="Value function",type="l")
 #' plot(xc,sol$u[,1]-sol$u[,2],type="l",xlab="x",ylab="Optimal control")
+#' plot(xc,sol$qsd.vector/dx,type="l",xlab="x",ylab="QSD",main=sol$qsd.value)
 #' @export
-PolicyIterationRegular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.minimize=TRUE)
+PolicyIterationRegular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,
+                                   do.minimize=TRUE,do.return.QSD=FALSE)
 {
     if(!is.list(G1)) G1 <- list(G1)
     if(!is.list(uopt)) uopt <- list(uopt)
@@ -124,6 +132,18 @@ PolicyIterationRegular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.m
         iter <- iter + 1
     }
 
+    if(do.return.QSD)
+    {
+        ## TODO: Replace RSpectra with something more efficient
+        require(RSpectra)
+        qsd <- RSpectra::eigs(Gcl,k=1,which="LR",opts=list(ncv=40))
+        qsd.vector <- as.numeric(Re(qsd$vectors))
+        qsd.vector <- qsd.vector/sum(qsd.vector)
+        return(list(V=V,u=u,
+                    qsd.value=as.numeric(Re(qsd$values)),
+                    qsd.vector=qsd.vector))
+    }
+    
     return(list(V=V,u=u))
 }
 

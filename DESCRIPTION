@@ -3,14 +3,14 @@ Type: Package
 Title: Utilities for Stochastic Differential Equations
 Version: 0.1
 Date: 2020-01-21
-Author: Uffe Hoegsbro Thygesen
-Maintainer: Uffe Hoegsbro Thygesen <uht@aqua.dtu.dk>
+Author: Uffe Hogsbro Thygesen
+Maintainer: Uffe Hogsbro Thygesen <uhth@dtu.dk>
 Description: Analyse of stochastic differential equations: Simulation of sample paths of Brownian motion, numerical stochastic integration, numerical solution of stochastic differential equations, and numerical analysis of the Kolmogorov equations in one and two spatial dimensions, including applications to filtering (recursive state estimation) and optimal control. 
 License: GPL
 LazyData: TRUE
 Encoding: UTF-8
 Imports:
-    deSolve, Matrix, MASS
+    deSolve, Matrix, MASS, RSpectra
 Suggests:
     testthat,
     knitr
