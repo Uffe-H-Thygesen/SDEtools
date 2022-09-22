@@ -134,14 +134,10 @@ PolicyIterationRegular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,
 
     if(do.return.QSD)
     {
-        ## TODO: Replace RSpectra with something more efficient
-        require(RSpectra)
-        qsd <- RSpectra::eigs(Gcl,k=1,which="LR",opts=list(ncv=40))
-        qsd.vector <- as.numeric(Re(qsd$vectors))
-        qsd.vector <- qsd.vector/sum(qsd.vector)
+        qsd <- QuasiStationaryDistribution(Gcl)
         return(list(V=V,u=u,
-                    qsd.value=as.numeric(Re(qsd$values)),
-                    qsd.vector=qsd.vector))
+                    qsd.value=qsd$value,
+                    qsd.vector=qsd$vector))
     }
     
     return(list(V=V,u=u))

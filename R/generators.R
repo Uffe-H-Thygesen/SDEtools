@@ -118,6 +118,8 @@ fvade <- function(u,D,xgrid,bc,sparse=TRUE,diagonals=FALSE)
 #'
 #' @param G Generator of a CTMC: A quadratic matrix with non-negative off-diagonal elements and zero row sums
 #'
+#' @return phi, a vector with as many elements as rows in G, containing the stationary distribution.
+#' 
 #' @examples
 #' G <- array(c(-2,1,2,-1),c(2,2))
 #' phi <- StationaryDistribution(G)
@@ -137,6 +139,53 @@ StationaryDistribution <- function(G)
 
     phi <- phiE[1:ncol(G)]
     return(phi)
+}
+
+#' Compute the quasi-stationary distribution for a terminating Continuous Time Markov Chain
+#'
+#' @description
+#' QuasiStationaryDistribution compute the quasi-stationary distribution phi for a Continuous Time
+#' Markov Chain given by a sub-generator G, which is given by the equations
+#'
+#'   phi %*% G == -mu*phi, sum(phi) == 1
+#'
+#' @param G Sub-generator of a CTMC: A quadratic matrix with non-negative off-diagonal elements and non-positive row sums
+#'
+#' @return A list containing:
+#' vector, a vector with non-negative elements, containing the stationary distribution
+#' value, the corresponding eigenvalue.
+#' 
+#' @examples
+#' xgrid <- seq(0,1,0.01)
+#' G <- fvade(u=function(x)5,D=function(x)1,xgrid=xgrid,bc="a")
+#' sol <- QuasiStationaryDistribution(G)
+#' plot(cell.centers(xgrid),sol$vector/diff(xgrid),main=paste("Decay rate",-sol$value))
+#' @export
+QuasiStationaryDistribution <- function(G,max.iter=20,tol=1e-16)
+{
+    require(Matrix)
+    
+    n <- nrow(G)
+    e <- rep(1,n)
+    pi <- e/n
+    mu <- -mean(Matrix::rowSums(G))
+    
+    for(i in 1:max.iter)
+    {
+        J <- rbind( cbind( G + Matrix::Diagonal(n,mu),e),c(pi,0))
+        res <- c( as.numeric(pi %*% G) + mu*pi, sum(pi)-1)
+        err <- sum(res^2)
+        if(err < tol) break
+
+        dpimu <- Matrix::solve(Matrix::t(J),res)
+        pi <- pi - as.numeric(head(dpimu,-1))
+        mu <- mu - as.numeric(tail(dpimu,1))
+    }
+
+    if(any(pi<0)) warning("warning: Quasi-stationary distribution has negative elements.")
+    if(err > tol) stop("Error: QSD stopped at max.iter without finding the quasistationary distribution.")
+    
+    return(list(value=-mu,vector=pi))
 }
 
 #' Convert cell probabilities to (average) probability densities
@@ -196,13 +245,16 @@ unpack.field <- function(phi,nx,ny) array(phi,c(ny,nx))
 #' @description
 #' cell.centers takes a rectangular grid and returns coordinates of the cell centers as a field
 #'
-#' @param xgrid Interfaces 
-#' @param ygrid Interfaces 
+#' @param xgrid Interfaces in x-direction  
+#' @param ygrid Interfaces in y-direction (if 2D)
 #'
 #' @export
-cell.centers <- function(xgrid,ygrid)
+cell.centers <- function(xgrid,ygrid=NULL)
 {
     xc <- 0.5*(head(xgrid,-1)+tail(xgrid,-1))
+
+    if(is.null(ygrid)) return(xc)
+
     yc <- 0.5*(head(ygrid,-1)+tail(ygrid,-1))
 
     xx <- rep(xc,rep(length(yc),length(xc)))

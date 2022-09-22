@@ -15,19 +15,19 @@ vignette: >
 We simulate a sample path from the Ito stochastic differential equation governing the abundance of a bacterial population
 
 \[
-dX_t = 1- X_t ~dt + \gamma \sqrt{X_t} ~dB_t
+dX_t = (1- X_t) ~dt + \gamma \sqrt{X_t} ~dB_t
 \]
 
 which is the Cox-Ingersoll-Ross model. Then, we simulate random measurements taken at times $0,dt,2~dt, \ldots, T$ so that $Y_i | X_{t_i}$ is Poisson distributed with mean $v `. X_{t_i}$. Then, we pretend that we don't know the states and re-estimate them from these measurements. 
 
 We first simulate states and measurements: 
 
-```{r, fig.show='hold'}
+```{r,fig.width=8}
   require(SDEtools)
 
   # Define model. Note abs to handle negative x.
-  gamma <- 0.9
-  f = function(x) x*(1-x)
+  gamma <- 1
+  f = function(x) (1-x)
   g = function(x) gamma * sqrt(abs(x));
 
   # Advection-diffusion form
@@ -50,18 +50,13 @@ We first simulate states and measurements:
   ## Simulate states 
   sim <- euler(f,g,tvec,x0,p=p)
   
-  dev.new()
   plot(sim$times,sim$X,type="l",xlab="Time",ylab='Abundance')
 
-  ## Use a grid which has finer resolution near x=0 (because we can)
-  xi = seq(0,4,0.025)^2                                # Cell Interfaces
-
   ## Generate random measurements
+  tsample <- 0.1
+  vsample <- 1
 
-  tsample = 0.1;
-  vsample = 0.5;
-
-  sampleIndeces = round(seq(1,length(tvec),(tsample/dt)))
+  sampleIndeces <- round(seq(1,length(tvec),(tsample/dt)))
   tm = tvec[sampleIndeces];
   ymean = vsample * sim$X[sampleIndeces];
 
@@ -73,7 +68,7 @@ We first simulate states and measurements:
 
 We now run the filter. We first specify the likelihood function, and then call HMMfilterSDE.
 
-```{r, fig.show='hold'}
+```{r,fig.width=8,fig.height=6}
 
   ## Data likelihood
   dl <- function(x,y) dpois(y,lambda=vsample*x)
@@ -88,7 +83,7 @@ We now run the filter. We first specify the likelihood function, and then call H
   filter <- HMMfilterSDE(u,D,xi,bc='r',phi0,tm,ymeas,dl)
 
   ## Show colour plot of posterior c.d.f.
-  image(tm,xc,t(apply(filter$psi,1,cumsum)))
+  image(tm,xc,t(apply(filter$psi,1,cumsum)),ylim=c(0,4))
 
   ## Add true state at times of measurements
   lines(tm,ymean/vsample)

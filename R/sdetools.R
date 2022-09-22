@@ -371,11 +371,11 @@ dLinSDE <- function(A,G,t,x0=NULL,u=NULL,S0=0*A)
     St <-eAt %*% S0 %*% t(eAt) + matrix(gs[nx^2+(1:(nx^2))],nrow=nx)
 
     if(is.null(x0)){
-      return(list(eAt = Matrix::expm(A*t),St = St))
+      return(list(eAt = eAt,St = St))
     }
 
     if(is.null(u)){
-      return(list(EX=Matrix::expm(A*t) %*% x0,St=St))
+      return(list(EX=eAt %*% x0,St=St))
     }
 
     if(length(u)==nx){
