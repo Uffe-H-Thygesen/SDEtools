@@ -45,7 +45,9 @@ rvBM <- function(times,n=1,sigma=rep(1,n),B0=rep(0,n),u=rep(0,n))
   return(sapply(1:n,function(i)rBM(times,sigma=sigma[i],B0=B0[i],u=u[i])))
 }
 
-#' Integrate one sample path of a stochastic process w.r.t. another
+#' Integrate one sample path of a stochastic process w.r.t. another,
+#' returning the Ito integral, the Stratonovich integral, or the
+#' "right hand rule".
 #'
 #' @name stochint
 #' 
@@ -81,6 +83,27 @@ stochint <- function(f,g,rule="l")
   r <- c(0,cumsum(f[-1]*dg))
   c <- 0.5*(l+r)
   return(data.frame(l=l,r=r,c=c)[,rule])
+}
+
+#' Ito integral of a stochastic process w.r.t. another
+#'
+#' @name itointegral
+#' 
+#' @param G numeric vector containing the integrator
+#' @param B numeric vector, same length as G, containing the integrand
+#' @return A numeric vector, same length as G, giving the "running integral", i.e. the Ito integral as a function of the upper limit.
+#' @examples
+#' ## Integration of Brownian motion w.r.t. itself
+#' times <- seq(0,10,0.01)
+#' BM <- rBM(times)
+#' I <- itointegral(BM,BM)
+#' matplot(times,cbind(I,0.5*BM^2-0.5*times),type="l",xlab="Time",ylab="Ito integral",
+#'          main="Integral of B.M. w.r.t itself")
+#' 
+#' @export
+itointegral <- function(G,B)
+{
+  return(c(0,cumsum(G[-length(G)]*diff(B))))
 }
 
 #' Covariation of two stochastic processes
