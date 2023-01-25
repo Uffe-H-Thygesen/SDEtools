@@ -85,6 +85,30 @@ stochint <- function(f,g,rule="l")
   return(data.frame(l=l,r=r,c=c)[,rule])
 }
 
+#' Discretized quadratic variation of a stochastic process 
+#'
+#' @name QuadraticVariation
+#' 
+#' @param X numeric vector containing the process
+#' @return A numeric vector, same length as X, giving the discretized quadratic variation as a function of time
+#' @examples
+#' ## Quadratic Variation of Brownian motion
+#' times <- seq(0,10,0.01)
+#' B <- rBM(times)
+#' plot(times,QuadraticVariation(B))
+#'
+#' ## Quadratic Variation of an Ito integral
+#' G <- cos(B)
+#' X <- itointegral(G,B)
+#' plot(times,QuadraticVariation(X))
+#' lines(times,itointegral(G^2,times))
+#' 
+#' @export
+QuadraticVariation <- function(X)
+{
+  return(c(0,cumsum(diff(X)^2)))
+}
+
 #' Ito integral of a stochastic process w.r.t. another
 #'
 #' @name itointegral
@@ -384,15 +408,22 @@ dLinSDE <- function(A,G,t,x0=NULL,u=NULL,S0=0*A)
     GG <- G %*% t(G)
 
     nx <- nrow(A)
+    nu <- ncol(G)
 
     eAt <- as.matrix(Matrix::expm(A*t))
 
-    I <- diag(rep(1,nx))
-    M <- A %x% I + I %x% A
-    P <- rbind(array(0,c(nx^2,2*nx^2)),cbind(diag(rep(1,nx^2)),M))
-    gs <- Matrix::expm(P*t) %*% c(as.numeric(GG),rep(0,nx^2))
-    St <-eAt %*% S0 %*% t(eAt) + matrix(gs[nx^2+(1:(nx^2))],nrow=nx)
+    Sinf <- try(lyap(A,GG),silent=TRUE)
 
+    if(class(Sinf)=="try-error")
+        {
+            I <- diag(rep(1,nx))
+            M <- A %x% I + I %x% A
+            P <- rbind(array(0,c(nx^2,2*nx^2)),cbind(diag(rep(1,nx^2)),M))
+            gs <- Matrix::expm(P*t) %*% c(as.numeric(GG),rep(0,nx^2))
+            St <-eAt %*% S0 %*% t(eAt) + matrix(gs[nx^2+(1:(nx^2))],nrow=nx)
+        }else
+            St <- Sinf - eAt %*% (Sinf - S0) %*% t(eAt)
+    
     if(is.null(x0)){
       return(list(eAt = eAt,St = St))
     }
@@ -401,19 +432,22 @@ dLinSDE <- function(A,G,t,x0=NULL,u=NULL,S0=0*A)
       return(list(EX=eAt %*% x0,St=St))
     }
 
-    if(length(u)==nx){
-      AA <- rbind(array(0,c(nx,2*nx)),cbind(I,A))
-      uEx <- Matrix::expm(AA*t) %*% c(u,x0)
+    ## Zero order hold
+    if(length(u)==nu){
+      AA <- rbind(cbind(A,G),array(0,c(nu,nu+nx)))
+      uEx <- Matrix::expm(AA*t) %*% c(x0,u)
       return(list(EX=uEx[nx+(1:nx)],St=St))
     }
 
     u = as.matrix(u)
 
-    if(all(dim(u)==c(nx,2))){
+    ## First order hold
+    if(all(dim(u)==c(nu,2))){
       O <- array(0,c(nx,nx))
-      AAA <- rbind(cbind(O,O,O),
-                   cbind(I,O,O),
-                   cbind(O,I,A))
+      AAA <- rbind(numeric(2*nu+nx),
+                   cbind(diag(nrow=nu),array(0,c(nu,nu+nx))),
+                   cbind(arrayu(0,c(nx,nu)),G,A))
+
       duuEx <- Matrix::expm(AAA*t) %*% c((u[,2]-u[,1])/t,u[,1],x0)
       return(list(EX=duuEx[2*nx+(1:nx)],St=St))
     }
@@ -425,7 +459,7 @@ dLinSDE <- function(A,G,t,x0=NULL,u=NULL,S0=0*A)
 #'
 #' @param A A quadratic matrix without eigenvalues on the imaginary axis
 #' @param Q A symmetric matix of same dimension as A
-#' @return X A symmatric matrix of same dimension as A
+#' @return X A symmetric matrix of same dimension as A
 #'
 #' @details
 #' If A is asymptotically stable, Q is positive semidefinite and the pair (A,Q) is controllable, then X will be positive definite. Several similar results exist.
@@ -446,3 +480,4 @@ lyap <- function(A,Q)
     X <- -solve(P,as.numeric(Q))
     return(matrix(X,nrow=nrow(A)))
 }
+
