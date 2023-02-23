@@ -1,0 +1,7 @@
+title: SDEtools
+url: ~
+template:
+  params:
+    bootswatch: flatly
+  bootstrap: 5
+
