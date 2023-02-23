@@ -13,7 +13,8 @@ Imports:
     deSolve, Matrix, MASS, RSpectra
 Suggests:
     testthat,
-    knitr
+    knitr,
+    rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 7.2.3
 URL: https://github.com/Uffe-H-Thygesen/SDEtools
