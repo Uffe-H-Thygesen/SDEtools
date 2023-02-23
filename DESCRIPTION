@@ -16,3 +16,5 @@ Suggests:
     knitr
 VignetteBuilder: knitr
 RoxygenNote: 7.2.3
+URL: https://github.com/Uffe-H-Thygesen/SDEtools
+BugReports: https://github.com/Uffe-H-Thygesen/SDEtools/issues
