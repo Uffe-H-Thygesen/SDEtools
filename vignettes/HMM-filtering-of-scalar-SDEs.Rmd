@@ -4,7 +4,7 @@ author: "Uffe Høgsbro Thygesen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{HMM filtering of SDEs}
+  %\VignetteIndexEntry{HMM filtering of scalar SDEs}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,10 +20,10 @@ dX_t = (1- X_t) ~dt + \gamma \sqrt{X_t} ~dB_t
 
 which is the Cox-Ingersoll-Ross model. Then, we simulate random measurements taken at times $0,dt,2~dt, \ldots, T$ so that $Y_i | X_{t_i}$ is Poisson distributed with mean $v `. X_{t_i}$. Then, we pretend that we don't know the states and re-estimate them from these measurements. 
 
-We first simulate states and measurements: 
+We first simulate states 
 
-```{r,fig.width=8}
-  require(SDEtools)
+```{r,fig.width=7}
+require(SDEtools)
 
   # Define model. Note abs to handle negative x.
   gamma <- 1
@@ -42,7 +42,7 @@ We first simulate states and measurements:
   nt <- length(tvec)
 
   ## Initial condition, chosen somewhat arbitrarily
-  x0 <- 4
+  x0 <- 0.1
 
   ## Enforce that the simulated state should be non-negative
   p <- function(x) abs(x)
@@ -51,45 +51,84 @@ We first simulate states and measurements:
   sim <- euler(f,g,tvec,x0,p=p)
   
   plot(sim$times,sim$X,type="l",xlab="Time",ylab='Abundance')
+```
 
-  ## Generate random measurements
+Next, we generate some random measurements: 
+
+```{r,fig.width=7}
+## Generate random measurements
   tsample <- 0.1
   vsample <- 1
 
   sampleIndeces <- round(seq(1,length(tvec),(tsample/dt)))
   tm = tvec[sampleIndeces];
-  ymean = vsample * sim$X[sampleIndeces];
+  xtrue <- sim$X[sampleIndeces]
+  ymean = vsample * xtrue
 
   # Generate random measurements
   ymeas <- rpois(length(tm),lambda=ymean)
 
+  plot(sim$times,sim$X,type="l",xlab="Time",ylab='Abundance')
   points(tm,ymeas/vsample,pch='o')
 ```
 
-We now run the filter. We first specify the likelihood function, and then call HMMfilterSDE.
+We now setup to run the filter. We first specify the likelihood function.
 
-```{r,fig.width=8,fig.height=6}
-
-  ## Data likelihood
+```{r,fig.width=7}
+## State likelihood
   dl <- function(x,y) dpois(y,lambda=vsample*x)
 
   ## Choose discretization of state space
   xi <- seq(0,3,0.025)^2                                # Cell Interfaces
   xc <- head(xi,-1) + 0.5*diff(xi)
-  
-  ## Specify prior c.d.f. of the initial state, here uniform. Note that it does not have to be normalized.
+```
+
+Let us first inspect the state likelihood on its own, i.e., without using the process equation.
+
+```{r,fig.width=7}
+ltab <- outer(xc,ymeas,dl)
+image(tm,xc,t(ltab),xlab="Time",ylab="State")
+```
+
+We plot the most likely state, given just the measurements, on top of the true states:
+
+```{r,fig.width=7}
+plot(tm,xtrue,type="l")
+points(tm,xc[apply(ltab,2,which.max)])
+```
+
+There is very little information in the individual observation, because the counts are so low. Therefore, there is a potential gain from estimating the state not just using the measurement taken at the same time, but also the neighbouring measurements. This is particularly so because the measurements are taken quite frequently: The sample interval is 0.1 time unit, while the mean relaxes over a time scale of 1.
+
+In the following, we aim to add the information from the process equation. We use the function HMMfilterSDE, which require a process model as well as a likelihood function. In addition, it needs a distribution of the initial state. We focus on real-time state estimation; i.e., we use only the current and past measurements in the estimation, not future measurements.
+
+```{r,fig.width=7}
+## Specify prior c.d.f. of the initial state, here uniform. Note that it does not have to be normalized.
   phi0 <- function(x)x
   ## Run the filter 
   filter <- HMMfilterSDE(u,D,xi,bc='r',phi0,tm,ymeas,dl)
 
   ## Show colour plot of posterior c.d.f.
   image(tm,xc,t(apply(filter$psi,1,cumsum)),ylim=c(0,4))
+```
 
-  ## Add true state at times of measurements
-  lines(tm,ymean/vsample)
+We can compare the true states with the estimated ones.
+
+```{r,fig.width=7}
+  ## Plot true state at times of measurements
+  plot(tm,ymean/vsample,type="l",xlab="t",ylab="x")
 
   ## Compute and plot posterior mean
   XestMean <- filter$psi %*% xc
-  points(tm,XestMean,pch="x")
+  points(tm,XestMean)
 ```
 
+Notice that the estimated states lag a bit behind the true ones, and that some of the fast fluctuations in the true states do not reflect in the estimated ones. These features are as expected. 
+
+We can compare the expectation and the variance in the posterior distribution:
+
+```{r,fig.width=7}
+XestVar <- filter$psi %*% xc^2 - XestMean^2
+plot(XestMean,XestVar)
+```
+
+Note that there seems to be a roughly linear relationship. This reflects both process noise and measurement noise: When the state is large, the process noise is increased, and the variance on the measurements is larger. 

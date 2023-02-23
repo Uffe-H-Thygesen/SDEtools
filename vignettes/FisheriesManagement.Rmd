@@ -4,7 +4,7 @@ author: "Uffe Høgsbro Thygesen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Brownian Motion}
+  %\VignetteIndexEntry{Fisheries Management - a Numerical Optimal Control Problem}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -34,7 +34,7 @@ where $\gamma = \frac 12 (1-\sigma^2 /2)$.
 
 ## Numerical analysis of the steady-state problem
 
-We aim to verify the analytical solution numerically. We first set up the model, writing it in advection-diffusion form
+We aim to verify the analytical solution numerically. We first set up the model, writing it in advection-diffusion form. We use $D=g^2/2$ as the diffusivity and $v=f-D'$ as the advective field. 
 
 
 ```{r}
@@ -48,7 +48,7 @@ g <- function(x) sigma*x
 dg <- function(x) sigma
 D <- function(x) 0.5*g(x)^2
 dD <- function(x) g(x)*dg(x)
-u <- function(x) f(x) - dD(x)
+v <- function(x) f(x) - dD(x)
 ```
 
 The following function gives the optimal control as a function of $x$ and $V'(x)$:
@@ -68,7 +68,7 @@ xc <- 0.5*(head(xi,-1)+tail(xi,-1))     # Center of grid cells
 We first define the generator without fishing:
 
 ```{r}
-G0 <- fvade(u,D,xi,'r')
+G0 <- fvade(v,D,xi,'r')
 ```
 
 and next the generator corresponding to fishing: 
@@ -76,6 +76,8 @@ and next the generator corresponding to fishing:
 ```{r}
 G1 <- fvade(function(x)-1,function(x)0,xi,'r')
 ```
+
+Note that this discretizes the operator $V\mapsto -V'$. 
 
 We are now almost ready to solve the steady-state problem using policy iteration. But first, to make the nummerics more robust, we make two changes: First, at the left cell, we assume that we cannot fish. This avoids the option of driving the fish to extinction and then fish like crazy on fish that aren't there. Next, we assume that there is a bound on the harvest, even if $V'(x)=0$. We do that by replacing $V'(x)$ with $\max(epsilon,V'(x))$ where $\epsilon$ is a "small" number.
 
@@ -103,19 +105,25 @@ We can now solve the steady-state problem using policy iteration:
 
 We plot the policy and the value function compared with the analytical results: 
 
-```{r}
+```{r,fig.width=7}
   plot(xc,sol$V,type="l",xlab="x",ylab=expression(V(x)))
   lines(xc,0.5*log(xc) - 0.5*log(xc[50]) + sol$V[50])
 ```
 
 Note the excellent agreement. Similarly, for the control:
 
-```{r}
+```{r,fig.width=7}
   plot(xc,sol$u,type="l",xlab="x",ylab=expression(mu(x)))
   lines(xc,xc^2,lty="dashed")
 ```
 
 Note that there is some discrepancy at the upper boundary, where the discretized problem fishes really hard to avoid the risk of hitting the boundary, which would be wasteful. 
+
+We finally plot the stationary distribution of the state under the time-invariant control. 
+
+```{r,fig.width=7}
+  plot(xc,sol$pi,type="l",xlab="x",ylab="p.d.f.")
+```
 
 ## The time-varying problem
 
@@ -170,14 +178,14 @@ for(i in length(tv):2)
 
 The following plot shows the value function at the various points in time. Notice that it quite quickly seems to enter a steady state where the value function is just shifted the same amount from each time step to the previous. This reflects that the problem effectively is in steady state here: The control horizon is long compared to the mixing time of the controlled process. The shift corresponds to $\gamma$, the pay-off rate in steady state. The red line is the analytical result from the steady-state problem.
 
-```{r}
+```{r,fig.width=7}
 matplot(xc,V,type="l",col=1,lty=1,xlab="x")
 lines(xc,0.5*log(xc)-0.5*log(xc[50])+V[50,1],lty="dashed",col="red")
 ```
 
 The following contour plot shows the optimal control as a function of time and state. Note that we fish hard when we are close to the terminal time, since this problem does not include a terminal reward for leaving fish in the system at the end of time.
 
-```{r}
+```{r,fig.width=7}
 contour(tv,xc,t(U),levels=seq(0,3,0.25)^2,xlab="t",ylab="x")
 ```
 
@@ -211,11 +219,11 @@ for(i in length(tv):2)
 
 We repeat the two previous plots. Note that the transients are slightly different due to the coarse time step, but that the steady state is the same.
 
-```{r}
+```{r,fig.width=7}
 matplot(xc,V,type="l",col=1,lty=1,xlab="x")
 lines(xc,0.5*log(xc)-0.5*log(xc[50])+V[50,1],lty="dashed",col="red")
 ```
 
-```{r}
+```{r,fig.width=7}
 contour(tv,xc,t(U),levels=seq(0,3,0.25)^2,xlab="t",ylab="x")
 ```

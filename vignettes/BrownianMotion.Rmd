@@ -1,5 +1,5 @@
 ---
-title: "Simulation of Brownian motion, and path properties"
+title: "Brownian motion"
 author: "Uffe Høgsbro Thygesen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -8,7 +8,82 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+## Simulation of Brownian motion
 
+Given a set of time points, it is straightforward to simulate Brownian motion restricted to those time points:
+
+```{r}
+require(SDEtools)
+
+tv <- c(0,1,2,4)
+B <- rBM(tv)
+plot(tv,B,type="l",xlab="t",ylab=expression(B[t]))
+```
+
+The simulation routine starts by finding the time increments. Then random Gaussian variables are simulated for each increment, using that the increments of Brownian motion are independent and have a variance which scales with time. Finally the increments are added to obtain the Brownian motion itself.
+
+This is coded compactly in the function rBM:
+
+```{r}
+print(rBM)
+```
+
+## Verifying the statistics of Brownian motion 
+
+Let us generate a large number of sample paths for the same time discretization and check the statistics.
+
+```{r}
+n <- 1000
+B <- replicate(n,rBM(tv))
+
+cov(t(B))
+```
+Compare this with the analytical result:
+
+```{r}
+outer(tv,tv,Vectorize(function(x,y)min(x,y)))
+```
+
+## Scaling properties of Brownian motion 
+
+Brownian motion scales with the square root of time:
+
+```{r,fig.width=6}
+tv <- seq(0,1,1e-5)
+B <- replicate(3,rBM(tv))
+
+par(mfrow=c(1,2))
+matplot(tv,B,type="l",lty=1,ylim=c(-2,2))
+lines(tv,sqrt(tv),lty="dashed")
+lines(tv,-sqrt(tv),lty="dashed")
+matplot(tv,B,type="l",lty=1,ylim=c(-0.2,0.2),xlim=c(0,0.01))
+lines(tv,sqrt(tv),lty="dashed")
+lines(tv,-sqrt(tv),lty="dashed")
+```
+
+## The Brownian bridge
+
+Given two end points, we can simulate a Brownian bridge that connects them. That is, we simulate a Brownain motion conditionally on the end points.
+
+```{r}
+  tv <- 10:20
+  n <- 1e4
+  B0T <- c(15,5)
+  sigma <- 2
+  BB <- replicate(n,rBrownianBridge(tv,sigma=sigma,B0T=B0T))
+  
+  matplot(tv,BB[,1:10],type="l",lty=1)
+```
+
+We can verify the statistics by plotting the mean and variance of the bridge:
+
+```{r,fig.width=6}
+par(mfrow=c(1,2))
+plot(tv,apply(BB,1,mean),xlab="t",ylab="mean")
+lines(range(tv),B0T)
+plot(tv,apply(BB,1,var),xlab="t",ylab="var")
+lines(tv,sigma^2*(tv-tv[1])*(1-(tv-tv[1])/diff(range(tv))))
+```
 
 ## Simulation of the maximum of Brownian motion 
 

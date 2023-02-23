@@ -45,6 +45,33 @@ rvBM <- function(times,n=1,sigma=rep(1,n),B0=rep(0,n),u=rep(0,n))
   return(sapply(1:n,function(i)rBM(times,sigma=sigma[i],B0=B0[i],u=u[i])))
 }
 
+#' Simulate a Brownian bridge
+#'
+#' @name rBrownianBridge
+#' 
+#' @param times numeric vector of time points where the Brownian motion should be simulated
+#' @param sigma scalar; the noise level in the Brownian motion.
+#' @param B0T initial and terminal condition; the fixed value of the Brownian motion at the first and last time points
+#' @return a numeric vector, length(times), containing a sample path
+#' @examples
+#' times <- 10:20
+#' BB <- rBrownianBridge(times,c(10,-10),2)
+#' plot(times,BB,type="b")
+#' 
+#' @export
+rBrownianBridge <- function(times,B0T=c(0,0),sigma=1)
+{
+    B <- rBM(times,sigma=sigma)
+    n <- length(times)
+    t1 <- times[1]
+    t2 <- times[n]
+
+    slope <- (B0T[2] - B0T[1] - B[n] + B[1])/(times[n]-times[1])
+
+    BB <- B + B0T[1] - B[1] + slope * (times - times[1])
+    return(BB)
+}
+
 #' Integrate one sample path of a stochastic process w.r.t. another,
 #' returning the Ito integral, the Stratonovich integral, or the
 #' "right hand rule".
@@ -412,18 +439,19 @@ dLinSDE <- function(A,G,t,x0=NULL,u=NULL,S0=0*A)
 
     eAt <- as.matrix(Matrix::expm(A*t))
 
-    Sinf <- try(lyap(A,GG),silent=TRUE)
-
-    if(class(Sinf)=="try-error")
-        {
-            I <- diag(rep(1,nx))
+    St <- tryCatch(
+        expr = {
+            Sinf <- lyap(A,GG)
+            St <- Sinf - eAt %*% (Sinf - S0) %*% t(eAt)            
+        },
+        error = function(e){
+            I <- Matrix::Diagonal(n=nx,x=1)
             M <- A %x% I + I %x% A
             P <- rbind(array(0,c(nx^2,2*nx^2)),cbind(diag(rep(1,nx^2)),M))
             gs <- Matrix::expm(P*t) %*% c(as.numeric(GG),rep(0,nx^2))
             St <-eAt %*% S0 %*% t(eAt) + matrix(gs[nx^2+(1:(nx^2))],nrow=nx)
-        }else
-            St <- Sinf - eAt %*% (Sinf - S0) %*% t(eAt)
-    
+        })
+
     if(is.null(x0)){
       return(list(eAt = eAt,St = St))
     }
