@@ -88,7 +88,7 @@ We can now compute the stationary distribution. At first, this gives just a vect
 ```{r}
 pi <- unpack.field(StationaryDistribution(G),length(xc),length(vc))
 
-image(xc,vc,t(pi))
+image(xc,vc,t(prob2pdf(pi,xgrid,vgrid)))
 ```
 
 To compare this with the simulation, it is better to plot the time series as points in the phase plane: 
