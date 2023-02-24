@@ -14,6 +14,29 @@ knitr::opts_chunk$set(
 )
 ```
 
+This package provides functionality for stochastic differential equations in terms of: 
+
+* Simulating sample paths
+* Computing transition probabilities numerically in 1 and 2 dimensions
+* Estimating states (and parameters) for 1D or 2D equations, using Hidden Markov Model methods.
+* Solve optimal control problems numerically, using Markov Decision Process machinery.
+
+### Installation
+
+To install the package, open R and run 
+
+```r
+devtools::install_github("Uffe-H-Thygesen/SDEtools")
+```
+
+Alternatively, clone the github repo to your local machine and "make install" it, if you are familiar with make and makefiles. 
+
+Then load the package with 
+
 ```{r setup}
 library(SDEtools)
 ```
+
+## Tour of features
+
+Please see the vignettes which showcase functionality. 
