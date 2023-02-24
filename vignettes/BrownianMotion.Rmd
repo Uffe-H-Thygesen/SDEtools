@@ -1,5 +1,5 @@
 ---
-title: "Brownian motion"
+title: "Brownian Motion"
 author: "Uffe Høgsbro Thygesen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
