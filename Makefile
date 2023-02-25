@@ -8,7 +8,7 @@ all: docs build install clean
 full: deps docs vignettes check install clean
 
 deps:
-	R -e 'for(pkg in c("Matrix","fields","deSolve","devtools")) if (!require(pkg,character.only=TRUE)) install.packages(pkg, repos="http://cran.rstudio.com")'
+	R -e 'for(pkg in c("Matrix","fields","deSolve","devtools","stats")) if (!require(pkg,character.only=TRUE)) install.packages(pkg, repos="http://cran.rstudio.com")'
 
 docs:
 	R -e 'library(devtools); document()'
