@@ -62,6 +62,9 @@
       <a href="../articles/HMM-filtering-of-scalar-SDEs.html">HMM filtering of scalar SDEs</a>
     </li>
     <li>
+      <a href="../articles/ItoIntegrals.html">Itô Integrals and the Euler-Maruyama method</a>
+    </li>
+    <li>
       <a href="../articles/NoisyOscillator.html">The noisy harmonic oscillator</a>
     </li>
     <li>
@@ -100,7 +103,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-02-24</h4>
+            <h4 data-toc-skip class="date">2023-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/BrownianMotion.Rmd" class="external-link"><code>vignettes/BrownianMotion.Rmd</code></a></small>
       <div class="hidden name"><code>BrownianMotion.Rmd</code></div>
@@ -120,14 +123,14 @@ Brownian motion restricted to those time points:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">4</span><span class="op">)</span></span>
 <span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rBM.html">rBM</a></span><span class="op">(</span><span class="va">tv</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">B</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">B</span><span class="op">[</span><span class="va">t</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">B</span>,type<span class="op">=</span><span class="st">"b"</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">B</span><span class="op">[</span><span class="va">t</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="BrownianMotion_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 <p>The simulation routine starts by finding the time increments. Then
 random Gaussian variables are simulated for each increment, using that
 the increments of Brownian motion are independent and have a variance
 which scales with time. Finally the increments are added to obtain the
 Brownian motion itself.</p>
-<p>This is coded compactly in the function rBM:</p>
+<p>This is coded in the function rBM:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">rBM</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## function (times, sigma = 1, B0 = 0, u = 0) </span></span>
@@ -137,7 +140,7 @@ Brownian motion itself.</p>
 <span><span class="co">##     B &lt;- B0 + cumsum(dB)</span></span>
 <span><span class="co">##     return(B)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x55d3dcad9c28&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x55cf7168be20&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:SDEtools&gt;</span></span></code></pre>
 </div>
 <div class="section level2">
@@ -152,9 +155,9 @@ discretization and check the statistics.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">B</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##      [,1]      [,2]      [,3]      [,4]</span></span>
 <span><span class="co">## [1,]    0 0.0000000 0.0000000 0.0000000</span></span>
-<span><span class="co">## [2,]    0 1.0087211 0.9912425 0.9645349</span></span>
-<span><span class="co">## [3,]    0 0.9912425 1.9702379 1.9149517</span></span>
-<span><span class="co">## [4,]    0 0.9645349 1.9149517 3.8562291</span></span></code></pre>
+<span><span class="co">## [2,]    0 0.9656538 0.9500579 0.9433742</span></span>
+<span><span class="co">## [3,]    0 0.9500579 1.9288427 1.9087356</span></span>
+<span><span class="co">## [4,]    0 0.9433742 1.9087356 3.7789314</span></span></code></pre>
 <p>Compare this with the analytical result:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">tv</span>,<span class="fu"><a href="https://rdrr.io/r/base/Vectorize.html" class="external-link">Vectorize</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>

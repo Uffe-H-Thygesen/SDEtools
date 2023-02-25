@@ -17,12 +17,12 @@ require(SDEtools)
 
 tv <- c(0,1,2,4)
 B <- rBM(tv)
-plot(tv,B,type="l",xlab="t",ylab=expression(B[t]))
+plot(tv,B,type="b",xlab="t",ylab=expression(B[t]))
 ```
 
 The simulation routine starts by finding the time increments. Then random Gaussian variables are simulated for each increment, using that the increments of Brownian motion are independent and have a variance which scales with time. Finally the increments are added to obtain the Brownian motion itself.
 
-This is coded compactly in the function rBM:
+This is coded in the function rBM:
 
 ```{r}
 print(rBM)

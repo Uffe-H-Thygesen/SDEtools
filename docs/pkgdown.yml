@@ -5,9 +5,10 @@ articles:
   BrownianMotion: BrownianMotion.html
   FisheriesManagement: FisheriesManagement.html
   HMM-filtering-of-scalar-SDEs: HMM-filtering-of-scalar-SDEs.html
+  ItoIntegrals: ItoIntegrals.html
   NoisyOscillator: NoisyOscillator.html
   NumericalKolmogorov: NumericalKolmogorov.html
   SDEtools: SDEtools.html
   vanderPol: vanderPol.html
-last_built: 2023-02-24T14:39Z
+last_built: 2023-02-25T10:26Z
 

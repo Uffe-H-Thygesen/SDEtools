@@ -157,18 +157,18 @@ itointegral <- function(G,B)
   return(c(0,cumsum(G[-length(G)]*diff(B))))
 }
 
-#' Covariation of two stochastic processes
+#' Cross-variation of two stochastic processes
 #'
-#' @name covariation
+#' @name CrossVariation
 #'
 #' @param X numeric vector containing the one process
 #' @param Y numeric vector, same length as X, containing the other process
-#' @return A numeric vector, same length as X, giving the covaration as function of time
+#' @return A numeric vector, same length as X, giving the quadratic cross-varation as function of time
 #' @examples
 #' ## Quadratic variation of Brownian motion
 #' times <- seq(0,10,0.01)
 #' B <- rBM(times)
-#' plot(times,covariation(B,B),type="l")
+#' plot(times,CrossVariation(B,B),type="l")
 #' abline(0,1,lty="dashed")
 #'
 #' ## Verifying Ito's formula
@@ -177,11 +177,11 @@ itointegral <- function(G,B)
 #' Y <- h(X)
 #' plot(times,Y,type="l")
 #'
-#' Yi <- h(X[1]) + stochint(dhdx(X),X) + 0.5*stochint(dh2dx2(X),covariation(X,X))
+#' Yi <- h(X[1]) + itointegral(dhdx(X),X) + 0.5*itointegral(dh2dx2(X),CrossVariation(X,X))
 #' lines(times,Yi,col="blue")
 #' 
 #' @export
-covariation <- function(X,Y)
+CrossVariation <- function(X,Y)
 {
   return(c(0,cumsum(diff(X)*diff(Y))))
 }
