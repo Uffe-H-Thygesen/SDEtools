@@ -17,5 +17,6 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 7.2.3
-URL: https://github.com/Uffe-H-Thygesen/SDEtools
+URL: https://github.com/Uffe-H-Thygesen/SDEtools,
+    https://uffe-h-thygesen.github.io/SDEtools/
 BugReports: https://github.com/Uffe-H-Thygesen/SDEtools/issues
