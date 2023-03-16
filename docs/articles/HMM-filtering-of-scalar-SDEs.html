@@ -78,14 +78,12 @@
 
 
 
-
-<div class="row">
+<script src="HMM-filtering-of-scalar-SDEs_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>HMM filtering of scalar SDEs</h1>
-                        <h4 data-toc-skip class="author">Uffe Høgsbro
-Thygesen</h4>
+                        <h4 data-toc-skip class="author">Uffe Høgsbro Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-03-08</h4>
+            <h4 data-toc-skip class="date">2023-03-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/HMM-filtering-of-scalar-SDEs.Rmd" class="external-link"><code>vignettes/HMM-filtering-of-scalar-SDEs.Rmd</code></a></small>
       <div class="d-none name"><code>HMM-filtering-of-scalar-SDEs.Rmd</code></div>
@@ -96,17 +94,16 @@ Thygesen</h4>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>We simulate a sample path from the Ito stochastic differential
-equation governing the abundance of a bacterial population</p>
+<p>We simulate a sample path from the Ito stochastic differential equation governing the abundance of a bacterial population</p>
 <p><span class="math display">\[
 dX_t = (1- X_t) ~dt + \gamma \sqrt{X_t} ~dB_t
 \]</span></p>
-<p>which is the Cox-Ingersoll-Ross model. Then, we simulate random
-measurements taken at times <span class="math inline">\(0,dt,2~dt,
-\ldots, T\)</span> so that <span class="math inline">\(Y_i |
-X_{t_i}\)</span> is Poisson distributed with mean <span class="math inline">\(v `. X_{t_i}\)</span>. Then, we pretend that we
-don’t know the states and re-estimate them from these measurements.</p>
-<p>We first simulate states</p>
+<p>which is the Cox-Ingersoll-Ross model. Then, we simulate random measurements taken at times <span class="math inline">\(0,dt,2~dt, \ldots, T\)</span> so that <span class="math inline">\(Y_i | X_{t_i}\)</span> is Poisson distributed with mean <span class="math inline">\(v `. X_{t_i}\)</span>. Then, we pretend that we don’t know the states and re-estimate them from these measurements.</p>
+</div>
+<div class="section level2">
+<h2 id="simulation-of-states">Simulation of states<a class="anchor" aria-label="anchor" href="#simulation-of-states"></a>
+</h2>
+<p>We define the model and simulate the states using the Euler-Marruyama method.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Uffe-H-Thygesen/SDEtools" class="external-link">SDEtools</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: SDEtools</span></span></code></pre>
@@ -115,10 +112,6 @@ don’t know the states and re-estimate them from these measurements.</p>
 <span>  <span class="va">gamma</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span>  <span class="va">f</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">x</span><span class="op">)</span></span>
 <span>  <span class="va">g</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">gamma</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>;</span>
-<span></span>
-<span>  <span class="co"># Advection-diffusion form</span></span>
-<span>  <span class="va">D</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">0.5</span><span class="op">*</span><span class="va">gamma</span><span class="op">^</span><span class="fl">2</span><span class="op">*</span><span class="va">x</span>;</span>
-<span>  <span class="va">u</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">f</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">*</span><span class="va">gamma</span><span class="op">^</span><span class="fl">2</span>;</span>
 <span></span>
 <span>  <span class="co">## Time vector for simulation</span></span>
 <span>  <span class="va">dt</span> <span class="op">=</span> <span class="fl">0.001</span>;</span>
@@ -138,7 +131,11 @@ don’t know the states and re-estimate them from these measurements.</p>
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">times</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"Time"</span>,ylab<span class="op">=</span><span class="st">'Abundance'</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-1-1.png" width="672"></p>
-<p>Next, we generate some random measurements:</p>
+</div>
+<div class="section level2">
+<h2 id="simulation-of-measurements">Simulation of measurements<a class="anchor" aria-label="anchor" href="#simulation-of-measurements"></a>
+</h2>
+<p>Next, we generate some random measurements. Measurements are taken at regular points in time; not at every time point where are state values is simulated. We use a Poisson distribution for the measurements. This correspond to a situation where we count the number of individuals in a small sample from the environment.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Generate random measurements</span></span>
 <span>  <span class="va">tsample</span> <span class="op">&lt;-</span> <span class="fl">0.1</span></span>
@@ -155,41 +152,40 @@ don’t know the states and re-estimate them from these measurements.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">times</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"Time"</span>,ylab<span class="op">=</span><span class="st">'Abundance'</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">ymeas</span><span class="op">/</span><span class="va">vsample</span>,pch<span class="op">=</span><span class="st">'o'</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-2-1.png" width="672"></p>
-<p>We now setup to run the filter. We first specify the likelihood
-function.</p>
+</div>
+<div class="section level2">
+<h2 id="specification-of-the-likelihood-function">Specification of the likelihood function<a class="anchor" aria-label="anchor" href="#specification-of-the-likelihood-function"></a>
+</h2>
+<p>To run the filter, we must first specify the likelihood function. We first define this for a general measurement and general state:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## State likelihood</span></span>
-<span>  <span class="va">dl</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">dpois</a></span><span class="op">(</span><span class="va">y</span>,lambda<span class="op">=</span><span class="va">vsample</span><span class="op">*</span><span class="va">x</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="co">## Choose discretization of state space</span></span>
-<span>  <span class="va">xi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">3</span>,<span class="fl">0.025</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>                                <span class="co"># Cell Interfaces</span></span>
-<span>  <span class="va">xc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">xi</span>,<span class="op">-</span><span class="fl">1</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span></span></code></pre></div>
-<p>Let us first inspect the state likelihood on its own, i.e., without
-using the process equation.</p>
+<code class="sourceCode R"><span>  <span class="co">## State likelihood   </span></span>
+<span>  <span class="va">dl</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">dpois</a></span><span class="op">(</span><span class="va">y</span>,lambda<span class="op">=</span><span class="va">vsample</span><span class="op">*</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
+<p>We can now inspect the state likelihood on its own, i.e., without using the process equation. We choose a discretization of state space. We choose to use a grid that has higher resolution near 0, and tabulate the likelihood function.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ltab</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">ymeas</span>,<span class="va">dl</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xc</span>,<span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">ltab</span><span class="op">)</span>,xlab<span class="op">=</span><span class="st">"Time"</span>,ylab<span class="op">=</span><span class="st">"State"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span>  <span class="co">## Choose discretization of state space</span></span>
+<span>  <span class="va">xi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">3</span>,<span class="fl">0.025</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>                                <span class="co"># Cell Interfaces</span></span>
+<span>  <span class="va">xc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cell.centers.html">cell.centers</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">ltab</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">ymeas</span>,<span class="va">dl</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xc</span>,<span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">ltab</span><span class="op">)</span>,xlab<span class="op">=</span><span class="st">"Time"</span>,ylab<span class="op">=</span><span class="st">"State"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
-<p>We plot the most likely state, given just the measurements, on top of
-the true states:</p>
+<p>We plot the most likely state, given just the measurements, on top of the true states:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xtrue</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xc</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">ltab</span>,<span class="fl">2</span>,<span class="va">which.max</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
-<p>There is very little information in the individual observation,
-because the counts are so low. Therefore, there is a potential gain from
-estimating the state not just using the measurement taken at the same
-time, but also the neighbouring measurements. This is particularly so
-because the measurements are taken quite frequently: The sample interval
-is 0.1 time unit, while the mean relaxes over a time scale of 1.</p>
-<p>In the following, we aim to add the information from the process
-equation. We use the function HMMfilterSDE, which require a process
-model as well as a likelihood function. In addition, it needs a
-distribution of the initial state. We focus on real-time state
-estimation; i.e., we use only the current and past measurements in the
-estimation, not future measurements.</p>
+<p>There is very little information in the individual observation, because the counts are so low. Therefore, there is a potential gain from estimating the state not just using the measurement taken at the same time, but also the neighbouring measurements. This is particularly so because the measurements are taken quite frequently: The sample interval is 0.1 time unit, while the mean relaxes over a time scale of 1.</p>
+</div>
+<div class="section level2">
+<h2 id="running-the-filter">Running the filter<a class="anchor" aria-label="anchor" href="#running-the-filter"></a>
+</h2>
+<p>We now use the filter to add the information from the process equation. We use the function HMMfilterSDE, which require a process model as well as a likelihood function. In addition, it needs a distribution of the initial state. We focus on real-time state estimation; i.e., we use only the current and past measurements in the estimation, not future measurements.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Specify prior c.d.f. of the initial state, here uniform. Note that it does not have to be normalized.</span></span>
+<code class="sourceCode R"><span>  <span class="co"># Advection-diffusion form of the Kolmogorov equations</span></span>
+<span>  <span class="va">D</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">0.5</span><span class="op">*</span><span class="va">gamma</span><span class="op">^</span><span class="fl">2</span><span class="op">*</span><span class="va">x</span>;</span>
+<span>  <span class="va">u</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">f</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">*</span><span class="va">gamma</span><span class="op">^</span><span class="fl">2</span>;</span>
+<span></span>
+<span>  <span class="co">## Specify prior c.d.f. of the initial state, here uniform. Note that it does not have to be normalized.</span></span>
 <span>  <span class="va">phi0</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="va">x</span></span>
 <span>  <span class="co">## Run the filter </span></span>
 <span>  <span class="va">filter</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HMMfilterSDE.html">HMMfilterSDE</a></span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,bc<span class="op">=</span><span class="st">'r'</span>,<span class="va">phi0</span>,<span class="va">tm</span>,<span class="va">ymeas</span>,<span class="va">dl</span><span class="op">)</span></span></code></pre></div>
@@ -198,7 +194,11 @@ estimation, not future measurements.</p>
 <code class="sourceCode R"><span>  <span class="co">## Show colour plot of posterior c.d.f.</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xc</span>,<span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">filter</span><span class="op">$</span><span class="va">psi</span>,<span class="fl">1</span>,<span class="va">cumsum</span><span class="op">)</span><span class="op">)</span>,ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
-<p>We can compare the true states with the estimated ones.</p>
+</div>
+<div class="section level2">
+<h2 id="filtering-results">Filtering results<a class="anchor" aria-label="anchor" href="#filtering-results"></a>
+</h2>
+<p>We compare the true states with the estimated ones:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="co">## Plot true state at times of measurements</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">ymean</span><span class="op">/</span><span class="va">vsample</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"x"</span><span class="op">)</span></span>
@@ -207,19 +207,22 @@ estimation, not future measurements.</p>
 <span>  <span class="va">XestMean</span> <span class="op">&lt;-</span> <span class="va">filter</span><span class="op">$</span><span class="va">psi</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">xc</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XestMean</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
-<p>Notice that the estimated states lag a bit behind the true ones, and
-that some of the fast fluctuations in the true states do not reflect in
-the estimated ones. These features are as expected.</p>
-<p>We can compare the expectation and the variance in the posterior
-distribution:</p>
+<p>Notice that the estimated states lag a bit behind the true ones, and that some of the fast fluctuations in the true states do not reflect in the estimated ones. These features are as expected.</p>
+<p>We can compare the expectation and the variance in the posterior distribution:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">XestVar</span> <span class="op">&lt;-</span> <span class="va">filter</span><span class="op">$</span><span class="va">psi</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">xc</span><span class="op">^</span><span class="fl">2</span> <span class="op">-</span> <span class="va">XestMean</span><span class="op">^</span><span class="fl">2</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">XestMean</span>,<span class="va">XestVar</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XestVar</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
-<p>Note that there seems to be a roughly linear relationship. This
-reflects both process noise and measurement noise: When the state is
-large, the process noise is increased, and the variance on the
-measurements is larger.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">XestMean</span>,<span class="va">XestVar</span><span class="op">)</span></span></code></pre></div>
+<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
+<p>Note that there seems to be a roughly linear relationship (save the first couple of data points, which reflect transients from the initial condition). This linear relationship reflects both process noise and measurement noise: When the state is large, the process noise is increased, and the variance on the measurements is larger.</p>
+</div>
+<div class="section level2">
+<h2 id="perspectives">Perspectives<a class="anchor" aria-label="anchor" href="#perspectives"></a>
+</h2>
+<p>The function HMMfilterSDE can also gived “smoothed” states, i.e., estimates that are based on all measurements, both past and future. You can compare the performance of the estimates we have shown here, with these smoothed estimates.</p>
+<p>You could also estimate the states between the measurements, for example by having a state likelihood function which is constant to 1 whenever no measurement is taken. Then, you could investigate how the posterior variance evolves between times of measurements.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

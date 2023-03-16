@@ -78,14 +78,12 @@
 
 
 
-
-<div class="row">
+<script src="BrownianMotion_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Brownian Motion</h1>
-                        <h4 data-toc-skip class="author">Uffe Høgsbro
-Thygesen</h4>
+                        <h4 data-toc-skip class="author">Uffe Høgsbro Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-03-08</h4>
+            <h4 data-toc-skip class="date">2023-03-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/BrownianMotion.Rmd" class="external-link"><code>vignettes/BrownianMotion.Rmd</code></a></small>
       <div class="d-none name"><code>BrownianMotion.Rmd</code></div>
@@ -96,8 +94,7 @@ Thygesen</h4>
 <div class="section level2">
 <h2 id="simulation-of-brownian-motion">Simulation of Brownian motion<a class="anchor" aria-label="anchor" href="#simulation-of-brownian-motion"></a>
 </h2>
-<p>Given a set of time points, it is straightforward to simulate
-Brownian motion restricted to those time points:</p>
+<p>Given a set of time points, it is straightforward to simulate Brownian motion restricted to those time points:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Uffe-H-Thygesen/SDEtools" class="external-link">SDEtools</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: SDEtools</span></span></code></pre>
@@ -106,11 +103,7 @@ Brownian motion restricted to those time points:</p>
 <span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rBM.html">rBM</a></span><span class="op">(</span><span class="va">tv</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">B</span>,type<span class="op">=</span><span class="st">"b"</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">B</span><span class="op">[</span><span class="va">t</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="BrownianMotion_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
-<p>The simulation routine starts by finding the time increments. Then
-random Gaussian variables are simulated for each increment, using that
-the increments of Brownian motion are independent and have a variance
-which scales with time. Finally the increments are added to obtain the
-Brownian motion itself.</p>
+<p>The simulation routine starts by finding the time increments. Then random Gaussian variables are simulated for each increment, using that the increments of Brownian motion are independent and have a variance which scales with time. Finally the increments are added to obtain the Brownian motion itself.</p>
 <p>This is coded in the function rBM:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">rBM</span><span class="op">)</span></span></code></pre></div>
@@ -121,24 +114,23 @@ Brownian motion itself.</p>
 <span><span class="co">##     B &lt;- B0 + cumsum(dB)</span></span>
 <span><span class="co">##     return(B)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x561c5d22c530&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x55ef6a7f5668&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:SDEtools&gt;</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="verifying-the-statistics-of-brownian-motion">Verifying the statistics of Brownian motion<a class="anchor" aria-label="anchor" href="#verifying-the-statistics-of-brownian-motion"></a>
 </h2>
-<p>Let us generate a large number of sample paths for the same time
-discretization and check the statistics.</p>
+<p>Let us generate a large number of sample paths for the same time discretization and check the statistics.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
 <span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="va">n</span>,<span class="fu"><a href="../reference/rBM.html">rBM</a></span><span class="op">(</span><span class="va">tv</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">B</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##      [,1]     [,2]     [,3]     [,4]</span></span>
-<span><span class="co">## [1,]    0 0.000000 0.000000 0.000000</span></span>
-<span><span class="co">## [2,]    0 1.038959 1.074233 1.030689</span></span>
-<span><span class="co">## [3,]    0 1.074233 2.038491 1.998083</span></span>
-<span><span class="co">## [4,]    0 1.030689 1.998083 4.043479</span></span></code></pre>
+<pre><code><span><span class="co">##      [,1]      [,2]     [,3]      [,4]</span></span>
+<span><span class="co">## [1,]    0 0.0000000 0.000000 0.0000000</span></span>
+<span><span class="co">## [2,]    0 0.9938048 0.947972 0.9669428</span></span>
+<span><span class="co">## [3,]    0 0.9479720 1.871010 1.8274389</span></span>
+<span><span class="co">## [4,]    0 0.9669428 1.827439 3.8345452</span></span></code></pre>
 <p>Compare this with the analytical result:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">tv</span>,<span class="fu"><a href="https://rdrr.io/r/base/Vectorize.html" class="external-link">Vectorize</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -168,9 +160,7 @@ discretization and check the statistics.</p>
 <div class="section level2">
 <h2 id="the-brownian-bridge">The Brownian bridge<a class="anchor" aria-label="anchor" href="#the-brownian-bridge"></a>
 </h2>
-<p>Given two end points, we can simulate a Brownian bridge that connects
-them. That is, we simulate a Brownain motion conditionally on the end
-points.</p>
+<p>Given two end points, we can simulate a Brownian bridge that connects them. That is, we simulate a Brownain motion conditionally on the end points.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">tv</span> <span class="op">&lt;-</span> <span class="fl">10</span><span class="op">:</span><span class="fl">20</span></span>
 <span>  <span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1e4</span></span>
@@ -180,8 +170,7 @@ points.</p>
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/matplot.html" class="external-link">matplot</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">BB</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>,type<span class="op">=</span><span class="st">"l"</span>,lty<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="BrownianMotion_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
-<p>We can verify the statistics by plotting the mean and variance of the
-bridge:</p>
+<p>We can verify the statistics by plotting the mean and variance of the bridge:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tv</span>,<span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">BB</span>,<span class="fl">1</span>,<span class="va">mean</span><span class="op">)</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"mean"</span><span class="op">)</span></span>
@@ -193,11 +182,10 @@ bridge:</p>
 <div class="section level2">
 <h2 id="simulation-of-the-maximum-of-brownian-motion">Simulation of the maximum of Brownian motion<a class="anchor" aria-label="anchor" href="#simulation-of-the-maximum-of-brownian-motion"></a>
 </h2>
-<p>We study the maximum of the Brownian motion, as well as its maximum
-absolute value.</p>
+<p>We study the maximum of the Brownian motion, as well as its maximum absolute value.</p>
 <p>For the maximum we have the analytical result:</p>
 <p><span class="math display">\[
-\mathbf{P}(S_t \geq x) = 2\mathbf{P}( B_t \geq x)
+\mathbf{P}(S_t \geq x) = 2\mathbf{P}( B_t \geq x) 
 \]</span></p>
 <p>where</p>
 <p><span class="math display">\[
@@ -205,21 +193,13 @@ S_t= \max\{ B_s : 0\leq s \leq t \}
 \]</span></p>
 <p>For the max-abs, we have the bound</p>
 <p><span class="math display">\[
-\mathbf{P}(\bar S_t \geq x) \leq 4\mathbf{P}( B_t \geq x)
+\mathbf{P}(\bar S_t \geq x) \leq 4\mathbf{P}( B_t \geq x) 
 \]</span></p>
 <p>where</p>
 <p><span class="math display">\[
 \bar S_t= \max\{ |B_s| : 0\leq s \leq t \}
 \]</span></p>
-<p>The following code simulates a number of sample paths of Brownian
-motion <span class="math inline">\(B_t\)</span> over a time interval
-<span class="math inline">\(t=0,\ldots,Nt\)</span>. For each sample path
-we compute the maximum as well as the maximum absolute value. We plot
-the the empirical statistics of the maximum, and the max-abs, against
-analytical approximations. The statistics are the histogram, which
-should be compared with the probability density function (pdf), and the
-complementary cumulated distribution function (ccdf), also referred to
-as the survival function.</p>
+<p>The following code simulates a number of sample paths of Brownian motion <span class="math inline">\(B_t\)</span> over a time interval <span class="math inline">\(t=0,\ldots,Nt\)</span>. For each sample path we compute the maximum as well as the maximum absolute value. We plot the the empirical statistics of the maximum, and the max-abs, against analytical approximations. The statistics are the histogram, which should be compared with the probability density function (pdf), and the complementary cumulated distribution function (ccdf), also referred to as the survival function.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Uffe-H-Thygesen/SDEtools" class="external-link">SDEtools</a></span><span class="op">)</span></span>
 <span></span>
@@ -247,25 +227,16 @@ as the survival function.</p>
 <span>    main<span class="op">=</span><span class="st">"Ccdf of max(abs(BM)"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">4</span><span class="op">*</span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">pnorm</a></span><span class="op">(</span><span class="va">x</span>,sd<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">Nt</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,from<span class="op">=</span><span class="fl">0</span>,to<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">maxB</span><span class="op">)</span>,add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>We first try the comparison using 1000 sample paths (which is
-sufficient) and over 1000 time steps:</p>
+<p>We first try the comparison using 1000 sample paths (which is sufficient) and over 1000 time steps:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">hist.maxBM.compare.analytical.Monte.Carlo</span><span class="op">(</span>Nt<span class="op">=</span><span class="fl">1000</span>,Np<span class="op">=</span><span class="fl">1000</span><span class="op">)</span></span></code></pre></div>
 <p><img src="BrownianMotion_files/figure-html/unnamed-chunk-9-1.png" width="700"><img src="BrownianMotion_files/figure-html/unnamed-chunk-9-2.png" width="700"><img src="BrownianMotion_files/figure-html/unnamed-chunk-9-3.png" width="700"></p>
-<p>We see that there is excellent agreement between the maximum and the
-theoretical prediction. As for the max-abs, we see that there is good
-agreement in the tail, i.e. for high values of <span class="math inline">\(x\)</span>, but poor agreement for low values of
-<span class="math inline">\(x\)</span>. The reason for this disagreement
-is the bound on <span class="math inline">\(\mathbf{P}(\bar S_t \geq
-x)\)</span> is obtained by ignoring the probability that the maximum
-exceeds <span class="math inline">\(x\)</span> and at the same time the
-minimum exceeds <span class="math inline">\(-x\)</span>. When <span class="math inline">\(x\)</span> is small, this error becomes large.</p>
+<p>We see that there is excellent agreement between the maximum and the theoretical prediction. As for the max-abs, we see that there is good agreement in the tail, i.e. for high values of <span class="math inline">\(x\)</span>, but poor agreement for low values of <span class="math inline">\(x\)</span>. The reason for this disagreement is the bound on <span class="math inline">\(\mathbf{P}(\bar S_t \geq x)\)</span> is obtained by ignoring the probability that the maximum exceeds <span class="math inline">\(x\)</span> and at the same time the minimum exceeds <span class="math inline">\(-x\)</span>. When <span class="math inline">\(x\)</span> is small, this error becomes large.</p>
 <p>The next graph repeats this for a small number of time steps, <span class="math inline">\(Nt=10\)</span>.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">hist.maxBM.compare.analytical.Monte.Carlo</span><span class="op">(</span>Nt<span class="op">=</span><span class="fl">10</span>,Np<span class="op">=</span><span class="fl">1000</span><span class="op">)</span></span></code></pre></div>
 <p><img src="BrownianMotion_files/figure-html/unnamed-chunk-10-1.png" width="700"><img src="BrownianMotion_files/figure-html/unnamed-chunk-10-2.png" width="700"><img src="BrownianMotion_files/figure-html/unnamed-chunk-10-3.png" width="700"></p>
-<p>We see that there is poor agreement everywhere now. The reason is the
-difference between the continuous-time maximum</p>
+<p>We see that there is poor agreement everywhere now. The reason is the difference between the continuous-time maximum</p>
 <p><span class="math display">\[
 \max\{ B_s : 0 \leq s \leq t\}
 \]</span></p>
@@ -273,8 +244,7 @@ difference between the continuous-time maximum</p>
 <p><span class="math display">\[
 \max\{ B_s : s=0,1,\ldots,t\}
 \]</span></p>
-<p>When <span class="math inline">\(t\)</span> is small, this difference
-becomes more important.</p>
+<p>When <span class="math inline">\(t\)</span> is small, this difference becomes more important.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

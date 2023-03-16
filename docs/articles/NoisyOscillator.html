@@ -78,14 +78,12 @@
 
 
 
-
-<div class="row">
+<script src="NoisyOscillator_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>The noisy harmonic oscillator</h1>
-                        <h4 data-toc-skip class="author">Uffe Høgsbro
-Thygesen</h4>
+                        <h4 data-toc-skip class="author">Uffe Høgsbro Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-03-08</h4>
+            <h4 data-toc-skip class="date">2023-03-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/NoisyOscillator.Rmd" class="external-link"><code>vignettes/NoisyOscillator.Rmd</code></a></small>
       <div class="d-none name"><code>NoisyOscillator.Rmd</code></div>
@@ -93,25 +91,19 @@ Thygesen</h4>
 
     
     
-<p>We study the noisy harmonic oscillator, given by the two coupled
-linear SDEs</p>
+<p>We study the noisy harmonic oscillator, given by the two coupled linear SDEs</p>
 <p><span class="math display">\[
 dX_t = AX_t ~ dt + \sigma ~ dB_t
 \]</span></p>
-<p>where <span class="math inline">\(\{B_t : t \geq 0\}\)</span> is
-two-dimensional standard Brownian motion and</p>
+<p>where <span class="math inline">\(\{B_t : t \geq 0\}\)</span> is two-dimensional standard Brownian motion and</p>
 <p><span class="math display">\[
 A = \left[ \begin{array}{rr}
--\lambda &amp; -\omega \\
+-\lambda &amp; -\omega \\ 
 \omega &amp; -\lambda
 \end{array}
 \right]
 \]</span></p>
-<p>The following code computes and plots the response of the system to
-an initial condition. Since there are two states, there are four
-possible responses. Due to symmetry between state 1 and 2, the response
-from state 1 to state 1 is identical to that from state 2 to state 2, so
-we only see three distinct curves.</p>
+<p>The following code computes and plots the response of the system to an initial condition. Since there are two states, there are four possible responses. Due to symmetry between state 1 and 2, the response from state 1 to state 1 is identical to that from state 2 to state 2, so we only see three distinct curves.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://Matrix.R-forge.R-project.org/" class="external-link">Matrix</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: Matrix</span></span></code></pre>
@@ -130,8 +122,7 @@ we only see three distinct curves.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/matplot.html" class="external-link">matplot</a></span><span class="op">(</span><span class="va">tt</span>,<span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">eAt</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"Time"</span>,ylab<span class="op">=</span><span class="st">"Impulse response"</span>,ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>,lty<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>,col<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1-&gt;1"</span>,<span class="st">"1-&gt;2"</span>,<span class="st">"2-&gt;1"</span>,<span class="st">"2-&gt;2"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NoisyOscillator_files/figure-html/unnamed-chunk-1-1.png" width="672"></p>
-<p>The following code computes the transition probabilities of the
-process for a given time step.</p>
+<p>The following code computes the transition probabilities of the process for a given time step.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s</span><span class="op">&lt;-</span><span class="fl">1</span></span>
 <span><span class="va">tp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dLinSDE.html">dLinSDE</a></span><span class="op">(</span><span class="va">A</span>,<span class="va">s</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span>,t<span class="op">=</span><span class="va">dt</span><span class="op">)</span></span>
@@ -145,34 +136,16 @@ process for a given time step.</p>
 <span><span class="co">##              [,1]          [,2]</span></span>
 <span><span class="co">## [1,] 9.802640e-02 -2.775558e-17</span></span>
 <span><span class="co">## [2,] 4.019773e-17  9.802640e-02</span></span></code></pre>
-<p>So an initial condition <span class="math inline">\((1,0)\)</span>
-results in an expectation which is rotated slightly, and regresses
-slightly towards the origin. In fact, since the time step is relatively
-short, both the angle of rotation and the regression is roughly
-proportional to the time step:</p>
+<p>So an initial condition <span class="math inline">\((1,0)\)</span> results in an expectation which is rotated slightly, and regresses slightly towards the origin. In fact, since the time step is relatively short, both the angle of rotation and the regression is roughly proportional to the time step:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">atan2</a></span><span class="op">(</span><span class="va">tp</span><span class="op">$</span><span class="va">eAt</span><span class="op">[</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">]</span>,<span class="va">tp</span><span class="op">$</span><span class="va">eAt</span><span class="op">[</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span>,<span class="va">w</span><span class="op">*</span><span class="va">dt</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 0.1 0.1</span></span></code></pre>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/norm.html" class="external-link">norm</a></span><span class="op">(</span><span class="va">tp</span><span class="op">$</span><span class="va">eAt</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,type<span class="op">=</span><span class="st">"2"</span><span class="op">)</span>,<span class="fl">1</span><span class="op">-</span><span class="va">l</span><span class="op">*</span><span class="va">dt</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 0.9801987 0.9800000</span></span></code></pre>
-<p>This could perhaps lead you to think that we could have approximated
-the matrix exponential <span class="math inline">\(\exp (A~dt)\)</span>
-with <span class="math inline">\(I + A~dt\)</span>, the explicit Euler
-approximation. That would be correct here, but careful! The explicit
-Euler approximation is unstable for large time steps, so a better
-approximation would be the implicit Euler <span class="math inline">\((I
-- A~dt)^{-1}\)</span>.</p>
-<p>The variance/covariance matrix is (up to numerics) a scalar times the
-identity matrix: The random components of the two states are independent
-and identically distributed, due to rotational symmetry. Again, since
-the time step is quite short, the variance/covariance matrix is well
-approximated by <span class="math inline">\(s^2 I~dt\)</span>.</p>
-<p>We can use these transition probabilities to recursively sample a
-trajectory. For efficient sampling, we first factorize the
-variance/covariance matrix, so that we can sample the random component
-by first sampling two i.i.d. standard Gaussians, and then do a
-matrix/vector multiplication.</p>
+<p>This could perhaps lead you to think that we could have approximated the matrix exponential <span class="math inline">\(\exp (A~dt)\)</span> with <span class="math inline">\(I + A~dt\)</span>, the explicit Euler approximation. That would be correct here, but careful! The explicit Euler approximation is unstable for large time steps, so a better approximation would be the implicit Euler <span class="math inline">\((I - A~dt)^{-1}\)</span>.</p>
+<p>The variance/covariance matrix is (up to numerics) a scalar times the identity matrix: The random components of the two states are independent and identically distributed, due to rotational symmetry. Again, since the time step is quite short, the variance/covariance matrix is well approximated by <span class="math inline">\(s^2 I~dt\)</span>.</p>
+<p>We can use these transition probabilities to recursively sample a trajectory. For efficient sampling, we first factorize the variance/covariance matrix, so that we can sample the random component by first sampling two i.i.d. standard Gaussians, and then do a matrix/vector multiplication.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">G</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/chol.html" class="external-link">chol</a></span><span class="op">(</span><span class="va">tp</span><span class="op">$</span><span class="va">St</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -188,23 +161,19 @@ matrix/vector multiplication.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">acfX</span><span class="op">$</span><span class="va">lag</span><span class="op">[</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">]</span>,<span class="va">acfX</span><span class="op">$</span><span class="va">acf</span><span class="op">[</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">]</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"a.c.f.[1,1]"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">acfX</span><span class="op">$</span><span class="va">lag</span><span class="op">[</span>,<span class="fl">1</span>,<span class="fl">2</span><span class="op">]</span>,<span class="va">acfX</span><span class="op">$</span><span class="va">acf</span><span class="op">[</span>,<span class="fl">1</span>,<span class="fl">2</span><span class="op">]</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"a.c.f.[1,2]"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NoisyOscillator_files/figure-html/unnamed-chunk-5-1.png" width="672">
-Note the similarity with the impulse response.</p>
-<p>We can estimate the stationary variance from the time series and
-compare with the analytical prediction:</p>
+<p><img src="NoisyOscillator_files/figure-html/unnamed-chunk-5-1.png" width="672"> Note the similarity with the impulse response.</p>
+<p>We can estimate the stationary variance from the time series and compare with the analytical prediction:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##            [,1]       [,2]</span></span>
-<span><span class="co">## [1,] 2.29747122 0.03111306</span></span>
-<span><span class="co">## [2,] 0.03111306 2.32224307</span></span></code></pre>
+<pre><code><span><span class="co">##             [,1]        [,2]</span></span>
+<span><span class="co">## [1,]  2.75926497 -0.00491202</span></span>
+<span><span class="co">## [2,] -0.00491202  2.73463575</span></span></code></pre>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/lyap.html">lyap</a></span><span class="op">(</span><span class="va">A</span>,<span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">s</span><span class="op">^</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##              [,1] [,2]</span></span>
 <span><span class="co">## [1,] 2.500000e+00  0.0</span></span>
 <span><span class="co">## [2,] 9.570888e-17  2.5</span></span></code></pre>
-<p>We can assess the variance spectrum of the state. For simplicity, we
-take only the first state. We use the spectrum function from the stats
-package.</p>
+<p>We can assess the variance spectrum of the state. For simplicity, we take only the first state. We use the spectrum function from the stats package.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">S</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/spectrum.html" class="external-link">spectrum</a></span><span class="op">(</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,plot<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">freq</span>,<span class="va">S</span><span class="op">$</span><span class="va">spec</span>,log<span class="op">=</span><span class="st">"xy"</span>,pch<span class="op">=</span><span class="st">"."</span><span class="op">)</span></span></code></pre></div>
@@ -221,20 +190,8 @@ package.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Vectorize.html" class="external-link">Vectorize</a></span><span class="op">(</span><span class="va">Stheo</span><span class="op">)</span>,from<span class="op">=</span><span class="fl">1e-1</span>,to<span class="op">=</span><span class="fl">1e1</span>,log<span class="op">=</span><span class="st">"xy"</span>,</span>
 <span>       xlab<span class="op">=</span><span class="st">"Frequency"</span>,ylab<span class="op">=</span><span class="st">"Variance spectrum"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NoisyOscillator_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
-<p>We see a reasonable agreement, qualitatively. To get a more
-quantitative agreement, we need to address three issues: First,
-empirical spectra are always very noisy. Second, the frequency axis
-needs to be rescaled, as the empirical spectrum did not know about
-sample frequency, and also uses cycles and not radians. Third, we need
-to rescale also the spectrum axis.</p>
-<p>Here, we smooth the spectrum using a simple running average. We
-convert the empirical frequencies to radians per time using the sample
-frequency. Finally, the spectrum is “variance pr frequency”, so also
-here we need to rescale with the sample frequency. Note that there is
-not universal agreement on how to scale the spectrum, and this detail
-must often be found deep in the documentation - the easiest may be to
-reverse engineer it by simulating e.g. white noise and compute its
-spectrum.</p>
+<p>We see a reasonable agreement, qualitatively. To get a more quantitative agreement, we need to address three issues: First, empirical spectra are always very noisy. Second, the frequency axis needs to be rescaled, as the empirical spectrum did not know about sample frequency, and also uses cycles and not radians. Third, we need to rescale also the spectrum axis.</p>
+<p>Here, we smooth the spectrum using a simple running average. We convert the empirical frequencies to radians per time using the sample frequency. Finally, the spectrum is “variance pr frequency”, so also here we need to rescale with the sample frequency. Note that there is not universal agreement on how to scale the spectrum, and this detail must often be found deep in the documentation - the easiest may be to reverse engineer it by simulating e.g. white noise and compute its spectrum.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Vectorize.html" class="external-link">Vectorize</a></span><span class="op">(</span><span class="va">Stheo</span><span class="op">)</span>,from<span class="op">=</span><span class="fl">1e-1</span>,to<span class="op">=</span><span class="fl">1e1</span>,log<span class="op">=</span><span class="st">"xy"</span>,</span>
 <span>       xlab<span class="op">=</span><span class="st">"Angular Frequency"</span>,ylab<span class="op">=</span><span class="st">"Variance spectrum"</span>,col<span class="op">=</span><span class="st">"red"</span>,lwd<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>

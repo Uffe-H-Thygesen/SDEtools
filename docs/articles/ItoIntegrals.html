@@ -78,14 +78,12 @@
 
 
 
-
-<div class="row">
+<script src="ItoIntegrals_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Itô Integrals and the Euler-Maruyama method</h1>
-                        <h4 data-toc-skip class="author">Uffe Høgsbro
-Thygesen</h4>
+                        <h4 data-toc-skip class="author">Uffe Høgsbro Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-03-08</h4>
+            <h4 data-toc-skip class="date">2023-03-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/ItoIntegrals.Rmd" class="external-link"><code>vignettes/ItoIntegrals.Rmd</code></a></small>
       <div class="d-none name"><code>ItoIntegrals.Rmd</code></div>
@@ -96,24 +94,14 @@ Thygesen</h4>
 <div class="section level2">
 <h2 id="numerical-itô-integration">Numerical Itô integration<a class="anchor" aria-label="anchor" href="#numerical-it%C3%B4-integration"></a>
 </h2>
-<p>We consider an <em>integrator</em> <span class="math inline">\(\{B_t\}\)</span> and an <em>integrand</em> <span class="math inline">\(\{G_t\}\)</span>, which are both stochastic
-processes. Think of <span class="math inline">\(\{B_t\}\)</span> as
-Brownian motion and <span class="math inline">\(\{G_t\}\)</span> as an
-adapted process, although this is not necessary. We aim to approximate
-the Itô integral <span class="math display">\[
+<p>We consider an <em>integrator</em> <span class="math inline">\(\{B_t\}\)</span> and an <em>integrand</em> <span class="math inline">\(\{G_t\}\)</span>, which are both stochastic processes. Think of <span class="math inline">\(\{B_t\}\)</span> as Brownian motion and <span class="math inline">\(\{G_t\}\)</span> as an adapted process, although this is not necessary. We aim to approximate the Itô integral <span class="math display">\[
 I_t = \int_0^t G_s ~dB_s
 \]</span> numerically, for different values of <span class="math inline">\(t\)</span>.</p>
-<p>Given a time discretization <span class="math inline">\(0=t_0 &lt;
-t_1 &lt; \cdots &lt; t_n\)</span>, the numerical Itô integral is given
-by <span class="math display">\[
-I_0 = 0, \quad I_{t_i+1} = I_{t_{i}} + G_{t_i} (B_{t_{i+1}}- B_{t_i})
-\mbox{ for }
+<p>Given a time discretization <span class="math inline">\(0=t_0 &lt; t_1 &lt; \cdots &lt; t_n\)</span>, the numerical Itô integral is given by <span class="math display">\[
+I_0 = 0, \quad I_{t_i+1} = I_{t_{i}} + G_{t_i} (B_{t_{i+1}}- B_{t_i}) \mbox{ for }
 i = 0,1,\ldots,n-1.
-\]</span> This assumes that <span class="math inline">\(\{G_t\}\)</span>
-is piecewise constant between the time points <span class="math inline">\(t_i\)</span>.</p>
-<p>This approximation is implemented in the function
-<strong>itointegral</strong>. For example, we can integrate Brownian
-motion w.r.t. itself:</p>
+\]</span> This assumes that <span class="math inline">\(\{G_t\}\)</span> is piecewise constant between the time points <span class="math inline">\(t_i\)</span>.</p>
+<p>This approximation is implemented in the function <strong>itointegral</strong>. For example, we can integrate Brownian motion w.r.t. itself:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Uffe-H-Thygesen/SDEtools" class="external-link">SDEtools</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: SDEtools</span></span></code></pre>
@@ -124,36 +112,29 @@ motion w.r.t. itself:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">I</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="fl">0.5</span><span class="op">*</span><span class="op">(</span><span class="va">B</span><span class="op">^</span><span class="fl">2</span><span class="op">-</span><span class="va">t</span><span class="op">)</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
-<p>We have included the analytical result. The agreement is not perfect;
-there is a time discretization error.</p>
-<p>Note that the numerical Itô integration routine does not need to know
-the time grid; only values of the integrator and the integrand at each
-time point. The integral is implemented as follows:</p>
+<p>We have included the analytical result. The agreement is not perfect; there is a time discretization error.</p>
+<p>Note that the numerical Itô integration routine does not need to know the time grid; only values of the integrator and the integrand at each time point. The integral is implemented as follows:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">itointegral</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## function (G, B) </span></span>
 <span><span class="co">## {</span></span>
 <span><span class="co">##     return(c(0, cumsum(G[-length(G)] * diff(B))))</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x55af9a64c4f0&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x55e8e1cef210&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:SDEtools&gt;</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="itô-integrals-and-the-euler-maruyama-method">Itô integrals and the Euler-Maruyama method<a class="anchor" aria-label="anchor" href="#it%C3%B4-integrals-and-the-euler-maruyama-method"></a>
 </h2>
-<p>Note that the numerical Itô integral is essentially an Euler-Maruyama
-solution of the stochastic differential equation:</p>
+<p>Note that the numerical Itô integral is essentially an Euler-Maruyama solution of the stochastic differential equation:</p>
 <p><span class="math display">\[
 dI_t = G_t ~dB_t
 \]</span></p>
-<p>We see that there is a strong coupling between the Euler-Maruyama
-method and numerical Itô integration. To verify this, consider the Itô
-stochastic differential equation</p>
+<p>We see that there is a strong coupling between the Euler-Maruyama method and numerical Itô integration. To verify this, consider the Itô stochastic differential equation</p>
 <p><span class="math display">\[
 dX_t = f(X_t) ~dt + g(X_t) ~dB_t
 \]</span></p>
-<p>with initial condition <span class="math inline">\(X_0=0\)</span>,
-where <span class="math inline">\(f(x)=x-x^3\)</span> and <span class="math inline">\(g(x) = \sqrt{1+x^2}\)</span>:</p>
+<p>with initial condition <span class="math inline">\(X_0=0\)</span>, where <span class="math inline">\(f(x)=x-x^3\)</span> and <span class="math inline">\(g(x) = \sqrt{1+x^2}\)</span>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">-</span><span class="va">x</span><span class="op">^</span><span class="fl">3</span> </span>
 <span>  <span class="va">g</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="va">x</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
@@ -161,31 +142,24 @@ where <span class="math inline">\(f(x)=x-x^3\)</span> and <span class="math inli
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 <p>For this solution, we have <span class="math display">\[
-X_t = \int_0^t f(X_s) ~ds + \int_0^t g(X_s) ~dB_s .
+X_t = \int_0^t f(X_s) ~ds + \int_0^t g(X_s) ~dB_s . 
 \]</span></p>
-<p>The following code compares the Euler-Maruyama discretization of the
-stochastic differential equation with the numerical Itô integral:</p>
+<p>The following code compares the Euler-Maruyama discretization of the stochastic differential equation with the numerical Itô integral:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="fu"><a href="../reference/itointegral.html">itointegral</a></span><span class="op">(</span><span class="fu">f</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">t</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="../reference/itointegral.html">itointegral</a></span><span class="op">(</span><span class="fu">g</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">B</span><span class="op">)</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<p>Note that they seem to fit perfectly. In fact, the error is roughly
-machine precision:</p>
+<p>Note that they seem to fit perfectly. In fact, the error is roughly machine precision:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">X</span><span class="op">-</span><span class="fu"><a href="../reference/itointegral.html">itointegral</a></span><span class="op">(</span><span class="fu">f</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">t</span><span class="op">)</span><span class="op">-</span><span class="fu"><a href="../reference/itointegral.html">itointegral</a></span><span class="op">(</span><span class="fu">g</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">B</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 1.332268e-15</span></span></code></pre>
-<p>that is, there is no time discretization error because we use the
-same principle for time discretization in the Euler-Maruyama method and
-in the numerical Itô integral.</p>
+<pre><code><span><span class="co">## [1] 6.661338e-16</span></span></code></pre>
+<p>that is, there is no time discretization error because we use the same principle for time discretization in the Euler-Maruyama method and in the numerical Itô integral.</p>
 </div>
 <div class="section level2">
 <h2 id="numerical-itô-integration-w-r-t--other-processes">Numerical Itô integration w.r.t. other processes<a class="anchor" aria-label="anchor" href="#numerical-it%C3%B4-integration-w-r-t--other-processes"></a>
 </h2>
-<p>We can perform numerical Itô integration of any process with respect
-to any process, even if the nice properties of the Itô integral (the
-martingale property and the Itô isometry) need not hold.</p>
-<p>In the following, we demonstrate this by recomputing the Brownian
-motion:</p>
+<p>We can perform numerical Itô integration of any process with respect to any process, even if the nice properties of the Itô integral (the martingale property and the Itô isometry) need not hold.</p>
+<p>In the following, we demonstrate this by recomputing the Brownian motion:</p>
 <p><span class="math display">\[
   dB_t = \frac{1}{g(X_t)} ~ dX_t - \frac{f(X_t)}{g(X_t)} ~dt
 \]</span></p>
@@ -194,8 +168,7 @@ motion:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">W</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">B</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
-<p>Again, the error is machine precision so there is no time
-discretization error:</p>
+<p>Again, the error is machine precision so there is no time discretization error:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">B</span><span class="op">-</span><span class="va">W</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 6.661338e-16</span></span></code></pre>
@@ -205,25 +178,18 @@ discretization error:</p>
 </h2>
 <p>We can repeat the previous with Stratonovich integrals such as <span class="math display">\[
 \int_0^t G_s \circ dB_s
-\]</span> For example, we can integrate Brownian motion with respect to
-itself:</p>
+\]</span> For example, we can integrate Brownian motion with respect to itself:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Is</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stochint.html">stochint</a></span><span class="op">(</span><span class="va">B</span>,<span class="va">B</span>,rule<span class="op">=</span><span class="st">"c"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Is</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="fl">0.6</span><span class="op">*</span><span class="va">B</span><span class="op">^</span><span class="fl">2</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
-<p>Again, we see a reasonable agreement between the numerical and
-analytical result, even if it is not perfect, due to the time
-discretization.</p>
-<p>The difference between the Itô and the Stratonovich integral comes
-from the quadratic cross-variation between the integrator and the
-integrand. The following code and figure compare the Itô and
-Stratonovich integrals <span class="math display">\[
-  I^i_t = \int_0^t G_s ~dX_s ,
+<p>Again, we see a reasonable agreement between the numerical and analytical result, even if it is not perfect, due to the time discretization.</p>
+<p>The difference between the Itô and the Stratonovich integral comes from the quadratic cross-variation between the integrator and the integrand. The following code and figure compare the Itô and Stratonovich integrals <span class="math display">\[
+  I^i_t = \int_0^t G_s ~dX_s , 
   I^s_t = \int_0^t G_s \ring dX_s  
-\]</span> with <span class="math inline">\(G_s = B_s + X_s\)</span>, as
-well as the relationship between the two <span class="math display">\[
-I^s_t = I^i_t + \frac 12 \langle G,X\rangle_t .
+\]</span> with <span class="math inline">\(G_s = B_s + X_s\)</span>, as well as the relationship between the two <span class="math display">\[
+I^s_t = I^i_t + \frac 12 \langle G,X\rangle_t . 
 \]</span></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">G</span> <span class="op">&lt;-</span> <span class="va">X</span><span class="op">+</span><span class="va">B</span></span>
@@ -232,7 +198,7 @@ I^s_t = I^i_t + \frac 12 \langle G,X\rangle_t .
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Ii</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Is</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Ii</span> <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="fu">CrossVariation</span><span class="op">(</span><span class="va">G</span>,<span class="va">X</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Ii</span> <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="fu"><a href="../reference/CrossVariation.html">CrossVariation</a></span><span class="op">(</span><span class="va">G</span>,<span class="va">X</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

@@ -78,14 +78,12 @@
 
 
 
-
-<div class="row">
+<script src="vanderPol_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>A 2D example: The van der Pol oscillator</h1>
-                        <h4 data-toc-skip class="author">Uffe Høgsbro
-Thygesen</h4>
+                        <h4 data-toc-skip class="author">Uffe Høgsbro Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-03-08</h4>
+            <h4 data-toc-skip class="date">2023-03-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/vanderPol.Rmd" class="external-link"><code>vignettes/vanderPol.Rmd</code></a></small>
       <div class="d-none name"><code>vanderPol.Rmd</code></div>
@@ -93,8 +91,7 @@ Thygesen</h4>
 
     
     
-<p>The following example demonstrates how to simulate solutions to two
-coupled equations, and how to solve the Kolmogorov equations.</p>
+<p>The following example demonstrates how to simulate solutions to two coupled equations, and how to solve the Kolmogorov equations.</p>
 <p>The case is stochastic van der Pol oscillator:</p>
 <p><span class="math display">\[
 dX_t = V_t ~dt , \quad dV_t = [ V_t(\mu-X_t^2) -X_t ]~dt + \sigma ~dB_t
@@ -107,9 +104,7 @@ dX_t = V_t ~dt , \quad dV_t = [ V_t(\mu-X_t^2) -X_t ]~dt + \sigma ~dB_t
 <span><span class="va">fv</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">v</span><span class="op">)</span> <span class="va">v</span><span class="op">*</span><span class="op">(</span><span class="va">mu</span> <span class="op">-</span> <span class="va">x</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">-</span><span class="va">x</span></span>
 <span><span class="va">gx</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">v</span><span class="op">)</span> <span class="fl">0</span></span>
 <span><span class="va">gv</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">v</span><span class="op">)</span> <span class="va">sigma</span></span></code></pre></div>
-<p>We set this in the usual state space formalism, defining a state
-vector <span class="math inline">\(Z_t=(X_t,V_t)\)</span>. Then, the
-drift and noise in this vector equation for <span class="math inline">\(Z_t\)</span> are:</p>
+<p>We set this in the usual state space formalism, defining a state vector <span class="math inline">\(Z_t=(X_t,V_t)\)</span>. Then, the drift and noise in this vector equation for <span class="math inline">\(Z_t\)</span> are:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">xv</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">fx</span><span class="op">(</span><span class="va">xv</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,<span class="va">xv</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>,<span class="fu">fv</span><span class="op">(</span><span class="va">xv</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,<span class="va">xv</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">g</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">xv</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fu">gv</span><span class="op">(</span><span class="va">xv</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,<span class="va">xv</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -133,8 +128,7 @@ drift and noise in this vector equation for <span class="math inline">\(Z_t\)</s
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"Position X"</span>,ylab<span class="op">=</span><span class="st">"Velocity V"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vanderPol_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<p>We can also compute the stationary distribution analytically. To this
-end, we first define a grid.</p>
+<p>We can also compute the stationary distribution analytically. To this end, we first define a grid.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">xmax</span> <span class="op">&lt;-</span> <span class="fl">1.5</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">vmax</span> <span class="op">&lt;-</span> <span class="fl">1.5</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
@@ -149,26 +143,20 @@ end, we first define a grid.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>h<span class="op">=</span><span class="va">vgrid</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>v<span class="op">=</span><span class="va">xgrid</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vanderPol_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
-<p>We next pose the advection/diffusion form of the Kolmogorov
-equations. Note that the advective field equals the drift, since the
-noise intensity is state independent. We discretize the equation using
-the function <em>fvade2d</em>, which by default uses reflection at the
-boundaries.</p>
+<p>We next pose the advection/diffusion form of the Kolmogorov equations. Note that the advective field equals the drift, since the noise intensity is state independent. We discretize the equation using the function <em>fvade2d</em>, which by default uses reflection at the boundaries.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Dx</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">v</span><span class="op">)</span> <span class="fl">0</span></span>
 <span><span class="va">Dv</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">v</span><span class="op">)</span> <span class="fl">0.5</span><span class="op">*</span><span class="fu">gv</span><span class="op">(</span><span class="va">x</span>,<span class="va">v</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
 <span></span>
 <span><span class="va">G</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fvade2d.html">fvade2d</a></span><span class="op">(</span><span class="va">fx</span>,<span class="va">fv</span>,<span class="va">Dx</span>,<span class="va">Dv</span>,<span class="va">xgrid</span>,<span class="va">vgrid</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: Matrix</span></span></code></pre>
-<p>We can now compute the stationary distribution. At first, this gives
-just a vector, so it must be transformed to a field</p>
+<p>We can now compute the stationary distribution. At first, this gives just a vector, so it must be transformed to a field</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/unpack.field.html">unpack.field</a></span><span class="op">(</span><span class="fu"><a href="../reference/StationaryDistribution.html">StationaryDistribution</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">xc</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">vc</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">vc</span>,<span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="../reference/prob2pdf.html">prob2pdf</a></span><span class="op">(</span><span class="va">pi</span>,<span class="va">xgrid</span>,<span class="va">vgrid</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vanderPol_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
-<p>To compare this with the simulation, it is better to plot the time
-series as points in the phase plane:</p>
+<p>To compare this with the simulation, it is better to plot the time series as points in the phase plane:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>,pch<span class="op">=</span><span class="st">"."</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"v"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vanderPol_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>

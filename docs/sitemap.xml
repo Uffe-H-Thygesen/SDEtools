@@ -43,6 +43,9 @@
     <loc>https://uffe-h-thygesen.github.io/SDEtools/news/index.html</loc>
   </url>
   <url>
+    <loc>https://uffe-h-thygesen.github.io/SDEtools/reference/CrossVariation.html</loc>
+  </url>
+  <url>
     <loc>https://uffe-h-thygesen.github.io/SDEtools/reference/HMMfilterSDE.html</loc>
   </url>
   <url>
@@ -62,9 +65,6 @@
   </url>
   <url>
     <loc>https://uffe-h-thygesen.github.io/SDEtools/reference/cell.centers.html</loc>
-  </url>
-  <url>
-    <loc>https://uffe-h-thygesen.github.io/SDEtools/reference/covariation.html</loc>
   </url>
   <url>
     <loc>https://uffe-h-thygesen.github.io/SDEtools/reference/dLinSDE.html</loc>
