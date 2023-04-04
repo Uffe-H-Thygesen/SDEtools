@@ -196,6 +196,7 @@ CrossVariation <- function(X,Y)
 #' @param x0 numeric vector giving the initial condition
 #' @param B sample path of (multivariate) Browniań motion. If omitted, a sample is drawn using rvBM
 #' @param p Optional projection function that at each time poins projects the state, e.g. to enforce non-negativeness
+#' @param h Optional stopping function; the simulation terminates if h(t,x)<=0
 #' @examples
 #' times <- seq(0,10,0.1)
 #'
@@ -236,7 +237,7 @@ CrossVariation <- function(X,Y)
 #'   function(x)diag(c(1,x[1])),times,c(0,0),BM2)$X,xlab="Time",ylab="X",type="l",add=TRUE)
 #' 
 #' @export
-heun <- function(f,g,times,x0,B=NULL,p=function(x)x)
+heun <- function(f,g,times,x0,B=NULL,p=function(x)x,h=function(t,x)1)
 {
   nx <- length(x0)
   nt <- length(times)
@@ -294,6 +295,8 @@ heun <- function(f,g,times,x0,B=NULL,p=function(x)x)
     fY <- as.numeric(ff(times[i+1],Y))
     gY <- gg(times[i+1],Y)
     X[i+1,] <- as.numeric(p(X[i,] + 0.5*(fX+fY)*dt[i] + 0.5*(gX+gY) %*% as.numeric(dB[i,])))
+
+    if(h(times[i+1],X[i+1,]) <= 0) break
   }
 
   colnames(X) <- names(x0)
@@ -312,6 +315,7 @@ heun <- function(f,g,times,x0,B=NULL,p=function(x)x)
 #' @param x0 numeric vector giving the initial condition
 #' @param B sample path of (multivariate) Browniań motion. If omitted, a sample is drawn using rvBM
 #' @param p Optional projection function that at each time poins projects the state, e.g. to enforce non-negativeness
+#' @param h Optional stopping function; the simulation terminates if h(t,x)<=0
 #' @examples
 #' times <- seq(0,10,0.1)
 #'
@@ -335,7 +339,7 @@ heun <- function(f,g,times,x0,B=NULL,p=function(x)x)
 #' lines(times,euler(f,g,times,c(1,0),BM)$X[,1],type="l",lty="dashed")
 #' 
 #' @export
-euler <- function(f,g,times,x0,B=NULL,p=function(x)x)
+euler <- function(f,g,times,x0,B=NULL,p=function(x)x,h=NULL,r=NULL,S0=1,Stau=runif(1))
 {
   nx <- length(x0)
   nt <- length(times)
@@ -354,6 +358,28 @@ euler <- function(f,g,times,x0,B=NULL,p=function(x)x)
   }else
   {
     ggg <- g
+  }
+
+  ## Check if h is unspecified or specified as a function(x) only, then convert to a function(t,x)
+  if(is.null(h)) h <- function(t,x)1
+  if(length(formals(h))==1){
+    hh <- function(t,x)h(x)
+  }else
+  {
+    hh <- h
+  }
+  
+  ## Check if r is unspecified or specified as a function(x) only, then convert to a function(t,x)
+  if(is.null(r)) {
+      r <- function(t,x)0
+      NO.MORTALITY <- TRUE
+  } else NO.MORTALITY <- FALSE
+  
+  if(length(formals(r))==1){
+    rr <- function(t,x)r(x)
+  }else
+  {
+    rr <- r
   }
 
   ## Find number of dimensions of the Brownian motion. Convert g, if necessary, to something that
@@ -381,16 +407,29 @@ euler <- function(f,g,times,x0,B=NULL,p=function(x)x)
   colnames(X) <- names(x0)
   X[1,] <- x0
 
+  S <- numeric(nt)
+  S[1] <- S0
+  
   dt <- diff(times)
 
   for(i in 1:(nt-1))
   {
-    X[i+1,] <- p( X[i,] + ff(times[i],X[i,])*dt[i] + gg(times[i],X[i,]) %*% as.numeric(dB[i,]) )
+      X[i+1,] <- p( X[i,] + ff(times[i],X[i,])*dt[i] + gg(times[i],X[i,]) %*% as.numeric(dB[i,]) )
+      if(h(times[i+1],X[i+1,]) <= 0) break
+      S[i+1] <- S[i] * exp(-rr(t,X[i,])*dt[i])
+      if(S[i+1]<Stau) break
   }
 
   colnames(X) <- names(x0)
 
-  return(list(times=times,X=X))
+  if(NO.MORTALITY)
+  {
+      return(list(times=times,X=X))
+  }
+  else {
+      tau <- times[i+1]
+      return(list(times=times[1:(i+1)],X=X[1:(i+1),],S=S[1:(i+1)],tau=tau))
+  }      
 }
 
 #' Transition probabilities in a linear SDE dX = A*X*dt + u*dt + G*dB
@@ -474,7 +513,7 @@ dLinSDE <- function(A,G,t,x0=NULL,u=NULL,S0=0*A)
       O <- array(0,c(nx,nx))
       AAA <- rbind(numeric(2*nu+nx),
                    cbind(diag(nrow=nu),array(0,c(nu,nu+nx))),
-                   cbind(arrayu(0,c(nx,nu)),G,A))
+                   cbind(array(0,c(nx,nu)),G,A))
 
       duuEx <- Matrix::expm(AAA*t) %*% c((u[,2]-u[,1])/t,u[,1],x0)
       return(list(EX=duuEx[2*nx+(1:nx)],St=St))

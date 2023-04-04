@@ -64,6 +64,8 @@ with initial condition $X_0=0$, where $f(x)=x-x^3$ and $g(x) = \sqrt{1+x^2}$:
   f <- function(x) x -x^3 
   g <- function(x) sqrt(1 + x^2)
   X <- SDEtools::euler(f,g,t,0,B=B)$X
+```
+```{r,fig.width=8}
   plot(t,X,type="l")
 ```
 

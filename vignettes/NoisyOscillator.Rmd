@@ -28,6 +28,7 @@ A = \left[ \begin{array}{rr}
 The following code computes and plots the response of the system to an initial condition. Since there are two states, there are four possible responses. Due to symmetry between state 1 and 2, the response from state 1 to state 1 is identical to that from state 2 to state 2, so we only see three distinct curves. 
 
 ```{r, fig.width=7}
+rm(list=ls())
 require(Matrix)
 require(SDEtools)
 
@@ -45,7 +46,7 @@ legend("topright",lty=1:4,col=1:4,c("1->1","1->2","2->1","2->2"))
 
 The following code computes the transition probabilities of the process for a given time step. 
 
-```{r, fig.show='hold',fig.width=7}
+```{r}
 s<-1
 tp <- dLinSDE(A,s*diag(c(1,1)),t=dt)
 print(tp)
@@ -65,7 +66,7 @@ The variance/covariance matrix is (up to numerics) a scalar times the identity m
 
 We can use these transition probabilities to recursively sample a trajectory. For efficient sampling, we first factorize the variance/covariance matrix, so that we can sample the random component by first sampling two i.i.d. standard Gaussians, and then do a matrix/vector multiplication.
 
-```{r, fig.show='hold',fig.width=7}
+```{r,fig.width=7}
 G <- t(chol(tp$St))
 
 Nt <- 10000
@@ -118,11 +119,14 @@ We see a reasonable agreement, qualitatively. To get a more quantitative agreeme
 Here, we smooth the spectrum using a simple running average. We convert the empirical frequencies to radians per time using the sample frequency. Finally, the spectrum is "variance pr frequency", so also here we need to rescale with the sample frequency. Note that there is not universal agreement on how to scale the spectrum, and this detail must often be found deep in the documentation - the easiest may be to reverse engineer it by simulating e.g. white noise and compute its spectrum.
 
 ```{r,fig.width=7}
+	fscale <- 2*pi/dt
+```
+
+```{r,fig.width=7}
   plot(Vectorize(Stheo),from=1e-1,to=1e1,log="xy",
        xlab="Angular Frequency",ylab="Variance spectrum",col="red",lwd=2)
 
   Ssmooth <- filter(S$spec,rep(0.2,5))
-  fscale <- 2*pi/dt
   Sscale <- dt
   points(fscale*S$freq,S$spec*Sscale,pch=".")
   lines(fscale*S$freq,Ssmooth*Sscale)

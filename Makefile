@@ -29,7 +29,7 @@ check: build-cran
 	cd ..;\
 	R CMD check $(PKGNAME)_$(PKGVERS).tar.gz --as-cran
 
-vignettes:
+vignettes: build vignettes/*Rmd
 	R -e 'require(devtools); build_vignettes()'
 
 clean:

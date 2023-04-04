@@ -18,6 +18,7 @@ dX_t = V_t ~dt , \quad dV_t = [ V_t(\mu-X_t^2) -X_t ]~dt + \sigma ~dB_t
 \]
 
 ```{r}
+rm(list=ls())
 require(SDEtools)
 
 fx <- function(x,v) v
