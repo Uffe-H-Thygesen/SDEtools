@@ -4,89 +4,116 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="SDEtools">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HMM filtering of scalar SDEs • SDEtools</title>
-<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="HMM filtering of scalar SDEs">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../pkgdown.js"></script><meta property="og:title" content="HMM filtering of scalar SDEs">
 <meta property="og:description" content="SDEtools">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
-    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+<body data-spy="scroll" data-target="#toc">
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-    
-    <a class="navbar-brand me-2" href="../index.html">SDEtools</a>
+    <div class="container template-article">
+      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">SDEtools</a>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1</span>
+      </span>
+    </div>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1</small>
-
-    
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../articles/SDEtools.html">Get started</a>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+<li>
+  <a href="../articles/SDEtools.html">Get started</a>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
+<li>
+  <a href="../reference/index.html">Reference</a>
 </li>
-<li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/BrownianMotion.html">Brownian Motion</a>
-    <a class="dropdown-item" href="../articles/FisheriesManagement.html">Fisheries Management - a Numerical Optimal Control Problem</a>
-    <a class="dropdown-item" href="../articles/HMM-filtering-of-scalar-SDEs.html">HMM filtering of scalar SDEs</a>
-    <a class="dropdown-item" href="../articles/ItoIntegrals.html">Itô Integrals and the Euler-Maruyama method</a>
-    <a class="dropdown-item" href="../articles/ItosFormula.html">Itô's formula</a>
-    <a class="dropdown-item" href="../articles/NoisyOscillator.html">The noisy harmonic oscillator</a>
-    <a class="dropdown-item" href="../articles/NumericalKolmogorov.html">Numerical Analysis of the Kolmogorov Equations</a>
-    <a class="dropdown-item" href="../articles/vanderPol.html">A 2D example: The van der Pol oscillator</a>
-  </div>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="../articles/BrownianMotion.html">Brownian Motion</a>
+    </li>
+    <li>
+      <a href="../articles/FisheriesManagement.html">Fisheries Management - a Numerical Optimal Control Problem</a>
+    </li>
+    <li>
+      <a href="../articles/HMM-filtering-of-scalar-SDEs.html">HMM filtering of scalar SDEs</a>
+    </li>
+    <li>
+      <a href="../articles/ItoIntegrals.html">Itô Integrals and the Euler-Maruyama method</a>
+    </li>
+    <li>
+      <a href="../articles/ItosFormula.html">Itô's formula</a>
+    </li>
+    <li>
+      <a href="../articles/Killing.html">SDEs with killing</a>
+    </li>
+    <li>
+      <a href="../articles/NoisyOscillator.html">The noisy harmonic oscillator</a>
+    </li>
+    <li>
+      <a href="../articles/NumericalKolmogorov.html">Numerical Analysis of the Kolmogorov Equations</a>
+    </li>
+    <li>
+      <a href="../articles/vanderPol.html">A 2D example: The van der Pol oscillator</a>
+    </li>
+  </ul>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/Uffe-H-Thygesen/SDEtools/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/Uffe-H-Thygesen/SDEtools/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
 </div>
-
-    
+<!--/.nav-collapse -->
   </div>
-</nav><div class="container template-article">
+<!--/.container -->
+</div>
+<!--/.navbar -->
 
+      
 
-
-<script src="HMM-filtering-of-scalar-SDEs_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
-  <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>HMM filtering of scalar SDEs</h1>
-                        <h4 data-toc-skip class="author">Uffe Høgsbro Thygesen</h4>
+      </header><div class="row">
+  <div class="col-md-9 contents">
+    <div class="page-header toc-ignore">
+      <h1 data-toc-skip>HMM filtering of scalar SDEs</h1>
+                        <h4 data-toc-skip class="author">Uffe Høgsbro
+Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-03-16</h4>
+            <h4 data-toc-skip class="date">2023-04-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/HMM-filtering-of-scalar-SDEs.Rmd" class="external-link"><code>vignettes/HMM-filtering-of-scalar-SDEs.Rmd</code></a></small>
-      <div class="d-none name"><code>HMM-filtering-of-scalar-SDEs.Rmd</code></div>
+      <div class="hidden name"><code>HMM-filtering-of-scalar-SDEs.Rmd</code></div>
+
     </div>
 
     
@@ -94,16 +121,22 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>We simulate a sample path from the Ito stochastic differential equation governing the abundance of a bacterial population</p>
+<p>We simulate a sample path from the Ito stochastic differential
+equation governing the abundance of a bacterial population</p>
 <p><span class="math display">\[
 dX_t = (1- X_t) ~dt + \gamma \sqrt{X_t} ~dB_t
 \]</span></p>
-<p>which is the Cox-Ingersoll-Ross model. Then, we simulate random measurements taken at times <span class="math inline">\(0,dt,2~dt, \ldots, T\)</span> so that <span class="math inline">\(Y_i | X_{t_i}\)</span> is Poisson distributed with mean <span class="math inline">\(v `. X_{t_i}\)</span>. Then, we pretend that we don’t know the states and re-estimate them from these measurements.</p>
+<p>which is the Cox-Ingersoll-Ross model. Then, we simulate random
+measurements taken at times <span class="math inline">\(0,dt,2~dt,
+\ldots, T\)</span> so that <span class="math inline">\(Y_i |
+X_{t_i}\)</span> is Poisson distributed with mean <span class="math inline">\(v `. X_{t_i}\)</span>. Then, we pretend that we
+don’t know the states and re-estimate them from these measurements.</p>
 </div>
 <div class="section level2">
 <h2 id="simulation-of-states">Simulation of states<a class="anchor" aria-label="anchor" href="#simulation-of-states"></a>
 </h2>
-<p>We define the model and simulate the states using the Euler-Marruyama method.</p>
+<p>We define the model and simulate the states using the Euler-Marruyama
+method.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Uffe-H-Thygesen/SDEtools" class="external-link">SDEtools</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: SDEtools</span></span></code></pre>
@@ -135,7 +168,11 @@ dX_t = (1- X_t) ~dt + \gamma \sqrt{X_t} ~dB_t
 <div class="section level2">
 <h2 id="simulation-of-measurements">Simulation of measurements<a class="anchor" aria-label="anchor" href="#simulation-of-measurements"></a>
 </h2>
-<p>Next, we generate some random measurements. Measurements are taken at regular points in time; not at every time point where are state values is simulated. We use a Poisson distribution for the measurements. This correspond to a situation where we count the number of individuals in a small sample from the environment.</p>
+<p>Next, we generate some random measurements. Measurements are taken at
+regular points in time; not at every time point where are state values
+is simulated. We use a Poisson distribution for the measurements. This
+correspond to a situation where we count the number of individuals in a
+small sample from the environment.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Generate random measurements</span></span>
 <span>  <span class="va">tsample</span> <span class="op">&lt;-</span> <span class="fl">0.1</span></span>
@@ -156,11 +193,15 @@ dX_t = (1- X_t) ~dt + \gamma \sqrt{X_t} ~dB_t
 <div class="section level2">
 <h2 id="specification-of-the-likelihood-function">Specification of the likelihood function<a class="anchor" aria-label="anchor" href="#specification-of-the-likelihood-function"></a>
 </h2>
-<p>To run the filter, we must first specify the likelihood function. We first define this for a general measurement and general state:</p>
+<p>To run the filter, we must first specify the likelihood function. We
+first define this for a general measurement and general state:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="co">## State likelihood   </span></span>
 <span>  <span class="va">dl</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">dpois</a></span><span class="op">(</span><span class="va">y</span>,lambda<span class="op">=</span><span class="va">vsample</span><span class="op">*</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
-<p>We can now inspect the state likelihood on its own, i.e., without using the process equation. We choose a discretization of state space. We choose to use a grid that has higher resolution near 0, and tabulate the likelihood function.</p>
+<p>We can now inspect the state likelihood on its own, i.e., without
+using the process equation. We choose a discretization of state space.
+We choose to use a grid that has higher resolution near 0, and tabulate
+the likelihood function.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="co">## Choose discretization of state space</span></span>
 <span>  <span class="va">xi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">3</span>,<span class="fl">0.025</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>                                <span class="co"># Cell Interfaces</span></span>
@@ -169,17 +210,28 @@ dX_t = (1- X_t) ~dt + \gamma \sqrt{X_t} ~dB_t
 <span>  <span class="va">ltab</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">ymeas</span>,<span class="va">dl</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xc</span>,<span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">ltab</span><span class="op">)</span>,xlab<span class="op">=</span><span class="st">"Time"</span>,ylab<span class="op">=</span><span class="st">"State"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
-<p>We plot the most likely state, given just the measurements, on top of the true states:</p>
+<p>We plot the most likely state, given just the measurements, on top of
+the true states:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xtrue</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xc</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">ltab</span>,<span class="fl">2</span>,<span class="va">which.max</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
-<p>There is very little information in the individual observation, because the counts are so low. Therefore, there is a potential gain from estimating the state not just using the measurement taken at the same time, but also the neighbouring measurements. This is particularly so because the measurements are taken quite frequently: The sample interval is 0.1 time unit, while the mean relaxes over a time scale of 1.</p>
+<p>There is very little information in the individual observation,
+because the counts are so low. Therefore, there is a potential gain from
+estimating the state not just using the measurement taken at the same
+time, but also the neighbouring measurements. This is particularly so
+because the measurements are taken quite frequently: The sample interval
+is 0.1 time unit, while the mean relaxes over a time scale of 1.</p>
 </div>
 <div class="section level2">
 <h2 id="running-the-filter">Running the filter<a class="anchor" aria-label="anchor" href="#running-the-filter"></a>
 </h2>
-<p>We now use the filter to add the information from the process equation. We use the function HMMfilterSDE, which require a process model as well as a likelihood function. In addition, it needs a distribution of the initial state. We focus on real-time state estimation; i.e., we use only the current and past measurements in the estimation, not future measurements.</p>
+<p>We now use the filter to add the information from the process
+equation. We use the function HMMfilterSDE, which require a process
+model as well as a likelihood function. In addition, it needs a
+distribution of the initial state. We focus on real-time state
+estimation; i.e., we use only the current and past measurements in the
+estimation, not future measurements.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="co"># Advection-diffusion form of the Kolmogorov equations</span></span>
 <span>  <span class="va">D</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">0.5</span><span class="op">*</span><span class="va">gamma</span><span class="op">^</span><span class="fl">2</span><span class="op">*</span><span class="va">x</span>;</span>
@@ -207,8 +259,11 @@ dX_t = (1- X_t) ~dt + \gamma \sqrt{X_t} ~dB_t
 <span>  <span class="va">XestMean</span> <span class="op">&lt;-</span> <span class="va">filter</span><span class="op">$</span><span class="va">psi</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">xc</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XestMean</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
-<p>Notice that the estimated states lag a bit behind the true ones, and that some of the fast fluctuations in the true states do not reflect in the estimated ones. These features are as expected.</p>
-<p>We can compare the expectation and the variance in the posterior distribution:</p>
+<p>Notice that the estimated states lag a bit behind the true ones, and
+that some of the fast fluctuations in the true states do not reflect in
+the estimated ones. These features are as expected.</p>
+<p>We can compare the expectation and the variance in the posterior
+distribution:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">XestVar</span> <span class="op">&lt;-</span> <span class="va">filter</span><span class="op">$</span><span class="va">psi</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">xc</span><span class="op">^</span><span class="fl">2</span> <span class="op">-</span> <span class="va">XestMean</span><span class="op">^</span><span class="fl">2</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XestVar</span><span class="op">)</span></span></code></pre></div>
@@ -216,34 +271,51 @@ dX_t = (1- X_t) ~dt + \gamma \sqrt{X_t} ~dB_t
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">XestMean</span>,<span class="va">XestVar</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
-<p>Note that there seems to be a roughly linear relationship (save the first couple of data points, which reflect transients from the initial condition). This linear relationship reflects both process noise and measurement noise: When the state is large, the process noise is increased, and the variance on the measurements is larger.</p>
+<p>Note that there seems to be a roughly linear relationship (save the
+first couple of data points, which reflect transients from the initial
+condition). This linear relationship reflects both process noise and
+measurement noise: When the state is large, the process noise is
+increased, and the variance on the measurements is larger.</p>
 </div>
 <div class="section level2">
 <h2 id="perspectives">Perspectives<a class="anchor" aria-label="anchor" href="#perspectives"></a>
 </h2>
-<p>The function HMMfilterSDE can also gived “smoothed” states, i.e., estimates that are based on all measurements, both past and future. You can compare the performance of the estimates we have shown here, with these smoothed estimates.</p>
-<p>You could also estimate the states between the measurements, for example by having a state likelihood function which is constant to 1 whenever no measurement is taken. Then, you could investigate how the posterior variance evolves between times of measurements.</p>
+<p>The function HMMfilterSDE can also gived “smoothed” states, i.e.,
+estimates that are based on all measurements, both past and future. You
+can compare the performance of the estimates we have shown here, with
+these smoothed estimates.</p>
+<p>You could also estimate the states between the measurements, for
+example by having a state likelihood function which is constant to 1
+whenever no measurement is taken. Then, you could investigate how the
+posterior variance evolves between times of measurements.</p>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
-    </nav></aside>
+  </div>
+
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
+
 </div>
 
 
 
-    <footer><div class="pkgdown-footer-left">
+      <footer><div class="copyright">
   <p></p>
 <p>Developed by Uffe Hogsbro Thygesen.</p>
 </div>
 
-<div class="pkgdown-footer-right">
+<div class="pkgdown">
   <p></p>
 <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
-    </footer>
+      </footer>
 </div>
 
   
+
 
   
 

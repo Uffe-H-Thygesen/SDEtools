@@ -1,0 +1,12 @@
+* using log directory ‘/home/uhth/Projects/sdebook/SDEtools/..Rcheck’
+* using R version 3.1.2 (2014-10-31)
+* using platform: x86_64-pc-linux-gnu (64-bit)
+* using session charset: UTF-8
+* checking for file ‘./DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘SDEtools’ version ‘0.1’
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ...

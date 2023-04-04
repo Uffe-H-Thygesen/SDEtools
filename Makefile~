@@ -1,0 +1,4 @@
+all:	../SDEtools_0.1.tar.gz
+
+SDEtools_0.1.tar.gz:
+	Rscript -e 'require(devtools);document();build();install()'

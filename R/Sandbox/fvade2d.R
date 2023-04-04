@@ -1,0 +1,62 @@
+require(SDEtools)
+require(fields)
+
+## Double well
+ux <- function(x,y) y
+uy <- function(x,y) x*(1-x^2)-5*y
+Dx <- function(x,y) 0
+Dy <- function(x,y) 1
+xgrid <- seq(-3,3,0.02)
+ygrid <- seq(-2,2,0.05)
+bc <- 'r'
+
+## Rosenzweig-MacArthur
+r <- 4
+K <- 1
+Cmax <- 0.75
+sigmax <- 0.01
+sigmay <- 0.01
+beta <- 3
+epsilon <- 1
+mu <- 0.5
+
+Dx <- function(x,y) sigmax*x
+Dy <- function(x,y) sigmay*y
+f <- function(x) beta*x/(1+beta*x/Cmax)
+ux <- function(x,y) r*x*(1-x/K) - f(x)*y - sigmax^2*x
+uy <- function(x,y) epsilon*f(x)*y - mu*y - sigmay^2*y
+xgrid <- seq(0,1.25*K,length=100)
+ygrid <- seq(0,3*K*epsilon,length=80)
+
+plot.grid <- function(xgrid,ygrid)
+{
+    xlim <- range(xgrid)
+    ylim <- range(ygrid)
+    plot(xlim,ylim,type="n")
+    for(i in 1:length(xgrid)) lines(rep(xgrid[i],2),ylim)
+    for(i in 1:length(ygrid)) lines(xlim,rep(ygrid[i],2))
+
+    ## Center of interfaces
+    xNS <- rep(xc,length(yc))
+    yN <- rep(tail(ygrid,-1),rep(length(xc),length(ygrid)-1))
+    yS <- rep(head(ygrid,-1),rep(length(xc),length(ygrid)-1))
+
+    yEW <- rep(yc,length(xc))
+    xE <- rep(tail(xgrid,-1),rep(length(yc),length(xgrid)-1))
+    xW <- rep(head(xgrid,-1),rep(length(yc),length(xgrid)-1))
+
+    points(xNS,yN,pch=1)
+    points(xNS,yS,pch=2)
+    points(xW,yEW,pch=3)
+    points(xE,yEW,pch=4)
+}
+
+
+G <- fvade2d(ux,uy,Dx,Dy,xgrid,ygrid)
+
+phi <- StationaryDistribution(G)
+
+xc = 0.5*(head(xgrid,-1)+tail(xgrid,-1))
+yc = 0.5*(head(ygrid,-1)+tail(ygrid,-1))
+
+image.plot(xc,yc,t(unpack.field(phi)))

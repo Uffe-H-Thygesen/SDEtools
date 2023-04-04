@@ -1,0 +1,106 @@
+
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> require(SDEtools)
+Loading required package: SDEtools
+Loading required package: MASS
+Loading required package: Matrix
+> require(fields)
+Loading required package: fields
+Loading required package: spam
+Loading required package: dotCall64
+Loading required package: grid
+Spam version 2.2-2 (2019-03-07) is loaded.
+Type 'help( Spam)' or 'demo( spam)' for a short introduction 
+and overview of this package.
+Help for individual functions is also obtained by adding the
+suffix '.spam' to the function name, e.g. 'help( chol.spam)'.
+
+Attaching package: ‘spam’
+
+The following object is masked from ‘package:Matrix’:
+
+    det
+
+The following objects are masked from ‘package:base’:
+
+    backsolve, forwardsolve
+
+Loading required package: maps
+See https://github.com/NCAR/Fields for
+ an extensive vignette, other supplements and source code 
+> 
+> ## Double well
+> ux <- function(x,y) y
+> uy <- function(x,y) x*(1-x^2)-5*y
+> Dx <- function(x,y) 0
+> Dy <- function(x,y) 1
+> xgrid <- seq(-3,3,0.02)
+> ygrid <- seq(-2,2,0.05)
+> bc <- 'r'
+> 
+> ## Rosenzweig-MacArthur
+> r <- 4
+> K <- 1
+> Cmax <- 0.75
+> sigmax <- 0.01
+> sigmay <- 0.01
+> beta <- 3
+> epsilon <- 1
+> mu <- 0.5
+> 
+> Dx <- function(x,y) sigmax*x
+> Dy <- function(x,y) sigmay*y
+> f <- function(x) beta*x/(1+beta*x/Cmax)
+> ux <- function(x,y) r*x*(1-x/K) - f(x)*y - sigmax^2*x
+> uy <- function(x,y) epsilon*f(x)*y - mu*y - sigmay^2*y
+> xgrid <- seq(0,1.25*K,length=100)
+> ygrid <- seq(0,3*K*epsilon,length=80)
+> 
+> plot.grid <- function(xgrid,ygrid)
++ {
++     xlim <- range(xgrid)
++     ylim <- range(ygrid)
++     plot(xlim,ylim,type="n")
++     for(i in 1:length(xgrid)) lines(rep(xgrid[i],2),ylim)
++     for(i in 1:length(ygrid)) lines(xlim,rep(ygrid[i],2))
++ 
++     ## Center of interfaces
++     xNS <- rep(xc,length(yc))
++     yN <- rep(tail(ygrid,-1),rep(length(xc),length(ygrid)-1))
++     yS <- rep(head(ygrid,-1),rep(length(xc),length(ygrid)-1))
++ 
++     yEW <- rep(yc,length(xc))
++     xE <- rep(tail(xgrid,-1),rep(length(yc),length(xgrid)-1))
++     xW <- rep(head(xgrid,-1),rep(length(yc),length(xgrid)-1))
++ 
++     points(xNS,yN,pch=1)
++     points(xNS,yS,pch=2)
++     points(xW,yEW,pch=3)
++     points(xE,yEW,pch=4)
++ }
+> 
+> 
+> G <- fvade2d(ux,uy,Dx,Dy,xgrid,ygrid)
+> 
+> phi <- StationaryDistribution(G)
+Error in solve.default(tG, b) : 
+  'b' (1 x 1) must be compatible with 'a' (7822 x 7822)
+Calls: StationaryDistribution -> solve -> solve.default
+Execution halted

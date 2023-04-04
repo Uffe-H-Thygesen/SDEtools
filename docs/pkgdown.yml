@@ -1,4 +1,4 @@
-pandoc: 2.9.2.1
+pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
@@ -7,12 +7,10 @@ articles:
   HMM-filtering-of-scalar-SDEs: HMM-filtering-of-scalar-SDEs.html
   ItoIntegrals: ItoIntegrals.html
   ItosFormula: ItosFormula.html
+  Killing: Killing.html
   NoisyOscillator: NoisyOscillator.html
   NumericalKolmogorov: NumericalKolmogorov.html
   SDEtools: SDEtools.html
   vanderPol: vanderPol.html
-last_built: 2023-03-16T15:29Z
-urls:
-  reference: https://uffe-h-thygesen.github.io/SDEtools/reference
-  article: https://uffe-h-thygesen.github.io/SDEtools/articles
+last_built: 2023-04-04T09:45Z
 
