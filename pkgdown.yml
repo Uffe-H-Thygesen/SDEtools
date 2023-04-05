@@ -1,0 +1,17 @@
+pandoc: 2.19.2
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  BrownianMotion: BrownianMotion.html
+  FisheriesManagement: FisheriesManagement.html
+  HMM-filtering-of-scalar-SDEs: HMM-filtering-of-scalar-SDEs.html
+  ItoIntegrals: ItoIntegrals.html
+  ItosFormula: ItosFormula.html
+  ItosFormula2: ItosFormula2.html
+  Killing: Killing.html
+  NoisyOscillator: NoisyOscillator.html
+  NumericalKolmogorov: NumericalKolmogorov.html
+  SDEtools: SDEtools.html
+  vanderPol: vanderPol.html
+last_built: 2023-04-05T22:00Z
+
