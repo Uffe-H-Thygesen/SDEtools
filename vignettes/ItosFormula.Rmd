@@ -10,32 +10,38 @@ vignette: >
 ---
 ## Verifying Itô's formula through simulation 
 
-Itô's formula states that 
+Itô's formula, in its simplest version, states that 
 \[
 dY_t = h'(X_t) ~dX_t + \frac 12 h''(X_t) (dX_t)^2 
 \]
-when $\{X_t\}$ is an Itô process and $Y_t=h(X_t)$.
-
-Moreover, if 
+when $Y_t=h(X_t)$ and $\{X_t\}$ is an Itô process 
 \[
-dX_t = F_t ~dt + G_t ~dB_t
+dX_t = F_t ~dt + G_t ~dB_t . 
 \]
-then we have $(dX_t)^2 = G_t^2 ~dt$, so 
+Moreover, the quadratic variation $[X]_t$ is given by  $d[X]_t = (dX_t)^2 = G_t^2 ~dt$, so 
 \[
-dY_t = h'(X_t) F_t ~dt + h'(X_t) G_t ~dB_t + \frac 12 h''(X_t) G_t^2 ~dt 
+dY_t = h'(X_t) F_t ~dt + h'(X_t) G_t ~dB_t + \frac 12 h''(X_t) G_t^2 ~dt  .
 \]
+The aim of this vignette is to 
+verify this numerically for a specific example, and to discuss discretization errors when we verify the formula in discrete time.
 
-The following verifies this numerically for a specific example, where $\{X_t\}$ is stochastic logistic growth:
+In our example, $\{X_t\}$ is stochastic logistic growth given by the Itô stochastic differential equation
+\[
+dX_t = X_t(1-X_t) ~dt + \sigma X_t ~dB_t
+\]
+with $\sigma = 0.25$ and the initial condition $X_0=x_0=0.01$. We simulate a sample path of $X_t$ using the Euler-Maruyama algorithm:
 
 ```{r}
   require(SDEtools)
+  set.seed(123456)
 
   f <- function(x) x*(1-x)
-  g <- function(x) 0.5*x
+  g <- function(x) sigma*x
   
   t <- seq(0,10,0.01)
   B <- rBM(t)
-  x0 <- 0.1
+  x0 <- 0.01
+  sigma <- 0.25
   X <- euler(f,g,t,x0,B)$X
   
   plot(t,X,type="l")
@@ -52,31 +58,104 @@ We now map this process through the function $h(x)=\log x$ to generate $Y_t=h(X_
   plot(t,Y,type="l")
 ```
 
-We now verify the first variant of Itô's formula:
+We now verify the first variant of Itô's formula, viz.
+\[
+Y_t = Y_0 + \int_0^t h'(X_s) ~dX_s + \int_0^t \frac 12 h''(X_s) ~d[X]_s.
+\]
+We first generate the quadratic variation $[X]_t$, and then perform numerical Itô integration:
 
 ```{r}
+qvX = QuadraticVariation(X)
+Y1 <- h(x0) + itointegral(hp(X),X) + 0.5*itointegral(hpp(X),qvX)
+
 plot(t,Y,type="l")
-Y1 <- h(x0) + itointegral(hp(X),X) + 0.5*itointegral(hpp(X),QuadraticVariation(X))
 lines(t,Y1,col="red")
 ```
 
-There is some discretization error, because we are effectively truncating at second order in Taylor's formula when computing increments over each time step. 
+The two lines lie nicely on top of each other, but there is some discretization error. We will look at this error later. 
+
+
+We now do the same for the second formulation, where we use the result 
+$d[X]_t = g^2(X_t)~dt$.
+
+```{r}
+Y2 <- h(x0) + itointegral(hp(X),X) + 0.5*itointegral(hpp(X)*g(X)^2,t)
+
+plot(t,Y,type="l")
+lines(t,Y2,col="green")
+```
+
+Again we see that the two lines lie on top of each other, although the discretization error in this case appears to be a little more visible.
+
+Next, we could manipulate the integral equation for $\{Y_t\}$ further. Inserting the forms for $h'$, $h''$, $dX_t$ and $(dX_t)^2$, we get 
+
+\[
+dY_t = (1-X_t) ~dt + \sigma ~dB_t - \frac 12 \sigma^2 ~dt 
+\]
+
+which leads to the following representation of $\{Y_t\}$:
+
+```{r}
+Y3 <- h(x0) + itointegral(1-X-0.5*sigma^2,t) + sigma*B
+
+plot(t,Y,type="l")
+lines(t,Y3,col="blue")
+```
+
+Finally, we can substitute $X_t = \exp(Y_t)$ in this expression, thus obtaining an Itô stochastic differential equation for $\{Y_t\}$, viz.:
+
+\[
+  dY_t = (1-e^{Y_t} - \frac 12 \sigma^2) ~dt + \sigma ~dB_t.
+\]
+
+The following code solves this equation and compares with the previous solution:
+
+```{r}
+  fY <- function(y) 1-exp(y)-0.5*sigma^2
+  gY <- function(y) sigma
+  Y4 <- euler(fY,gY,t,log(x0),B)$X
+  
+  plot(t,Y,type="l")
+  lines(t,Y4,col="purple")
+```
+
+
+## The discretization error
+
+We now examine the discretization error associated with the numerical Itô integration. The first formulation, 
+
+\[
+dY_t = h'(X_t) ~dX_t + \frac 12 h''(X_t) (dX_t)^2
+\]
+
+leads to a discretization error, because we are effectively truncating at second order in Taylor's formula when computing increments over each time step:
+
+\[
+Y_{t+k} = h(X_{t+k}) = h(X_t) + h'(X_t) (X_{t+k}-X_t) + \frac 12 h''(X_t) (X_{t+k}-X_t)^2  + R
+\]
+
+so that this version of Itô's formula ignores the higher order terms $R$. We can compute the error:
 
 ```{r}
   plot(t,Y-Y1,type="l")
 ```
 
-We now do the same for the second formulation:
+To estimate the error, note from Taylor's formula that the leading error term is $\frac 16 h'''(X_t) ~(X_{t+k}-X_t)^3$. Here, $h'''(x)=2/x^3$. During the growth phase, the increment $X_{t+k}-X_t$ has conditional expectation $kX_t$ and variance $k\sigma^2 X_t^2$, so the mean cubed is $X_t^3(k^3+ 3 k^2\sigma^2)$. As a result, the error should grow with rate $(k^3+3k^2\sigma^2)/3 \approx 6.6\cdot 10^{-6}$ per time step, i.e. with a rate $6.6\cdot 10^{-4}$. So after 5 time units, the error should be $0.0033$. We see that there is good agreement with the simulation result. 
 
-```{r}
-plot(t,Y,type="l")
-Y2 <- h(x0) + itointegral(hp(X),X) + 0.5*itointegral(hpp(X)*g(X)^2,t)
-lines(t,Y2,col="green")
-```
-
-In this discretization error, there is now also the effect that the discretized quadratic variation of Brownian motion does not exactly equal time. This error turns out to be larger, in this case: 
+We now consider the discretization error in the second formulation, 
+\[
+dY_t = h'(X_t) ~dX_t + \frac 12 h''(X_t) g^2(X_t) ~dt .
+\]
+Here, there is also the effect that the increment in discretized quadratic variation $[X]_t$, i.e. $(X_{t+k}-X_t)^2$, does not exactly equal $g^2(X_t) ~k$. In fact, the conditional variance of the increment equals $g^2(X_t) ~k$, but in discrete time, there is both a random component and a mean. This error can be traced back the underlying  Brownian motion: In discrete time, its quadratic variation does not exactly equal time. In this case, this error turns out to be larger than the one we examined previously:
 
 ```{r}
   plot(t,Y-Y2,type="l")
 ```
 
+To assess this error coarsely, note that it comes from the term 
+\[
+\frac 12 h''(X_t) [ (X_{t+k}-X_t)^2 - g^2(X_t) ~k]
+\]
+and the conditional expectation of this term is $-k^2/2$ per time step during the growth phase, i.e. it grows with rate $-k/2$. So after 5 time units, we expect that this error has grown to 0.025. We see a good agreement with the simulation, even if the variation between realizations are greater.
+
+This vignette has hopefully illuminated both where Itô's formula comes from, and the errors that may arise when we investigate stochastic differential equation in discrete time.

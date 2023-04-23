@@ -87,7 +87,7 @@ Note that they seem to fit perfectly. In fact, the error is roughly machine prec
   print(max(abs(X-itointegral(f(X),t)-itointegral(g(X),B))))
 ```
 
-that is, there is no time discretization error because we use the same principle for time discretization in the Euler-Maruyama method and in the numerical Itô integral.
+That is, there is no time discretization error because we use the same principle for time discretization in the Euler-Maruyama method and in the numerical Itô integral.
 
 ## Numerical Itô integration w.r.t. other processes
 
@@ -130,7 +130,7 @@ Again, we see a reasonable agreement between the numerical and analytical result
 The difference between the Itô and the Stratonovich integral comes from the quadratic cross-variation between the integrator and the integrand. The following code and figure compare the Itô and Stratonovich integrals
 \[
   I^i_t = \int_0^t G_s ~dX_s , 
-  I^s_t = \int_0^t G_s \ring dX_s  
+  I^s_t = \int_0^t G_s \circ dX_s  
 \]
 with $G_s = B_s + X_s$, as well as the relationship between the two 
 \[
@@ -142,7 +142,9 @@ G <- X+B
 Ii <- itointegral(G,X)
 Is <- stochint(G,X,rule="c")
 
-plot(t,Ii,type="l")
+ylim <- range(c(Ii,Is))
+
+plot(t,Ii,type="l",ylim=ylim)
 lines(t,Is,col="red")
 points(t,Ii + 0.5 * CrossVariation(G,X))
 ```

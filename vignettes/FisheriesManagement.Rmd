@@ -26,11 +26,15 @@ Here, $X_t$ is the biomass, and $B_t$ is standard Brownian motion. The term $X_t
 
 The optimal control is found as a stationary point: $u= 1/4/(V')^2$.
 
-The analytical solution to this problem is 
+The analytical steady-state solution to this problem is 
 \[
   V(x,t) = \frac 12 \log x -\gamma t
 \]
-where $\gamma = \frac 12 (1-\sigma^2 /2)$. 
+where $\gamma = \frac 12 (1-\sigma^2 /2)$. This leads to the strategy
+\[
+U_t = X_t^2 . 
+\]
+
 
 ## Numerical analysis of the steady-state problem
 
@@ -79,7 +83,7 @@ G1 <- fvade(function(x)-1,function(x)0,xi,'r')
 
 Note that this discretizes the operator $V\mapsto -V'$. 
 
-We are now almost ready to solve the steady-state problem using policy iteration. But first, to make the nummerics more robust, we make two changes: First, at the left cell, we assume that we cannot fish. This avoids the option of driving the fish to extinction and then fish like crazy on fish that aren't there. Next, we assume that there is a bound on the harvest, even if $V'(x)=0$. We do that by replacing $V'(x)$ with $\max(epsilon,V'(x))$ where $\epsilon$ is a "small" number.
+We are now almost ready to solve the steady-state problem using policy iteration. But first, to make the nummerics more robust, we make two changes: First, at the left cell, we assume that we cannot fish. This avoids the option of driving the fish to extinction and then fish like crazy on fish that aren't there. Next, we assume that there is a bound on the harvest, even if $V'(x)=0$. We do that by replacing $V'(x)$ with $\max(\epsilon,V'(x))$ where $\epsilon$ is a "small" number.
 
 ```{r}
 epsilon <- 1e-1

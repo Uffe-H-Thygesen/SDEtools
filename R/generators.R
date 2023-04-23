@@ -78,16 +78,11 @@ fvade <- function(u,D,xgrid,bc,sparse=TRUE,diagonals=FALSE,r=NULL)
     ## Loss
     if(is.null(r)) Uc <- numeric(nc) else Uc <- sapply(cell.centers(xgrid),r)
 
-    ## Mimic Matlab for off-diagonals (positive offset for sub-diagonal)
-    mydiag <- function(v,offset=0)
-    {
-        size <- length(v)+abs(offset)
-        j <- (1:length(v)) + max(0,-offset)
-        i <- (1:length(v)) + max(0,offset)
-        return(sparseMatrix(i=i,j=j,x=v,dims=rep(size,2)))
-    }
-
-    Ge <- mydiag(c(Dl+Ul,0),1) + mydiag(c(0,Dr+Ur),-1) -mydiag(c(0,Dl+Ul+Dr+Ur+Uc,0))
+    Ge <- bandSparse(nc+2,nc+2,(-1):1,
+                     list(c(Dl+Ul,0),
+                          -c(0,Dl+Ul+Dr+Ur+Uc,0),
+                          c(0,Dr+Ur)))
+                     
     G <- Ge[2:(nc+1),2:(nc+1)]
 
     ## Handle boundary conditions
@@ -305,7 +300,7 @@ cell.centers <- function(xgrid,ygrid=NULL)
 #' image(xi,yi,t(phim))
 #'
 #' @export
-fvade2d <- function(ux,uy,Dx,Dy,xgrid,ygrid,bc=list(N="r",E="r",S="r",W="r"))
+fvade2d <- function(ux,uy,Dx,Dy,xgrid,ygrid,bc=list(N="r",E="r",S="r",W="r"),Dxy=function(x,y)0)
 {
     require(Matrix)
 
@@ -359,7 +354,7 @@ fvade2d <- function(ux,uy,Dx,Dy,xgrid,ygrid,bc=list(N="r",E="r",S="r",W="r"))
             k <- k + 1
             GDentries[k,1] <- C(i,j)
             GDentries[k,2] <- N(i,j)
-            GDentries[k,3] <- Dy(xc[j],ygrid[i+1])/dy[i]/dyc[i+1]
+            GDentries[k,3] <- Dy(xc[j],ygrid[i+1])/dy[i]/dyc[i+1] 
 
             ## Diffusive flux S
             k <- k + 1
