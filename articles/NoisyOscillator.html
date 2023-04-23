@@ -68,9 +68,6 @@
       <a href="../articles/ItosFormula.html">Itô's formula</a>
     </li>
     <li>
-      <a href="../articles/ItosFormula2.html">Itô's formula part II</a>
-    </li>
-    <li>
       <a href="../articles/Killing.html">SDEs with killing</a>
     </li>
     <li>
@@ -112,7 +109,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-04-05</h4>
+            <h4 data-toc-skip class="date">2023-04-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/NoisyOscillator.Rmd" class="external-link"><code>vignettes/NoisyOscillator.Rmd</code></a></small>
       <div class="hidden name"><code>NoisyOscillator.Rmd</code></div>
@@ -224,8 +221,8 @@ compare with the analytical prediction:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##            [,1]       [,2]</span></span>
-<span><span class="co">## [1,] 2.51481153 0.03590485</span></span>
-<span><span class="co">## [2,] 0.03590485 2.59928896</span></span></code></pre>
+<span><span class="co">## [1,] 2.10420343 0.03250949</span></span>
+<span><span class="co">## [2,] 0.03250949 2.23918567</span></span></code></pre>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">lyap</span><span class="op">(</span><span class="va">A</span>,<span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">s</span><span class="op">^</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##              [,1]          [,2]</span></span>

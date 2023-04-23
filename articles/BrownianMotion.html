@@ -68,9 +68,6 @@
       <a href="../articles/ItosFormula.html">Itô's formula</a>
     </li>
     <li>
-      <a href="../articles/ItosFormula2.html">Itô's formula part II</a>
-    </li>
-    <li>
       <a href="../articles/Killing.html">SDEs with killing</a>
     </li>
     <li>
@@ -112,7 +109,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-04-05</h4>
+            <h4 data-toc-skip class="date">2023-04-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/BrownianMotion.Rmd" class="external-link"><code>vignettes/BrownianMotion.Rmd</code></a></small>
       <div class="hidden name"><code>BrownianMotion.Rmd</code></div>
@@ -149,7 +146,7 @@ Brownian motion itself.</p>
 <span><span class="co">##     B &lt;- B0 + cumsum(dB)</span></span>
 <span><span class="co">##     return(B)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x5569f37da808&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x558e1723c670&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:SDEtools&gt;</span></span></code></pre>
 </div>
 <div class="section level2">
@@ -162,11 +159,11 @@ discretization and check the statistics.</p>
 <span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="va">n</span>,<span class="fu">rBM</span><span class="op">(</span><span class="va">tv</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">B</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##      [,1]      [,2]     [,3]      [,4]</span></span>
-<span><span class="co">## [1,]    0 0.0000000 0.000000 0.0000000</span></span>
-<span><span class="co">## [2,]    0 1.0175191 1.022589 0.9061491</span></span>
-<span><span class="co">## [3,]    0 1.0225893 1.983076 1.8565905</span></span>
-<span><span class="co">## [4,]    0 0.9061491 1.856590 3.6721700</span></span></code></pre>
+<pre><code><span><span class="co">##      [,1]     [,2]     [,3]     [,4]</span></span>
+<span><span class="co">## [1,]    0 0.000000 0.000000 0.000000</span></span>
+<span><span class="co">## [2,]    0 1.016815 1.016334 1.074080</span></span>
+<span><span class="co">## [3,]    0 1.016334 1.966841 1.969115</span></span>
+<span><span class="co">## [4,]    0 1.074080 1.969115 3.997621</span></span></code></pre>
 <p>Compare this with the analytical result:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">tv</span>,<span class="fu"><a href="https://rdrr.io/r/base/Vectorize.html" class="external-link">Vectorize</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>

@@ -68,9 +68,6 @@
       <a href="../articles/ItosFormula.html">Itô's formula</a>
     </li>
     <li>
-      <a href="../articles/ItosFormula2.html">Itô's formula part II</a>
-    </li>
-    <li>
       <a href="../articles/Killing.html">SDEs with killing</a>
     </li>
     <li>
@@ -112,7 +109,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-04-05</h4>
+            <h4 data-toc-skip class="date">2023-04-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/ItoIntegrals.Rmd" class="external-link"><code>vignettes/ItoIntegrals.Rmd</code></a></small>
       <div class="hidden name"><code>ItoIntegrals.Rmd</code></div>
@@ -163,7 +160,7 @@ time point. The integral is implemented as follows:</p>
 <span><span class="co">## {</span></span>
 <span><span class="co">##     return(c(0, cumsum(G[-length(G)] * diff(B))))</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x55e6d85a6b20&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x55aeec74a4c0&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:SDEtools&gt;</span></span></code></pre>
 </div>
 <div class="section level2">
@@ -202,8 +199,8 @@ stochastic differential equation with the numerical Itô integral:</p>
 machine precision:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">X</span><span class="op">-</span><span class="fu">itointegral</span><span class="op">(</span><span class="fu">f</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">t</span><span class="op">)</span><span class="op">-</span><span class="fu">itointegral</span><span class="op">(</span><span class="fu">g</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">B</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 1.110223e-16</span></span></code></pre>
-<p>that is, there is no time discretization error because we use the
+<pre><code><span><span class="co">## [1] 6.661338e-16</span></span></code></pre>
+<p>That is, there is no time discretization error because we use the
 same principle for time discretization in the Euler-Maruyama method and
 in the numerical Itô integral.</p>
 </div>
@@ -227,7 +224,7 @@ motion:</p>
 discretization error:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">B</span><span class="op">-</span><span class="va">W</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 2.220446e-16</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 6.661338e-16</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="numerical-stratonovich-integration">Numerical Stratonovich integration<a class="anchor" aria-label="anchor" href="#numerical-stratonovich-integration"></a>
@@ -249,7 +246,7 @@ from the quadratic cross-variation between the integrator and the
 integrand. The following code and figure compare the Itô and
 Stratonovich integrals <span class="math display">\[
   I^i_t = \int_0^t G_s ~dX_s ,
-  I^s_t = \int_0^t G_s \ring dX_s  
+  I^s_t = \int_0^t G_s \circ dX_s  
 \]</span> with <span class="math inline">\(G_s = B_s + X_s\)</span>, as
 well as the relationship between the two <span class="math display">\[
 I^s_t = I^i_t + \frac 12 \langle G,X\rangle_t .
@@ -259,7 +256,9 @@ I^s_t = I^i_t + \frac 12 \langle G,X\rangle_t .
 <span><span class="va">Ii</span> <span class="op">&lt;-</span> <span class="fu">itointegral</span><span class="op">(</span><span class="va">G</span>,<span class="va">X</span><span class="op">)</span></span>
 <span><span class="va">Is</span> <span class="op">&lt;-</span> <span class="fu">stochint</span><span class="op">(</span><span class="va">G</span>,<span class="va">X</span>,rule<span class="op">=</span><span class="st">"c"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Ii</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
+<span><span class="va">ylim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">Ii</span>,<span class="va">Is</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Ii</span>,type<span class="op">=</span><span class="st">"l"</span>,ylim<span class="op">=</span><span class="va">ylim</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Is</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Ii</span> <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="fu">CrossVariation</span><span class="op">(</span><span class="va">G</span>,<span class="va">X</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>

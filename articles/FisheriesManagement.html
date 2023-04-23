@@ -68,9 +68,6 @@
       <a href="../articles/ItosFormula.html">Itô's formula</a>
     </li>
     <li>
-      <a href="../articles/ItosFormula2.html">Itô's formula part II</a>
-    </li>
-    <li>
       <a href="../articles/Killing.html">SDEs with killing</a>
     </li>
     <li>
@@ -113,7 +110,7 @@ Control Problem</h1>
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-04-05</h4>
+            <h4 data-toc-skip class="date">2023-04-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/FisheriesManagement.Rmd" class="external-link"><code>vignettes/FisheriesManagement.Rmd</code></a></small>
       <div class="hidden name"><code>FisheriesManagement.Rmd</code></div>
@@ -144,10 +141,12 @@ in steady state, which leads to the Hamilton-Jacobi-Bellman equation</p>
 \sigma^2 x^2 V'' + \sqrt u \right] = 0 .
 \]</span></p>
 <p>The optimal control is found as a stationary point: <span class="math inline">\(u= 1/4/(V')^2\)</span>.</p>
-<p>The analytical solution to this problem is <span class="math display">\[
+<p>The analytical steady-state solution to this problem is <span class="math display">\[
   V(x,t) = \frac 12 \log x -\gamma t
 \]</span> where <span class="math inline">\(\gamma = \frac 12
-(1-\sigma^2 /2)\)</span>.</p>
+(1-\sigma^2 /2)\)</span>. This leads to the strategy <span class="math display">\[
+U_t = X_t^2 .
+\]</span></p>
 </div>
 <div class="section level2">
 <h2 id="numerical-analysis-of-the-steady-state-problem">Numerical analysis of the steady-state problem<a class="anchor" aria-label="anchor" href="#numerical-analysis-of-the-steady-state-problem"></a>
@@ -191,7 +190,7 @@ two changes: First, at the left cell, we assume that we cannot fish.
 This avoids the option of driving the fish to extinction and then fish
 like crazy on fish that aren’t there. Next, we assume that there is a
 bound on the harvest, even if <span class="math inline">\(V'(x)=0\)</span>. We do that by replacing
-<span class="math inline">\(V'(x)\)</span> with <span class="math inline">\(\max(epsilon,V'(x))\)</span> where <span class="math inline">\(\epsilon\)</span> is a “small” number.</p>
+<span class="math inline">\(V'(x)\)</span> with <span class="math inline">\(\max(\epsilon,V'(x))\)</span> where <span class="math inline">\(\epsilon\)</span> is a “small” number.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">epsilon</span> <span class="op">&lt;-</span> <span class="fl">1e-1</span></span>
 <span><span class="va">uopt</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">G1V</span><span class="op">)</span> </span>

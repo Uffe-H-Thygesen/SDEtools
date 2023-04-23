@@ -68,9 +68,6 @@
       <a href="../articles/ItosFormula.html">Itô's formula</a>
     </li>
     <li>
-      <a href="../articles/ItosFormula2.html">Itô's formula part II</a>
-    </li>
-    <li>
       <a href="../articles/Killing.html">SDEs with killing</a>
     </li>
     <li>
@@ -112,7 +109,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-04-05</h4>
+            <h4 data-toc-skip class="date">2023-04-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/ItosFormula.Rmd" class="external-link"><code>vignettes/ItosFormula.Rmd</code></a></small>
       <div class="hidden name"><code>ItosFormula.Rmd</code></div>
@@ -124,30 +121,37 @@ Thygesen</h4>
 <div class="section level2">
 <h2 id="verifying-itôs-formula-through-simulation">Verifying Itô’s formula through simulation<a class="anchor" aria-label="anchor" href="#verifying-it%C3%B4s-formula-through-simulation"></a>
 </h2>
-<p>Itô’s formula states that <span class="math display">\[
+<p>Itô’s formula, in its simplest version, states that <span class="math display">\[
 dY_t = h'(X_t) ~dX_t + \frac 12 h''(X_t) (dX_t)^2
-\]</span> when <span class="math inline">\(\{X_t\}\)</span> is an Itô
-process and <span class="math inline">\(Y_t=h(X_t)\)</span>.</p>
-<p>Moreover, if <span class="math display">\[
-dX_t = F_t ~dt + G_t ~dB_t
-\]</span> then we have <span class="math inline">\((dX_t)^2 = G_t^2
-~dt\)</span>, so <span class="math display">\[
+\]</span> when <span class="math inline">\(Y_t=h(X_t)\)</span> and <span class="math inline">\(\{X_t\}\)</span> is an Itô process <span class="math display">\[
+dX_t = F_t ~dt + G_t ~dB_t .
+\]</span> Moreover, the quadratic variation <span class="math inline">\([X]_t\)</span> is given by <span class="math inline">\(d[X]_t = (dX_t)^2 = G_t^2 ~dt\)</span>, so <span class="math display">\[
 dY_t = h'(X_t) F_t ~dt + h'(X_t) G_t ~dB_t + \frac 12
-h''(X_t) G_t^2 ~dt
-\]</span></p>
-<p>The following verifies this numerically for a specific example, where
-<span class="math inline">\(\{X_t\}\)</span> is stochastic logistic
-growth:</p>
+h''(X_t) G_t^2 ~dt  .
+\]</span> The aim of this vignette is to verify this numerically for a
+specific example, and to discuss discretization errors when we verify
+the formula in discrete time.</p>
+<p>In our example, <span class="math inline">\(\{X_t\}\)</span> is
+stochastic logistic growth given by the Itô stochastic differential
+equation <span class="math display">\[
+dX_t = X_t(1-X_t) ~dt + \sigma X_t ~dB_t
+\]</span> with <span class="math inline">\(\sigma = 0.25\)</span> and
+the initial condition <span class="math inline">\(X_0=x_0=0.01\)</span>.
+We simulate a sample path of <span class="math inline">\(X_t\)</span>
+using the Euler-Maruyama algorithm:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Uffe-H-Thygesen/SDEtools" class="external-link">SDEtools</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: SDEtools</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>  <span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">*</span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">x</span><span class="op">)</span></span>
-<span>  <span class="va">g</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">0.5</span><span class="op">*</span><span class="va">x</span></span>
+<code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123456</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">*</span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">x</span><span class="op">)</span></span>
+<span>  <span class="va">g</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">sigma</span><span class="op">*</span><span class="va">x</span></span>
 <span>  </span>
 <span>  <span class="va">t</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span>,<span class="fl">0.01</span><span class="op">)</span></span>
 <span>  <span class="va">B</span> <span class="op">&lt;-</span> <span class="fu">rBM</span><span class="op">(</span><span class="va">t</span><span class="op">)</span></span>
-<span>  <span class="va">x0</span> <span class="op">&lt;-</span> <span class="fl">0.1</span></span>
+<span>  <span class="va">x0</span> <span class="op">&lt;-</span> <span class="fl">0.01</span></span>
+<span>  <span class="va">sigma</span> <span class="op">&lt;-</span> <span class="fl">0.25</span></span>
 <span>  <span class="va">X</span> <span class="op">&lt;-</span> <span class="fu">euler</span><span class="op">(</span><span class="va">f</span>,<span class="va">g</span>,<span class="va">t</span>,<span class="va">x0</span>,<span class="va">B</span><span class="op">)</span><span class="op">$</span><span class="va">X</span></span>
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
@@ -161,30 +165,114 @@ growth:</p>
 <span>  <span class="va">Y</span> <span class="op">=</span> <span class="fu">h</span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ItosFormula_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
-<p>We now verify the first variant of Itô’s formula:</p>
+<p>We now verify the first variant of Itô’s formula, viz. <span class="math display">\[
+Y_t = Y_0 + \int_0^t h'(X_s) ~dX_s + \int_0^t \frac 12
+h''(X_s) ~d[X]_s.
+\]</span> We first generate the quadratic variation <span class="math inline">\([X]_t\)</span>, and then perform numerical Itô
+integration:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
-<span><span class="va">Y1</span> <span class="op">&lt;-</span> <span class="fu">h</span><span class="op">(</span><span class="va">x0</span><span class="op">)</span> <span class="op">+</span> <span class="fu">itointegral</span><span class="op">(</span><span class="fu">hp</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">X</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">*</span><span class="fu">itointegral</span><span class="op">(</span><span class="fu">hpp</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="fu">QuadraticVariation</span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">qvX</span> <span class="op">=</span> <span class="fu">QuadraticVariation</span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span>
+<span><span class="va">Y1</span> <span class="op">&lt;-</span> <span class="fu">h</span><span class="op">(</span><span class="va">x0</span><span class="op">)</span> <span class="op">+</span> <span class="fu">itointegral</span><span class="op">(</span><span class="fu">hp</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">X</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">*</span><span class="fu">itointegral</span><span class="op">(</span><span class="fu">hpp</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">qvX</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y1</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ItosFormula_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
-<p>There is some discretization error, because we are effectively
-truncating at second order in Taylor’s formula when computing increments
-over each time step.</p>
+<p>The two lines lie nicely on top of each other, but there is some
+discretization error. We will look at this error later.</p>
+<p>We now do the same for the second formulation, where we use the
+result <span class="math inline">\(d[X]_t = g^2(X_t)~dt\)</span>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span><span class="op">-</span><span class="va">Y1</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ItosFormula_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<p>We now do the same for the second formulation:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
-<span><span class="va">Y2</span> <span class="op">&lt;-</span> <span class="fu">h</span><span class="op">(</span><span class="va">x0</span><span class="op">)</span> <span class="op">+</span> <span class="fu">itointegral</span><span class="op">(</span><span class="fu">hp</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">X</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">*</span><span class="fu">itointegral</span><span class="op">(</span><span class="fu">hpp</span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">*</span><span class="fu">g</span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>,<span class="va">t</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">Y2</span> <span class="op">&lt;-</span> <span class="fu">h</span><span class="op">(</span><span class="va">x0</span><span class="op">)</span> <span class="op">+</span> <span class="fu">itointegral</span><span class="op">(</span><span class="fu">hp</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">X</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">*</span><span class="fu">itointegral</span><span class="op">(</span><span class="fu">hpp</span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">*</span><span class="fu">g</span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>,<span class="va">t</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y2</span>,col<span class="op">=</span><span class="st">"green"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="ItosFormula_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p>Again we see that the two lines lie on top of each other, although
+the discretization error in this case appears to be a little more
+visible.</p>
+<p>Next, we could manipulate the integral equation for <span class="math inline">\(\{Y_t\}\)</span> further. Inserting the forms for
+<span class="math inline">\(h'\)</span>, <span class="math inline">\(h''\)</span>, <span class="math inline">\(dX_t\)</span> and <span class="math inline">\((dX_t)^2\)</span>, we get</p>
+<p><span class="math display">\[
+dY_t = (1-X_t) ~dt + \sigma ~dB_t - \frac 12 \sigma^2 ~dt
+\]</span></p>
+<p>which leads to the following representation of <span class="math inline">\(\{Y_t\}\)</span>:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">Y3</span> <span class="op">&lt;-</span> <span class="fu">h</span><span class="op">(</span><span class="va">x0</span><span class="op">)</span> <span class="op">+</span> <span class="fu">itointegral</span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">X</span><span class="op">-</span><span class="fl">0.5</span><span class="op">*</span><span class="va">sigma</span><span class="op">^</span><span class="fl">2</span>,<span class="va">t</span><span class="op">)</span> <span class="op">+</span> <span class="va">sigma</span><span class="op">*</span><span class="va">B</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y3</span>,col<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ItosFormula_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
-<p>In this discretization error, there is now also the effect that the
-discretized quadratic variation of Brownian motion does not exactly
-equal time. This error turns out to be larger, in this case:</p>
+<p>Finally, we can substitute <span class="math inline">\(X_t =
+\exp(Y_t)\)</span> in this expression, thus obtaining an Itô stochastic
+differential equation for <span class="math inline">\(\{Y_t\}\)</span>,
+viz.:</p>
+<p><span class="math display">\[
+  dY_t = (1-e^{Y_t} - \frac 12 \sigma^2) ~dt + \sigma ~dB_t.
+\]</span></p>
+<p>The following code solves this equation and compares with the
+previous solution:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span><span class="op">-</span><span class="va">Y2</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span>  <span class="va">fY</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="fl">1</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">-</span><span class="fl">0.5</span><span class="op">*</span><span class="va">sigma</span><span class="op">^</span><span class="fl">2</span></span>
+<span>  <span class="va">gY</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="va">sigma</span></span>
+<span>  <span class="va">Y4</span> <span class="op">&lt;-</span> <span class="fu">euler</span><span class="op">(</span><span class="va">fY</span>,<span class="va">gY</span>,<span class="va">t</span>,<span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">x0</span><span class="op">)</span>,<span class="va">B</span><span class="op">)</span><span class="op">$</span><span class="va">X</span></span>
+<span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y4</span>,col<span class="op">=</span><span class="st">"purple"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ItosFormula_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+</div>
+<div class="section level2">
+<h2 id="the-discretization-error">The discretization error<a class="anchor" aria-label="anchor" href="#the-discretization-error"></a>
+</h2>
+<p>We now examine the discretization error associated with the numerical
+Itô integration. The first formulation,</p>
+<p><span class="math display">\[
+dY_t = h'(X_t) ~dX_t + \frac 12 h''(X_t) (dX_t)^2
+\]</span></p>
+<p>leads to a discretization error, because we are effectively
+truncating at second order in Taylor’s formula when computing increments
+over each time step:</p>
+<p><span class="math display">\[
+Y_{t+k} = h(X_{t+k}) = h(X_t) + h'(X_t) (X_{t+k}-X_t) + \frac 12
+h''(X_t) (X_{t+k}-X_t)^2  + R
+\]</span></p>
+<p>so that this version of Itô’s formula ignores the higher order terms
+<span class="math inline">\(R\)</span>. We can compute the error:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span><span class="op">-</span><span class="va">Y1</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="ItosFormula_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p>To estimate the error, note from Taylor’s formula that the leading
+error term is <span class="math inline">\(\frac 16 h'''(X_t)
+~(X_{t+k}-X_t)^3\)</span>. Here, <span class="math inline">\(h'''(x)=2/x^3\)</span>. During the
+growth phase, the increment <span class="math inline">\(X_{t+k}-X_t\)</span> has conditional expectation
+<span class="math inline">\(kX_t\)</span> and variance <span class="math inline">\(k\sigma^2 X_t^2\)</span>, so the mean cubed is
+<span class="math inline">\(X_t^3(k^3+ 3 k^2\sigma^2)\)</span>. As a
+result, the error should grow with rate <span class="math inline">\((k^3+3k^2\sigma^2)/3 \approx 6.6\cdot
+10^{-6}\)</span> per time step, i.e. with a rate <span class="math inline">\(6.6\cdot 10^{-4}\)</span>. So after 5 time units,
+the error should be <span class="math inline">\(0.0033\)</span>. We see
+that there is good agreement with the simulation result.</p>
+<p>We now consider the discretization error in the second formulation,
+<span class="math display">\[
+dY_t = h'(X_t) ~dX_t + \frac 12 h''(X_t) g^2(X_t) ~dt .
+\]</span> Here, there is also the effect that the increment in
+discretized quadratic variation <span class="math inline">\([X]_t\)</span>, i.e. <span class="math inline">\((X_{t+k}-X_t)^2\)</span>, does not exactly equal
+<span class="math inline">\(g^2(X_t) ~k\)</span>. In fact, the
+conditional variance of the increment equals <span class="math inline">\(g^2(X_t) ~k\)</span>, but in discrete time, there
+is both a random component and a mean. This error can be traced back the
+underlying Brownian motion: In discrete time, its quadratic variation
+does not exactly equal time. In this case, this error turns out to be
+larger than the one we examined previously:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span><span class="op">-</span><span class="va">Y2</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="ItosFormula_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p>To assess this error coarsely, note that it comes from the term <span class="math display">\[
+\frac 12 h''(X_t) [ (X_{t+k}-X_t)^2 - g^2(X_t) ~k]
+\]</span> and the conditional expectation of this term is <span class="math inline">\(-k^2/2\)</span> per time step during the growth
+phase, i.e. it grows with rate <span class="math inline">\(-k/2\)</span>. So after 5 time units, we expect
+that this error has grown to 0.025. We see a good agreement with the
+simulation, even if the variation between realizations are greater.</p>
+<p>This vignette has hopefully illuminated both where Itô’s formula
+comes from, and the errors that may arise when we investigate stochastic
+differential equation in discrete time.</p>
 </div>
   </div>
 

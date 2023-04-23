@@ -68,9 +68,6 @@
       <a href="articles/ItosFormula.html">Itô's formula</a>
     </li>
     <li>
-      <a href="articles/ItosFormula2.html">Itô's formula part II</a>
-    </li>
-    <li>
       <a href="articles/Killing.html">SDEs with killing</a>
     </li>
     <li>
@@ -107,46 +104,7 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div class="section level1">
-<div class="page-header"><h1 id="sdetools">SDEtools<a class="anchor" aria-label="anchor" href="#sdetools"></a>
-</h1></div>
-<!-- badges: start -->
-<!-- badges: end -->
-<p>SDEtools provides functions for analyzing models based on stochastic differential equations (SDE’s). These analysis include simulation of sample paths, solving the Kolmogorov equations that govern transition probabilities, state estimation, and optimal control.</p>
-<div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h2>
-<p>You can install the development version of SDEtools from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"Uffe-H-Thygesen/SDEtools"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
-</h2>
-<p>This is a basic example which shows you how to simulate a sample path, and compute the transition probability, for a double well model:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Uffe-H-Thygesen/SDEtools" class="external-link">SDEtools</a></span><span class="op">)</span></span>
-<span><span class="co">## basic example code</span></span>
-<span><span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">-</span><span class="va">x</span><span class="op">^</span><span class="fl">3</span></span>
-<span><span class="va">g</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">0.5</span></span>
-<span></span>
-<span><span class="va">tv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">6</span>,<span class="fl">0.01</span><span class="op">)</span></span>
-<span><span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu">heun</span><span class="op">(</span><span class="va">f</span>,<span class="va">g</span>,<span class="va">tv</span>,<span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span>,ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.5</span>,<span class="fl">1.5</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">xi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.5</span>,<span class="fl">1.5</span>,<span class="fl">0.01</span><span class="op">)</span></span>
-<span><span class="va">xc</span> <span class="op">&lt;-</span> <span class="fu">cell.centers</span><span class="op">(</span><span class="va">xi</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">D</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">0.5</span><span class="op">*</span><span class="fu">g</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
-<span><span class="va">G</span> <span class="op">&lt;-</span> <span class="fu">fvade</span><span class="op">(</span><span class="va">f</span>,<span class="va">D</span>,<span class="va">xi</span>,<span class="st">'r'</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu">StationaryDistribution</span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="fl">200</span><span class="op">*</span><span class="va">rho</span>,<span class="va">xc</span><span class="op">)</span></span></code></pre></div>
-</div>
-</div>
+Analyse of stochastic differential equations: Simulation of sample paths of Brownian motion, numerical stochastic integration, numerical solution of stochastic differential equations, and numerical analysis of the Kolmogorov equations in one and two spatial dimensions, including applications to filtering (recursive state estimation) and optimal control. 
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
