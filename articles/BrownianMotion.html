@@ -146,7 +146,7 @@ Brownian motion itself.</p>
 <span><span class="co">##     B &lt;- B0 + cumsum(dB)</span></span>
 <span><span class="co">##     return(B)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x55881ab5a9e8&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x561ff01b4398&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:SDEtools&gt;</span></span></code></pre>
 </div>
 <div class="section level2">
@@ -161,9 +161,9 @@ discretization and check the statistics.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">B</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##      [,1]      [,2]     [,3]      [,4]</span></span>
 <span><span class="co">## [1,]    0 0.0000000 0.000000 0.0000000</span></span>
-<span><span class="co">## [2,]    0 0.9127637 0.959368 0.9907025</span></span>
-<span><span class="co">## [3,]    0 0.9593680 1.990551 2.0258492</span></span>
-<span><span class="co">## [4,]    0 0.9907025 2.025849 4.1408261</span></span></code></pre>
+<span><span class="co">## [2,]    0 1.0009405 1.019797 0.9874044</span></span>
+<span><span class="co">## [3,]    0 1.0197967 1.966899 1.9074352</span></span>
+<span><span class="co">## [4,]    0 0.9874044 1.907435 3.8431769</span></span></code></pre>
 <p>Compare this with the analytical result:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">tv</span>,<span class="fu"><a href="https://rdrr.io/r/base/Vectorize.html" class="external-link">Vectorize</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
