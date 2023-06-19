@@ -109,7 +109,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-04-23</h4>
+            <h4 data-toc-skip class="date">2023-06-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/NoisyOscillator.Rmd" class="external-link"><code>vignettes/NoisyOscillator.Rmd</code></a></small>
       <div class="hidden name"><code>NoisyOscillator.Rmd</code></div>
@@ -139,7 +139,7 @@ from state 1 to state 1 is identical to that from state 2 to state 2, so
 we only see three distinct curves.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span>list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/ls.html" class="external-link">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://Matrix.R-forge.R-project.org/" class="external-link">Matrix</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://Matrix.R-forge.R-project.org" class="external-link">Matrix</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: Matrix</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Uffe-H-Thygesen/SDEtools" class="external-link">SDEtools</a></span><span class="op">)</span></span></code></pre></div>
@@ -220,9 +220,9 @@ Note the similarity with the impulse response.</p>
 compare with the analytical prediction:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##             [,1]        [,2]</span></span>
-<span><span class="co">## [1,]  2.30484982 -0.03471078</span></span>
-<span><span class="co">## [2,] -0.03471078  2.25668623</span></span></code></pre>
+<pre><code><span><span class="co">##              [,1]         [,2]</span></span>
+<span><span class="co">## [1,]  2.404248530 -0.008830182</span></span>
+<span><span class="co">## [2,] -0.008830182  2.307313085</span></span></code></pre>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">lyap</span><span class="op">(</span><span class="va">A</span>,<span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">s</span><span class="op">^</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##              [,1]          [,2]</span></span>
