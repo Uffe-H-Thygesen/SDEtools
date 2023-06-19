@@ -152,23 +152,23 @@ model:</p>
 <span></span>
 <span><span class="co">## Define a time grid and simulate the process</span></span>
 <span><span class="va">tv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">100</span>,<span class="fl">0.1</span><span class="op">)</span></span>
-<span><span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu">heun</span><span class="op">(</span><span class="va">f</span>,<span class="va">g</span>,<span class="va">tv</span>,<span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/heun.html">heun</a></span><span class="op">(</span><span class="va">f</span>,<span class="va">g</span>,<span class="va">tv</span>,<span class="fl">0</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span>,ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.5</span>,<span class="fl">1.5</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## Compute the stationary density using a spatial grid</span></span>
 <span><span class="va">xi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.5</span>,<span class="fl">1.5</span>,<span class="fl">0.01</span><span class="op">)</span></span>
-<span><span class="va">xc</span> <span class="op">&lt;-</span> <span class="fu">cell.centers</span><span class="op">(</span><span class="va">xi</span><span class="op">)</span></span>
+<span><span class="va">xc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cell.centers.html">cell.centers</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## Define the diffusivity</span></span>
 <span><span class="va">D</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">0.5</span><span class="op">*</span><span class="fu">g</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
 <span></span>
 <span><span class="co">## Compute the generator</span></span>
-<span><span class="va">G</span> <span class="op">&lt;-</span> <span class="fu">fvade</span><span class="op">(</span><span class="va">f</span>,<span class="va">D</span>,<span class="va">xi</span>,<span class="st">'r'</span><span class="op">)</span></span>
+<span><span class="va">G</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fvade.html">fvade</a></span><span class="op">(</span><span class="va">f</span>,<span class="va">D</span>,<span class="va">xi</span>,<span class="st">'r'</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: Matrix</span></span>
 <span></span>
 <span><span class="co">## Compute the stationary distribution</span></span>
-<span><span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu">StationaryDistribution</span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
+<span><span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/StationaryDistribution.html">StationaryDistribution</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## Rescale and add to the plot</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="fl">20</span><span class="op">*</span><span class="va">rho</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">rho</span><span class="op">)</span>,<span class="va">xc</span><span class="op">)</span></span></code></pre></div>

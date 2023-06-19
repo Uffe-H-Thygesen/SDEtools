@@ -160,7 +160,7 @@ method.</p>
 <span>  <span class="va">p</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="co">## Simulate states </span></span>
-<span>  <span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu">euler</span><span class="op">(</span><span class="va">f</span>,<span class="va">g</span>,<span class="va">tvec</span>,<span class="va">x0</span>,p<span class="op">=</span><span class="va">p</span><span class="op">)</span></span>
+<span>  <span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="va">f</span>,<span class="va">g</span>,<span class="va">tvec</span>,<span class="va">x0</span>,p<span class="op">=</span><span class="va">p</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">times</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"Time"</span>,ylab<span class="op">=</span><span class="st">'Abundance'</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-1-1.png" width="672"></p>
@@ -205,7 +205,7 @@ the likelihood function.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="co">## Choose discretization of state space</span></span>
 <span>  <span class="va">xi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">3</span>,<span class="fl">0.025</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>                                <span class="co"># Cell Interfaces</span></span>
-<span>  <span class="va">xc</span> <span class="op">&lt;-</span> <span class="fu">cell.centers</span><span class="op">(</span><span class="va">xi</span><span class="op">)</span></span>
+<span>  <span class="va">xc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cell.centers.html">cell.centers</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">ltab</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">ymeas</span>,<span class="va">dl</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xc</span>,<span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">ltab</span><span class="op">)</span>,xlab<span class="op">=</span><span class="st">"Time"</span>,ylab<span class="op">=</span><span class="st">"State"</span><span class="op">)</span></span></code></pre></div>
@@ -240,7 +240,7 @@ estimation, not future measurements.</p>
 <span>  <span class="co">## Specify prior c.d.f. of the initial state, here uniform. Note that it does not have to be normalized.</span></span>
 <span>  <span class="va">phi0</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="va">x</span></span>
 <span>  <span class="co">## Run the filter </span></span>
-<span>  <span class="va">filter</span> <span class="op">&lt;-</span> <span class="fu">HMMfilterSDE</span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,bc<span class="op">=</span><span class="st">'r'</span>,<span class="va">phi0</span>,<span class="va">tm</span>,<span class="va">ymeas</span>,<span class="va">dl</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="va">filter</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HMMfilterSDE.html">HMMfilterSDE</a></span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,bc<span class="op">=</span><span class="st">'r'</span>,<span class="va">phi0</span>,<span class="va">tm</span>,<span class="va">ymeas</span>,<span class="va">dl</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: Matrix</span></span></code></pre>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="co">## Show colour plot of posterior c.d.f.</span></span>

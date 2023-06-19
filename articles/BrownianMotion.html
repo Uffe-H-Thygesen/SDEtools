@@ -128,7 +128,7 @@ Brownian motion restricted to those time points:</p>
 <pre><code><span><span class="co">## Loading required package: SDEtools</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">4</span><span class="op">)</span></span>
-<span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu">rBM</span><span class="op">(</span><span class="va">tv</span><span class="op">)</span></span>
+<span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rBM.html">rBM</a></span><span class="op">(</span><span class="va">tv</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">B</span>,type<span class="op">=</span><span class="st">"b"</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">B</span><span class="op">[</span><span class="va">t</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="BrownianMotion_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 <p>The simulation routine starts by finding the time increments. Then
@@ -146,7 +146,7 @@ Brownian motion itself.</p>
 <span><span class="co">##     B &lt;- B0 + cumsum(dB)</span></span>
 <span><span class="co">##     return(B)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x56132b534c48&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x5564ca613e20&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:SDEtools&gt;</span></span></code></pre>
 </div>
 <div class="section level2">
@@ -156,14 +156,14 @@ Brownian motion itself.</p>
 discretization and check the statistics.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
-<span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="va">n</span>,<span class="fu">rBM</span><span class="op">(</span><span class="va">tv</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="va">n</span>,<span class="fu"><a href="../reference/rBM.html">rBM</a></span><span class="op">(</span><span class="va">tv</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">B</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##      [,1]      [,2]      [,3]      [,4]</span></span>
-<span><span class="co">## [1,]    0 0.0000000 0.0000000 0.0000000</span></span>
-<span><span class="co">## [2,]    0 0.9701175 0.9226819 0.8332145</span></span>
-<span><span class="co">## [3,]    0 0.9226819 1.8054150 1.6842783</span></span>
-<span><span class="co">## [4,]    0 0.8332145 1.6842783 3.5447267</span></span></code></pre>
+<pre><code><span><span class="co">##      [,1]     [,2]     [,3]     [,4]</span></span>
+<span><span class="co">## [1,]    0 0.000000 0.000000 0.000000</span></span>
+<span><span class="co">## [2,]    0 1.027051 1.042329 1.038597</span></span>
+<span><span class="co">## [3,]    0 1.042329 2.159026 2.130307</span></span>
+<span><span class="co">## [4,]    0 1.038597 2.130307 4.027781</span></span></code></pre>
 <p>Compare this with the analytical result:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">tv</span>,<span class="fu"><a href="https://rdrr.io/r/base/Vectorize.html" class="external-link">Vectorize</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -179,7 +179,7 @@ discretization and check the statistics.</p>
 <p>Brownian motion scales with the square root of time:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">1e-5</span><span class="op">)</span></span>
-<span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fu">rBM</span><span class="op">(</span><span class="va">tv</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fu"><a href="../reference/rBM.html">rBM</a></span><span class="op">(</span><span class="va">tv</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/matplot.html" class="external-link">matplot</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">B</span>,type<span class="op">=</span><span class="st">"l"</span>,lty<span class="op">=</span><span class="fl">1</span>,ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
@@ -201,7 +201,7 @@ points.</p>
 <span>  <span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1e4</span></span>
 <span>  <span class="va">B0T</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">15</span>,<span class="fl">5</span><span class="op">)</span></span>
 <span>  <span class="va">sigma</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
-<span>  <span class="va">BB</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="va">n</span>,<span class="fu">rBrownianBridge</span><span class="op">(</span><span class="va">tv</span>,sigma<span class="op">=</span><span class="va">sigma</span>,B0T<span class="op">=</span><span class="va">B0T</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">BB</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="va">n</span>,<span class="fu"><a href="../reference/rBrownianBridge.html">rBrownianBridge</a></span><span class="op">(</span><span class="va">tv</span>,sigma<span class="op">=</span><span class="va">sigma</span>,B0T<span class="op">=</span><span class="va">B0T</span><span class="op">)</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/matplot.html" class="external-link">matplot</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">BB</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>,type<span class="op">=</span><span class="st">"l"</span>,lty<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="BrownianMotion_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
@@ -251,7 +251,7 @@ as the survival function.</p>
 <span><span class="va">hist.maxBM.compare.analytical.Monte.Carlo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">Nt</span>,<span class="va">Np</span><span class="op">)</span></span>
 <span><span class="op">{</span> </span>
 <span>  <span class="co">## Simulate Np trajectories of BM on {0,1,...,Nt}</span></span>
-<span>  <span class="va">B</span> <span class="op">&lt;-</span> <span class="fu">rvBM</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="va">Nt</span>,<span class="va">Np</span><span class="op">)</span></span>
+<span>  <span class="va">B</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rvBM.html">rvBM</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="va">Nt</span>,<span class="va">Np</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="co">## Compute max(B) and max(abs(B))</span></span>
 <span>  <span class="va">maxB</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">B</span>,<span class="fl">2</span>,<span class="va">max</span><span class="op">)</span></span>

@@ -129,7 +129,7 @@ interval with four grid cells, i.e. five cell boundaries:</p>
 <pre><code><span><span class="co">## Loading required package: SDEtools</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">xi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">0.2</span><span class="op">)</span></span>
-<span>  <span class="va">xc</span> <span class="op">&lt;-</span> <span class="fu">cell.centers</span><span class="op">(</span><span class="va">xi</span><span class="op">)</span></span>
+<span>  <span class="va">xc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cell.centers.html">cell.centers</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xi</span>,<span class="fl">0</span><span class="op">*</span><span class="va">xi</span>,pch<span class="op">=</span><span class="st">"+"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">""</span>,main<span class="op">=</span><span class="st">"The grid"</span><span class="op">)</span></span>
 <span>  <span class="kw">for</span><span class="op">(</span><span class="va">x</span> <span class="kw">in</span> <span class="va">xi</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>v<span class="op">=</span><span class="va">x</span><span class="op">)</span></span>
@@ -141,7 +141,7 @@ interval with four grid cells, i.e. five cell boundaries:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">u</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">0</span></span>
 <span>  <span class="va">D</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">0.5</span></span>
-<span>  <span class="va">Gd</span> <span class="op">&lt;-</span> <span class="fu">fvade</span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,<span class="st">'r'</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="va">Gd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fvade.html">fvade</a></span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,<span class="st">'r'</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: Matrix</span></span></code></pre>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">Gd</span><span class="op">)</span></span></code></pre></div>
@@ -168,7 +168,7 @@ point of view, the boundary becomes a singularity where probability
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">u</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">1</span></span>
 <span>  <span class="va">D</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">0</span></span>
-<span>  <span class="va">Gp</span> <span class="op">&lt;-</span> <span class="fu">fvade</span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,<span class="st">'r'</span><span class="op">)</span></span>
+<span>  <span class="va">Gp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fvade.html">fvade</a></span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,<span class="st">'r'</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">Gp</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## 5 x 5 sparse Matrix of class "dgCMatrix"</span></span>
 <span><span class="co">##                   </span></span>
@@ -183,7 +183,7 @@ constant flow field -1:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">u</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">-</span><span class="fl">1</span></span>
 <span>  <span class="va">D</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">0</span></span>
-<span>  <span class="va">Gm</span> <span class="op">&lt;-</span> <span class="fu">fvade</span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,<span class="st">'r'</span><span class="op">)</span></span>
+<span>  <span class="va">Gm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fvade.html">fvade</a></span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,<span class="st">'r'</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">Gm</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## 5 x 5 sparse Matrix of class "dgCMatrix"</span></span>
 <span><span class="co">##                   </span></span>
@@ -206,9 +206,9 @@ matrix exponential. This avoids errors arising from time discretization,
 but is expensive for large matrices.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">xi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">0.01</span><span class="op">)</span></span>
-<span>  <span class="va">xc</span> <span class="op">&lt;-</span> <span class="fu">cell.centers</span><span class="op">(</span><span class="va">xi</span><span class="op">)</span></span>
+<span>  <span class="va">xc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cell.centers.html">cell.centers</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="va">G</span> <span class="op">&lt;-</span> <span class="fu">fvade</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">0</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">1</span>,<span class="va">xi</span>,<span class="st">'r'</span><span class="op">)</span></span>
+<span>  <span class="va">G</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fvade.html">fvade</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">0</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">1</span>,<span class="va">xi</span>,<span class="st">'r'</span><span class="op">)</span></span>
 <span>  <span class="va">t</span> <span class="op">&lt;-</span> <span class="fl">0.01</span></span>
 <span>  <span class="va">x0</span> <span class="op">&lt;-</span> <span class="fl">0.25</span></span>
 <span>  <span class="va">phi0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xi</span> <span class="op">&gt;</span> <span class="va">x0</span><span class="op">)</span></span>
@@ -248,7 +248,7 @@ diffusion, it implies a homogenous Neumann boundary condition of the
 forward equation.</p>
 <p>We can repeat the study with periodic boundary conditions:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>  <span class="va">G</span> <span class="op">&lt;-</span> <span class="fu">fvade</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">0</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">1</span>,<span class="va">xi</span>,<span class="st">'p'</span><span class="op">)</span></span>
+<code class="sourceCode R"><span>  <span class="va">G</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fvade.html">fvade</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">0</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">1</span>,<span class="va">xi</span>,<span class="st">'p'</span><span class="op">)</span></span>
 <span>  <span class="va">phit</span> <span class="op">&lt;-</span> <span class="va">phi0</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/expm.html" class="external-link">expm</a></span><span class="op">(</span><span class="va">G</span><span class="op">*</span><span class="va">t</span><span class="op">)</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">phit</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
@@ -257,7 +257,7 @@ right.</p>
 <p>Whether we use periodic or reflecting boundaries, we can find the
 stationary distribution:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>  <span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu">StationaryDistribution</span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
+<code class="sourceCode R"><span>  <span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/StationaryDistribution.html">StationaryDistribution</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">rho</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"l"</span>,ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1.2</span><span class="op">)</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <p>As expected, the stationary distribution is uniform.</p>
@@ -271,7 +271,7 @@ would result in a Markov chain with 102 states (100 inner states and the
 two boundary states). In the following, in stead we omit the
 boundary.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>  <span class="va">G</span> <span class="op">&lt;-</span> <span class="fu">fvade</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">0</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">1</span>,<span class="va">xi</span>,<span class="st">'a'</span><span class="op">)</span></span>
+<code class="sourceCode R"><span>  <span class="va">G</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fvade.html">fvade</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">0</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">1</span>,<span class="va">xi</span>,<span class="st">'a'</span><span class="op">)</span></span>
 <span>  <span class="va">phit</span> <span class="op">&lt;-</span> <span class="va">phi0</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/expm.html" class="external-link">expm</a></span><span class="op">(</span><span class="va">G</span><span class="op">*</span><span class="va">t</span><span class="op">)</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">phit</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
@@ -279,7 +279,7 @@ boundary.</p>
 conserved, but will eventually vanish. So there is no stationary
 distribution, but a quasistationary distribution:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu">QuasiStationaryDistribution</span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/QuasiStationaryDistribution.html">QuasiStationaryDistribution</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">rho</span><span class="op">$</span><span class="va">vector</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"l"</span>,main<span class="op">=</span><span class="va">rho</span><span class="op">$</span><span class="va">value</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"q.s.d."</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>Theoretically, this should be <span class="math inline">\(\sin \pi
@@ -295,7 +295,7 @@ center.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">u</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">16</span><span class="op">*</span><span class="op">(</span><span class="fl">0.5</span><span class="op">-</span><span class="va">x</span><span class="op">)</span></span>
 <span>  <span class="va">D</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">1</span></span>
-<span>  <span class="va">G</span> <span class="op">&lt;-</span> <span class="fu">fvade</span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,<span class="st">'r'</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="va">G</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fvade.html">fvade</a></span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,<span class="st">'r'</span><span class="op">)</span></span></code></pre></div>
 <p>As before, the advection is discretized with a first order upwind
 scheme:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
@@ -326,7 +326,7 @@ carefully checked what properties the discretized system has, and what
 the consequences of this are.</p>
 <p>We can again plot the stationary distribution:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>  <span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu">StationaryDistribution</span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
+<code class="sourceCode R"><span>  <span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/StationaryDistribution.html">StationaryDistribution</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">rho</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 <p>Without boundaries, this would be a Gaussian with mean 0.5 and
@@ -380,10 +380,10 @@ formalism. For example, for stochastic logistic growth where <span class="math i
 <span>  <span class="va">u</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">f</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">-</span> <span class="fu">Dp</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">xi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">2</span>,<span class="fl">0.01</span><span class="op">)</span></span>
-<span>  <span class="va">xc</span> <span class="op">&lt;-</span> <span class="fu">cell.centers</span><span class="op">(</span><span class="va">xi</span><span class="op">)</span></span>
-<span>  <span class="va">G</span> <span class="op">&lt;-</span> <span class="fu">fvade</span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,<span class="st">'r'</span><span class="op">)</span></span>
+<span>  <span class="va">xc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cell.centers.html">cell.centers</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span></span>
+<span>  <span class="va">G</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fvade.html">fvade</a></span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,<span class="st">'r'</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu">StationaryDistribution</span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
+<span>  <span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/StationaryDistribution.html">StationaryDistribution</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">rho</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 </div>
@@ -396,10 +396,10 @@ mind that <em>fvade</em> works on probabilities of each grid cell, not
 densities:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">xi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>,<span class="fl">0.05</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
-<span>  <span class="va">xc</span> <span class="op">&lt;-</span> <span class="fu">cell.centers</span><span class="op">(</span><span class="va">xi</span><span class="op">)</span></span>
-<span>  <span class="va">G</span> <span class="op">&lt;-</span> <span class="fu">fvade</span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,<span class="st">'r'</span><span class="op">)</span></span>
+<span>  <span class="va">xc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cell.centers.html">cell.centers</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span></span>
+<span>  <span class="va">G</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fvade.html">fvade</a></span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,<span class="st">'r'</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu">StationaryDistribution</span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
+<span>  <span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/StationaryDistribution.html">StationaryDistribution</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">rho</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">xi</span>,<span class="fl">0</span><span class="op">*</span><span class="va">xi</span>,pch<span class="op">=</span><span class="st">"+"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
