@@ -44,24 +44,31 @@ This is a basic example which shows you how to simulate a sample path, and compu
 
 ```{r,fig.width=8}
 library(SDEtools)
-## basic example code
+## The double well model is dX = f(X)*dt + g(X)*dB with:
 f <- function(x) x-x^3
 g <- function(x) 0.5
 
-tv <- seq(0,6,0.01)
+## Define a time grid and simulate the process
+tv <- seq(0,100,0.1)
 sim <- heun(f,g,tv,0)
 
 plot(tv,sim$X,type="l",ylim=c(-1.5,1.5))
 
+## Compute the stationary density using a spatial grid
 xi <- seq(-1.5,1.5,0.01)
 xc <- cell.centers(xi)
 
+## Define the diffusivity
 D <- function(x) 0.5*g(x)^2
+
+## Compute the generator
 G <- fvade(f,D,xi,'r')
 
+## Compute the stationary distribution
 rho <- StationaryDistribution(G)
 
-lines(200*rho,xc)
+## Rescale and add to the plot
+lines(20*rho/max(rho),xc)
 ```
 
 ## Tour of features
