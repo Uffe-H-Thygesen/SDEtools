@@ -146,7 +146,7 @@ Brownian motion itself.</p>
 <span><span class="co">##     B &lt;- B0 + cumsum(dB)</span></span>
 <span><span class="co">##     return(B)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x561ff01b4398&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x56132b534c48&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:SDEtools&gt;</span></span></code></pre>
 </div>
 <div class="section level2">
@@ -159,11 +159,11 @@ discretization and check the statistics.</p>
 <span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="va">n</span>,<span class="fu">rBM</span><span class="op">(</span><span class="va">tv</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">B</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##      [,1]      [,2]     [,3]      [,4]</span></span>
-<span><span class="co">## [1,]    0 0.0000000 0.000000 0.0000000</span></span>
-<span><span class="co">## [2,]    0 1.0009405 1.019797 0.9874044</span></span>
-<span><span class="co">## [3,]    0 1.0197967 1.966899 1.9074352</span></span>
-<span><span class="co">## [4,]    0 0.9874044 1.907435 3.8431769</span></span></code></pre>
+<pre><code><span><span class="co">##      [,1]      [,2]      [,3]      [,4]</span></span>
+<span><span class="co">## [1,]    0 0.0000000 0.0000000 0.0000000</span></span>
+<span><span class="co">## [2,]    0 0.9701175 0.9226819 0.8332145</span></span>
+<span><span class="co">## [3,]    0 0.9226819 1.8054150 1.6842783</span></span>
+<span><span class="co">## [4,]    0 0.8332145 1.6842783 3.5447267</span></span></code></pre>
 <p>Compare this with the analytical result:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">tv</span>,<span class="fu"><a href="https://rdrr.io/r/base/Vectorize.html" class="external-link">Vectorize</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
