@@ -8,6 +8,8 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+Brownian motion is the fundamental building block in the theory of stochastic differential equations. This vignette explores some basics of Brownian motion: How to simulate sample paths, the statistics of Brownian motion and how to verify them from simulations, the Brownian bridge, and the properties of the maximum and hitting times.
+
 ## Simulation of Brownian motion
 
 Given a set of time points, it is straightforward to simulate Brownian motion restricted to those time points:
@@ -38,7 +40,7 @@ B <- replicate(n,rBM(tv))
 
 cov(t(B))
 ```
-Compare this with the analytical result:
+Compare this with the analytical result that the covariance of $B_s$ and $B_t$ is $\min(s,t)$:
 
 ```{r}
 outer(tv,tv,Vectorize(function(x,y)min(x,y)))
@@ -46,7 +48,7 @@ outer(tv,tv,Vectorize(function(x,y)min(x,y)))
 
 ## Scaling properties of Brownian motion 
 
-Brownian motion scales with the square root of time:
+Brownian motion scales with the square root of time. We can demonstrate this in two ways: First, we show a couple of sample paths and see that - roughly - stay inside the borders given by $\pm \sqrt t$ most of the time. Secondly, we can zoom in on a subinterval and see that, statistically, the process appears identical.
 
 ```{r,fig.width=6}
 tv <- seq(0,1,1e-5)
@@ -63,7 +65,7 @@ lines(tv,-sqrt(tv),lty="dashed")
 
 ## The Brownian bridge
 
-Given two end points, we can simulate a Brownian bridge that connects them. That is, we simulate a Brownain motion conditionally on the end points.
+Given two end points, we can simulate a Brownian bridge that connects them. That is, we simulate a Brownain motion conditionally on the end points. The function rBrownianBridge does this efficiently. Here, we sumliate a large number of bridges, and plot only the first few: 
 
 ```{r}
   tv <- 10:20
@@ -75,7 +77,7 @@ Given two end points, we can simulate a Brownian bridge that connects them. That
   matplot(tv,BB[,1:10],type="l",lty=1)
 ```
 
-We can verify the statistics by plotting the mean and variance of the bridge:
+We can verify the statistics by plotting the mean and variance of the bridge. We compare with the analytical results: The expectation follows a straight line connecting the end points, and the variance is a quadratic, which vanishes at the end points and has slope $\pm 1$ at the end points.  
 
 ```{r,fig.width=6}
 par(mfrow=c(1,2))
@@ -87,9 +89,7 @@ lines(tv,sigma^2*(tv-tv[1])*(1-(tv-tv[1])/diff(range(tv))))
 
 ## Simulation of the maximum of Brownian motion 
 
-We study the maximum of the Brownian motion, as well as its maximum absolute value. 
-
-For the maximum we have the analytical result:
+We study the maximum of the Brownian motion over a given time interval. We have the analytical result:
 
 \[
 \mathbf{P}(S_t \geq x) = 2\mathbf{P}( B_t \geq x) 
@@ -101,19 +101,7 @@ where
 S_t= \max\{ B_s : 0\leq s \leq t \}
 \]
 
-For the max-abs, we have the bound
-
-\[
-\mathbf{P}(\bar S_t \geq x) \leq 4\mathbf{P}( B_t \geq x) 
-\]
-
-where 
-
-\[
-\bar S_t= \max\{ |B_s| : 0\leq s \leq t \}
-\]
-
-The following code simulates a number of sample paths of Brownian motion $B_t$ over a time interval  $t=0,\ldots,Nt$. For each sample path we compute the maximum as well as the maximum absolute value. We plot the the empirical statistics of the maximum, and the max-abs, against analytical approximations. The statistics are the histogram, which should be compared with the probability density function (pdf), and the complementary cumulated distribution function (ccdf), also referred to as the survival function. 
+The following code simulates a number of sample paths of Brownian motion $B_t$ over a time interval  $t=0,\ldots,Nt$. For each sample path we compute the maximum. We plot the the empirical statistics of the maximum against the analytical result. The statistics are the histogram, which should be compared with the probability density function (pdf), and the complementary cumulated distribution function (ccdf), also referred to as the survival function. 
 
 
 ```{r, fig.show='hold'}
@@ -124,9 +112,8 @@ hist.maxBM.compare.analytical.Monte.Carlo <- function(Nt,Np)
   ## Simulate Np trajectories of BM on {0,1,...,Nt}
   B <- rvBM(0:Nt,Np)
   
-  ## Compute max(B) and max(abs(B))
+  ## Compute max(B) 
   maxB <- apply(B,2,max)
-  maxabsB <- apply(B,2,function(x)max(abs(x)))
 
   ## Histogram of max(B) vs theoretical p.d.f.  
   hist(maxB,freq=FALSE,xlab="x",ylab="P.d.f.",
@@ -137,11 +124,6 @@ hist.maxBM.compare.analytical.Monte.Carlo <- function(Nt,Np)
   plot(sort(maxB),seq(1,0,length=Np),type="s",xlab="x",ylab="Ccdf, P(X>x)",
        main="Ccdf of max(BM)")
   plot(function(x)2-2*pnorm(x,sd=sqrt(Nt)),from=0,to=max(maxB),add=TRUE)
-
-  ## Empirical vs. approximate theoretical survival function of max(abs(B))
-  plot(sort(maxabsB),seq(1,0,length=Np),type="s",xlab="x",ylab="Ccdf, P(X>x)",
-    main="Ccdf of max(abs(BM)")
-  plot(function(x)4*(1-pnorm(x,sd=sqrt(Nt))),from=0,to=max(maxB),add=TRUE)
 }
 
 ```
@@ -152,15 +134,15 @@ We first try the comparison using 1000 sample paths (which is sufficient) and ov
 hist.maxBM.compare.analytical.Monte.Carlo(Nt=1000,Np=1000)
 ```
 
-We see that there is excellent agreement between the maximum and the theoretical prediction. As for the max-abs, we see that there is good agreement in the tail, i.e. for high values of $x$, but poor agreement for low values of $x$. The reason for this disagreement is the bound on $\mathbf{P}(\bar S_t \geq x)$ is obtained by ignoring the probability that the maximum exceeds $x$ and at the same time the minimum exceeds $-x$. When $x$ is small, this error becomes large.
+We see that there is excellent agreement between the maximum and the theoretical prediction. 
 
-The next graph repeats this for a small number of time steps, $Nt=10$.
+The next graph repeats this for a small number of time steps, $N_t=10$.
 
 ```{r, fig.show='hold'}
 hist.maxBM.compare.analytical.Monte.Carlo(Nt=10,Np=1000)
 ```
 
-We see that there is poor agreement everywhere now. The reason is the difference between the continuous-time maximum
+We see that there is poor agreement now. The reason is the difference between the continuous-time maximum
 
 \[
 \max\{ B_s : 0 \leq s \leq t\}

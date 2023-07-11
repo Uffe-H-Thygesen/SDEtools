@@ -289,12 +289,12 @@ heun <- function(f,g,times,x0,B=NULL,p=function(x)x,h=function(t,x)1)
     ## Euler predictor
     fX <- as.numeric(ff(times[i],X[i,]))
     gX <- gg(times[i],X[i,])
-    Y <- as.numeric(p(X[i,] + fX*dt[i] + gX %*% as.numeric(dB[i,])))
+    Y <- as.numeric(p(X[i,] + fX*dt[i] + as.numeric(gX %*% as.numeric(dB[i,]))))
 
     ## Corrector
     fY <- as.numeric(ff(times[i+1],Y))
     gY <- gg(times[i+1],Y)
-    X[i+1,] <- as.numeric(p(X[i,] + 0.5*(fX+fY)*dt[i] + 0.5*(gX+gY) %*% as.numeric(dB[i,])))
+    X[i+1,] <- as.numeric(p(X[i,] + 0.5*(fX+fY)*dt[i] + as.numeric(0.5*(gX+gY) %*% as.numeric(dB[i,]))))
 
     if(h(times[i+1],X[i+1,]) <= 0) break
   }
@@ -414,7 +414,7 @@ euler <- function(f,g,times,x0,B=NULL,p=function(x)x,h=NULL,r=NULL,S0=1,Stau=run
 
   for(i in 1:(nt-1))
   {
-      X[i+1,] <- p( X[i,] + ff(times[i],X[i,])*dt[i] + gg(times[i],X[i,]) %*% as.numeric(dB[i,]) )
+      X[i+1,] <- p( as.numeric(X[i,]) + as.numeric(ff(times[i],X[i,])*dt[i]) + as.numeric(gg(times[i],X[i,]) %*% as.numeric(dB[i,])) )
       if(h(times[i+1],X[i+1,]) <= 0) break
       S[i+1] <- S[i] * exp(-rr(t,X[i,])*dt[i])
       if(S[i+1]<Stau) break
