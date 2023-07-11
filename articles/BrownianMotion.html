@@ -109,7 +109,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-06-19</h4>
+            <h4 data-toc-skip class="date">2023-07-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/BrownianMotion.Rmd" class="external-link"><code>vignettes/BrownianMotion.Rmd</code></a></small>
       <div class="hidden name"><code>BrownianMotion.Rmd</code></div>
@@ -118,6 +118,11 @@ Thygesen</h4>
 
     
     
+<p>Brownian motion is the fundamental building block in the theory of
+stochastic differential equations. This vignette explores some basics of
+Brownian motion: How to simulate sample paths, the statistics of
+Brownian motion and how to verify them from simulations, the Brownian
+bridge, and the properties of the maximum and hitting times.</p>
 <div class="section level2">
 <h2 id="simulation-of-brownian-motion">Simulation of Brownian motion<a class="anchor" aria-label="anchor" href="#simulation-of-brownian-motion"></a>
 </h2>
@@ -146,7 +151,7 @@ Brownian motion itself.</p>
 <span><span class="co">##     B &lt;- B0 + cumsum(dB)</span></span>
 <span><span class="co">##     return(B)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x5564ca613e20&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x563011e1ad68&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:SDEtools&gt;</span></span></code></pre>
 </div>
 <div class="section level2">
@@ -161,10 +166,10 @@ discretization and check the statistics.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">B</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##      [,1]     [,2]     [,3]     [,4]</span></span>
 <span><span class="co">## [1,]    0 0.000000 0.000000 0.000000</span></span>
-<span><span class="co">## [2,]    0 1.027051 1.042329 1.038597</span></span>
-<span><span class="co">## [3,]    0 1.042329 2.159026 2.130307</span></span>
-<span><span class="co">## [4,]    0 1.038597 2.130307 4.027781</span></span></code></pre>
-<p>Compare this with the analytical result:</p>
+<span><span class="co">## [2,]    0 1.016003 1.045922 1.004953</span></span>
+<span><span class="co">## [3,]    0 1.045922 2.094070 2.034918</span></span>
+<span><span class="co">## [4,]    0 1.004953 2.034918 4.025439</span></span></code></pre>
+<p>Compare this with the analytical result that the covariance of <span class="math inline">\(B_s\)</span> and <span class="math inline">\(B_t\)</span> is <span class="math inline">\(\min(s,t)\)</span>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">tv</span>,<span class="fu"><a href="https://rdrr.io/r/base/Vectorize.html" class="external-link">Vectorize</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##      [,1] [,2] [,3] [,4]</span></span>
@@ -176,7 +181,11 @@ discretization and check the statistics.</p>
 <div class="section level2">
 <h2 id="scaling-properties-of-brownian-motion">Scaling properties of Brownian motion<a class="anchor" aria-label="anchor" href="#scaling-properties-of-brownian-motion"></a>
 </h2>
-<p>Brownian motion scales with the square root of time:</p>
+<p>Brownian motion scales with the square root of time. We can
+demonstrate this in two ways: First, we show a couple of sample paths
+and see that - roughly - stay inside the borders given by <span class="math inline">\(\pm \sqrt t\)</span> most of the time. Secondly,
+we can zoom in on a subinterval and see that, statistically, the process
+appears identical.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">1e-5</span><span class="op">)</span></span>
 <span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fu"><a href="../reference/rBM.html">rBM</a></span><span class="op">(</span><span class="va">tv</span><span class="op">)</span><span class="op">)</span></span>
@@ -195,7 +204,8 @@ discretization and check the statistics.</p>
 </h2>
 <p>Given two end points, we can simulate a Brownian bridge that connects
 them. That is, we simulate a Brownain motion conditionally on the end
-points.</p>
+points. The function rBrownianBridge does this efficiently. Here, we
+sumliate a large number of bridges, and plot only the first few:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">tv</span> <span class="op">&lt;-</span> <span class="fl">10</span><span class="op">:</span><span class="fl">20</span></span>
 <span>  <span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1e4</span></span>
@@ -206,7 +216,9 @@ points.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/matplot.html" class="external-link">matplot</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">BB</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>,type<span class="op">=</span><span class="st">"l"</span>,lty<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="BrownianMotion_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>We can verify the statistics by plotting the mean and variance of the
-bridge:</p>
+bridge. We compare with the analytical results: The expectation follows
+a straight line connecting the end points, and the variance is a
+quadratic, which vanishes at the end points and has slope <span class="math inline">\(\pm 1\)</span> at the end points.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tv</span>,<span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">BB</span>,<span class="fl">1</span>,<span class="va">mean</span><span class="op">)</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"mean"</span><span class="op">)</span></span>
@@ -218,9 +230,8 @@ bridge:</p>
 <div class="section level2">
 <h2 id="simulation-of-the-maximum-of-brownian-motion">Simulation of the maximum of Brownian motion<a class="anchor" aria-label="anchor" href="#simulation-of-the-maximum-of-brownian-motion"></a>
 </h2>
-<p>We study the maximum of the Brownian motion, as well as its maximum
-absolute value.</p>
-<p>For the maximum we have the analytical result:</p>
+<p>We study the maximum of the Brownian motion over a given time
+interval. We have the analytical result:</p>
 <p><span class="math display">\[
 \mathbf{P}(S_t \geq x) = 2\mathbf{P}( B_t \geq x)
 \]</span></p>
@@ -228,23 +239,14 @@ absolute value.</p>
 <p><span class="math display">\[
 S_t= \max\{ B_s : 0\leq s \leq t \}
 \]</span></p>
-<p>For the max-abs, we have the bound</p>
-<p><span class="math display">\[
-\mathbf{P}(\bar S_t \geq x) \leq 4\mathbf{P}( B_t \geq x)
-\]</span></p>
-<p>where</p>
-<p><span class="math display">\[
-\bar S_t= \max\{ |B_s| : 0\leq s \leq t \}
-\]</span></p>
 <p>The following code simulates a number of sample paths of Brownian
 motion <span class="math inline">\(B_t\)</span> over a time interval
 <span class="math inline">\(t=0,\ldots,Nt\)</span>. For each sample path
-we compute the maximum as well as the maximum absolute value. We plot
-the the empirical statistics of the maximum, and the max-abs, against
-analytical approximations. The statistics are the histogram, which
-should be compared with the probability density function (pdf), and the
-complementary cumulated distribution function (ccdf), also referred to
-as the survival function.</p>
+we compute the maximum. We plot the the empirical statistics of the
+maximum against the analytical result. The statistics are the histogram,
+which should be compared with the probability density function (pdf),
+and the complementary cumulated distribution function (ccdf), also
+referred to as the survival function.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Uffe-H-Thygesen/SDEtools" class="external-link">SDEtools</a></span><span class="op">)</span></span>
 <span></span>
@@ -253,9 +255,8 @@ as the survival function.</p>
 <span>  <span class="co">## Simulate Np trajectories of BM on {0,1,...,Nt}</span></span>
 <span>  <span class="va">B</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rvBM.html">rvBM</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="va">Nt</span>,<span class="va">Np</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="co">## Compute max(B) and max(abs(B))</span></span>
+<span>  <span class="co">## Compute max(B) </span></span>
 <span>  <span class="va">maxB</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">B</span>,<span class="fl">2</span>,<span class="va">max</span><span class="op">)</span></span>
-<span>  <span class="va">maxabsB</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">B</span>,<span class="fl">2</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="co">## Histogram of max(B) vs theoretical p.d.f.  </span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">maxB</span>,freq<span class="op">=</span><span class="cn">FALSE</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"P.d.f."</span>,</span>
@@ -266,31 +267,20 @@ as the survival function.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">maxB</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0</span>,length<span class="op">=</span><span class="va">Np</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"s"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"Ccdf, P(X&gt;x)"</span>,</span>
 <span>       main<span class="op">=</span><span class="st">"Ccdf of max(BM)"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">2</span><span class="op">-</span><span class="fl">2</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">pnorm</a></span><span class="op">(</span><span class="va">x</span>,sd<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">Nt</span><span class="op">)</span><span class="op">)</span>,from<span class="op">=</span><span class="fl">0</span>,to<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">maxB</span><span class="op">)</span>,add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="co">## Empirical vs. approximate theoretical survival function of max(abs(B))</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">maxabsB</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0</span>,length<span class="op">=</span><span class="va">Np</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"s"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"Ccdf, P(X&gt;x)"</span>,</span>
-<span>    main<span class="op">=</span><span class="st">"Ccdf of max(abs(BM)"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">4</span><span class="op">*</span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">pnorm</a></span><span class="op">(</span><span class="va">x</span>,sd<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">Nt</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,from<span class="op">=</span><span class="fl">0</span>,to<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">maxB</span><span class="op">)</span>,add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>We first try the comparison using 1000 sample paths (which is
 sufficient) and over 1000 time steps:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">hist.maxBM.compare.analytical.Monte.Carlo</span><span class="op">(</span>Nt<span class="op">=</span><span class="fl">1000</span>,Np<span class="op">=</span><span class="fl">1000</span><span class="op">)</span></span></code></pre></div>
-<p><img src="BrownianMotion_files/figure-html/unnamed-chunk-9-1.png" width="700"><img src="BrownianMotion_files/figure-html/unnamed-chunk-9-2.png" width="700"><img src="BrownianMotion_files/figure-html/unnamed-chunk-9-3.png" width="700"></p>
+<p><img src="BrownianMotion_files/figure-html/unnamed-chunk-9-1.png" width="700"><img src="BrownianMotion_files/figure-html/unnamed-chunk-9-2.png" width="700"></p>
 <p>We see that there is excellent agreement between the maximum and the
-theoretical prediction. As for the max-abs, we see that there is good
-agreement in the tail, i.e. for high values of <span class="math inline">\(x\)</span>, but poor agreement for low values of
-<span class="math inline">\(x\)</span>. The reason for this disagreement
-is the bound on <span class="math inline">\(\mathbf{P}(\bar S_t \geq
-x)\)</span> is obtained by ignoring the probability that the maximum
-exceeds <span class="math inline">\(x\)</span> and at the same time the
-minimum exceeds <span class="math inline">\(-x\)</span>. When <span class="math inline">\(x\)</span> is small, this error becomes large.</p>
-<p>The next graph repeats this for a small number of time steps, <span class="math inline">\(Nt=10\)</span>.</p>
+theoretical prediction.</p>
+<p>The next graph repeats this for a small number of time steps, <span class="math inline">\(N_t=10\)</span>.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">hist.maxBM.compare.analytical.Monte.Carlo</span><span class="op">(</span>Nt<span class="op">=</span><span class="fl">10</span>,Np<span class="op">=</span><span class="fl">1000</span><span class="op">)</span></span></code></pre></div>
-<p><img src="BrownianMotion_files/figure-html/unnamed-chunk-10-1.png" width="700"><img src="BrownianMotion_files/figure-html/unnamed-chunk-10-2.png" width="700"><img src="BrownianMotion_files/figure-html/unnamed-chunk-10-3.png" width="700"></p>
-<p>We see that there is poor agreement everywhere now. The reason is the
-difference between the continuous-time maximum</p>
+<p><img src="BrownianMotion_files/figure-html/unnamed-chunk-10-1.png" width="700"><img src="BrownianMotion_files/figure-html/unnamed-chunk-10-2.png" width="700"></p>
+<p>We see that there is poor agreement now. The reason is the difference
+between the continuous-time maximum</p>
 <p><span class="math display">\[
 \max\{ B_s : 0 \leq s \leq t\}
 \]</span></p>
