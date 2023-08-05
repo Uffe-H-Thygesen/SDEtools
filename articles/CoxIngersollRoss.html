@@ -225,12 +225,12 @@ the stationary distribution.</p>
 property:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">dt</span> <span class="op">&lt;-</span> <span class="fl">0.1</span></span>
-<span>  <span class="va">t</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">100</span>,<span class="va">dt</span><span class="op">)</span></span>
+<span>  <span class="va">t</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1000</span>,<span class="va">dt</span><span class="op">)</span></span>
 <span>  <span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">t</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">X</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">xi</span></span>
 <span>  </span>
 <span>  <span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span> <span class="va">X</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dCIR.html">rCIR</a></span><span class="op">(</span><span class="fl">1</span>,<span class="va">X</span><span class="op">[</span><span class="va">i</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,<span class="va">lambda</span>,<span class="va">xi</span>,<span class="va">gamma</span>,<span class="va">dt</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span>,xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">100</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="CoxIngersollRoss_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
 </div>
 <div class="section level2">
@@ -253,6 +253,10 @@ samples).</p>
 <span>  <span class="va">hv</span> <span class="op">&lt;-</span> <span class="fl">0</span><span class="op">:</span><span class="fl">50</span>  <span class="co"># Number of samples, not continuous time</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">hv</span>,<span class="va">gamma</span><span class="op">^</span><span class="fl">2</span><span class="op">/</span><span class="fl">2</span><span class="op">/</span><span class="va">lambda</span><span class="op">*</span><span class="va">xi</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="va">hv</span><span class="op">*</span><span class="va">dt</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="CoxIngersollRoss_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
+<p>Note that there is a clear resemblance between the empirical and the
+theoretical result, but that the agreement is far from perfect: The
+variability in the process itself implies that also the estimated
+autocovariance function is uncertain.</p>
 </div>
 <div class="section level2">
 <h2 id="the-stratonovich-interpretation">The Stratonovich interpretation<a class="anchor" aria-label="anchor" href="#the-stratonovich-interpretation"></a>
