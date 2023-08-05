@@ -122,11 +122,11 @@ Thygesen</h4>
     
     
 <p>Brownian motion is the fundamental building block in the theory of
-stochastic differential equations <span class="citation">Thygesen
-(2023)</span>. This vignette explores some basics of Brownian motion:
-How to simulate sample paths, the statistics of Brownian motion and how
-to verify them from simulations, the Brownian bridge, and the properties
-of the maximum and hitting times.</p>
+stochastic differential equations <span class="citation">(Thygesen
+2023)</span>. This vignette explores some basics of Brownian motion: How
+to simulate sample paths, the statistics of Brownian motion and how to
+verify them from simulations, the Brownian bridge, and the properties of
+the maximum and hitting times.</p>
 <div class="section level3">
 <h3 id="simulation-of-brownian-motion">Simulation of Brownian motion<a class="anchor" aria-label="anchor" href="#simulation-of-brownian-motion"></a>
 </h3>
@@ -155,7 +155,7 @@ Brownian motion itself.</p>
 <span><span class="co">##     B &lt;- B0 + cumsum(dB)</span></span>
 <span><span class="co">##     return(B)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x5607097b1aa8&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x562d1a054aa8&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:SDEtools&gt;</span></span></code></pre>
 </div>
 <div class="section level3">
@@ -170,9 +170,9 @@ discretization and check the statistics.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">B</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##      [,1]     [,2]     [,3]     [,4]</span></span>
 <span><span class="co">## [1,]    0 0.000000 0.000000 0.000000</span></span>
-<span><span class="co">## [2,]    0 1.034338 1.045029 1.039637</span></span>
-<span><span class="co">## [3,]    0 1.045029 2.089980 2.166412</span></span>
-<span><span class="co">## [4,]    0 1.039637 2.166412 4.382475</span></span></code></pre>
+<span><span class="co">## [2,]    0 1.047391 1.026063 1.017756</span></span>
+<span><span class="co">## [3,]    0 1.026063 1.991117 1.970225</span></span>
+<span><span class="co">## [4,]    0 1.017756 1.970225 4.039406</span></span></code></pre>
 <p>Compare this with the analytical result that the covariance of <span class="math inline">\(B_s\)</span> and <span class="math inline">\(B_t\)</span> is <span class="math inline">\(\min(s,t)\)</span>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">tv</span>,<span class="fu"><a href="https://rdrr.io/r/base/Vectorize.html" class="external-link">Vectorize</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
