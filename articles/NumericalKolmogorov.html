@@ -56,6 +56,9 @@
       <a href="../articles/BrownianMotion.html">Brownian Motion</a>
     </li>
     <li>
+      <a href="../articles/CoxIngersollRoss.html">The Cox-Ingersoll-Ross process</a>
+    </li>
+    <li>
       <a href="../articles/FisheriesManagement.html">Fisheries Management - a Numerical Optimal Control Problem</a>
     </li>
     <li>
@@ -110,7 +113,7 @@ Equations</h1>
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-07-11</h4>
+            <h4 data-toc-skip class="date">2023-08-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/NumericalKolmogorov.Rmd" class="external-link"><code>vignettes/NumericalKolmogorov.Rmd</code></a></small>
       <div class="hidden name"><code>NumericalKolmogorov.Rmd</code></div>
@@ -119,9 +122,15 @@ Thygesen</h4>
 
     
     
-<p>We consider the numerical analysis of the forward and backward
-Kolmogorov equation, using the <em>fvade</em> function (Finite Volume
-method for Advection-Diffusion Equations).</p>
+<p>The Kolmogorov equationsa are central in the theory of stochastic
+differential equations, as they govern the transition probabilities of
+the solutions to these equations. See <span class="citation">(Thygesen
+2023)</span> for background theory, including the derivation of the
+equations and their application in many types of analysis of stochastic
+differential equations.</p>
+<p>In this vignette, we consider the numerical analysis of the forward
+and backward Kolmogorov equation, using the <em>fvade</em> function
+(Finite Volume method for Advection-Diffusion Equations).</p>
 <p>Let us start with a toy example. We make a uniform grid on the unit
 interval with four grid cells, i.e. five cell boundaries:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -192,9 +201,9 @@ constant flow field -1:</p>
 <span><span class="co">## [3,] .  5 -5  .  .</span></span>
 <span><span class="co">## [4,] .  .  5 -5  .</span></span>
 <span><span class="co">## [5,] .  .  .  5 -5</span></span></code></pre>
-<div class="section level2">
-<h2 id="solution-using-the-matrix-exponential">Solution using the matrix exponential<a class="anchor" aria-label="anchor" href="#solution-using-the-matrix-exponential"></a>
-</h2>
+<div class="section level3">
+<h3 id="solution-using-the-matrix-exponential">Solution using the matrix exponential<a class="anchor" aria-label="anchor" href="#solution-using-the-matrix-exponential"></a>
+</h3>
 <p>We now consider the forward Kolmogorov equation</p>
 <p><span class="math display">\[
 \dot \phi = \phi'' , \quad \phi(0,x) = \delta(x-x0)
@@ -219,9 +228,9 @@ but is expensive for large matrices.</p>
 <p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <p>Note that a probability vector <span class="math inline">\(\phi\)</span> must be multiplied on <span class="math inline">\(G\)</span> (and by extension, on <span class="math inline">\(\exp (Gt)\)</span>) from the left.</p>
 </div>
-<div class="section level2">
-<h2 id="implicit-euler-stepping">Implicit Euler stepping<a class="anchor" aria-label="anchor" href="#implicit-euler-stepping"></a>
-</h2>
+<div class="section level3">
+<h3 id="implicit-euler-stepping">Implicit Euler stepping<a class="anchor" aria-label="anchor" href="#implicit-euler-stepping"></a>
+</h3>
 <p>The matrix exponential is computationally expensive. A simpler
 solution is to use an Euler scheme. Explicit Euler is a bad idea, as it
 requires a very small time step for stability. So here we use an
@@ -239,9 +248,9 @@ implicit Euler step:</p>
 Note that the time step we used the Euler method here is quite large, so
 that the time discretization error is visible.</p>
 </div>
-<div class="section level2">
-<h2 id="periodic-boundaries">Periodic boundaries<a class="anchor" aria-label="anchor" href="#periodic-boundaries"></a>
-</h2>
+<div class="section level3">
+<h3 id="periodic-boundaries">Periodic boundaries<a class="anchor" aria-label="anchor" href="#periodic-boundaries"></a>
+</h3>
 <p>The previous was done with reflecting boundaries. This imposes that
 the flux at the boundary is zero. In this case, where there is only
 diffusion, it implies a homogenous Neumann boundary condition of the
@@ -262,9 +271,9 @@ stationary distribution:</p>
 <p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <p>As expected, the stationary distribution is uniform.</p>
 </div>
-<div class="section level2">
-<h2 id="absorbing-boundaries">Absorbing boundaries<a class="anchor" aria-label="anchor" href="#absorbing-boundaries"></a>
-</h2>
+<div class="section level3">
+<h3 id="absorbing-boundaries">Absorbing boundaries<a class="anchor" aria-label="anchor" href="#absorbing-boundaries"></a>
+</h3>
 <p>Finally, we can try absorbing boundaries. Here, we have two options:
 We can extend the state space with the absorbing boundary points; this
 would result in a Markov chain with 102 states (100 inner states and the
@@ -287,9 +296,9 @@ x\)</span> (normalized) and the corresponding eigenvalue is <span class="math in
 time to absorption is roughly 0.1 time units, in the quasistationary
 state.</p>
 </div>
-<div class="section level2">
-<h2 id="including-both-advection-and-diffusion">Including both advection and diffusion<a class="anchor" aria-label="anchor" href="#including-both-advection-and-diffusion"></a>
-</h2>
+<div class="section level3">
+<h3 id="including-both-advection-and-diffusion">Including both advection and diffusion<a class="anchor" aria-label="anchor" href="#including-both-advection-and-diffusion"></a>
+</h3>
 <p>We now include advection: Add a flow field that directs towards the
 center.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
@@ -336,9 +345,9 @@ the solution, although the effect of the boundaries perturb the
 solution. Note also that with advection, the no-flux boundary condition
 is no longer the same as a homogeneous Neumann condition.</p>
 </div>
-<div class="section level2">
-<h2 id="the-backward-equation">The backward equation<a class="anchor" aria-label="anchor" href="#the-backward-equation"></a>
-</h2>
+<div class="section level3">
+<h3 id="the-backward-equation">The backward equation<a class="anchor" aria-label="anchor" href="#the-backward-equation"></a>
+</h3>
 <p>The backward Kolmogorov equation in advection-diffusion form is <span class="math display">\[
 -\dot \psi = u \psi ' + (D\psi')'
 \]</span> and when we discretize this, it yields the <em>same</em>
@@ -352,9 +361,9 @@ condition <span class="math inline">\(X_0=x\)</span>:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">psi0</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">psi</span><span class="op">[</span><span class="fl">0</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 </div>
-<div class="section level2">
-<h2 id="varying-diffusivity">Varying diffusivity<a class="anchor" aria-label="anchor" href="#varying-diffusivity"></a>
-</h2>
+<div class="section level3">
+<h3 id="varying-diffusivity">Varying diffusivity<a class="anchor" aria-label="anchor" href="#varying-diffusivity"></a>
+</h3>
 <p>Keep in mind that when the diffusivity varies in space, the drift
 field <span class="math inline">\(f\)</span> in the stochastic
 differential equation does not equal the advective field <span class="math inline">\(u\)</span>. Rather, with the SDE <span class="math display">\[
@@ -387,9 +396,9 @@ formalism. For example, for stochastic logistic growth where <span class="math i
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">rho</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 </div>
-<div class="section level2">
-<h2 id="non-equidistant-grids">Non-equidistant grids<a class="anchor" aria-label="anchor" href="#non-equidistant-grids"></a>
-</h2>
+<div class="section level3">
+<h3 id="non-equidistant-grids">Non-equidistant grids<a class="anchor" aria-label="anchor" href="#non-equidistant-grids"></a>
+</h3>
 <p>Sometimes it is an advantage to use higher spatial resolution in some
 regions of state space. In this case it is extra important to keep in
 mind that <em>fvade</em> works on probabilities of each grid cell, not
@@ -405,6 +414,16 @@ densities:</p>
 <p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <p>This grid is a bit coarse, so the spatial discretization error is
 there, but demonstrates the principle.</p>
+</div>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Thygesen2023sde" class="csl-entry">
+Thygesen, Uffe Høgsbro. 2023. <em>Stochastic Differential Equations for
+Science and Engineering</em>. Taylor; Francis. <a href="http://uffe-h-thygesen.github.io" class="external-link">http://uffe-h-thygesen.github.io</a>.
+</div>
+</div>
 </div>
   </div>
 

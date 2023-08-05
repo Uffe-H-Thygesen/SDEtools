@@ -56,6 +56,9 @@
       <a href="../articles/BrownianMotion.html">Brownian Motion</a>
     </li>
     <li>
+      <a href="../articles/CoxIngersollRoss.html">The Cox-Ingersoll-Ross process</a>
+    </li>
+    <li>
       <a href="../articles/FisheriesManagement.html">Fisheries Management - a Numerical Optimal Control Problem</a>
     </li>
     <li>
@@ -109,7 +112,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-07-11</h4>
+            <h4 data-toc-skip class="date">2023-08-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/vanderPol.Rmd" class="external-link"><code>vignettes/vanderPol.Rmd</code></a></small>
       <div class="hidden name"><code>vanderPol.Rmd</code></div>
@@ -124,6 +127,11 @@ coupled equations, and how to solve the Kolmogorov equations.</p>
 <p><span class="math display">\[
 dX_t = V_t ~dt , \quad dV_t = [ V_t(\mu-X_t^2) -X_t ]~dt + \sigma ~dB_t
 \]</span></p>
+<p>Without noise, this is the standard van der Pol oscillator, which is
+a classical example of a non-linear system which has a limit cycle. The
+noise perturbs the oscillations, so that the system will converge to a
+stochastic steady state. See <span class="citation">Thygesen
+(2023)</span> for more details about the model.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span>list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/ls.html" class="external-link">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Uffe-H-Thygesen/SDEtools" class="external-link">SDEtools</a></span><span class="op">)</span></span></code></pre></div>
@@ -198,11 +206,23 @@ series as points in the phase plane:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>,pch<span class="op">=</span><span class="st">"."</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"v"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vanderPol_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Thygesen2023sde" class="csl-entry">
+Thygesen, Uffe Høgsbro. 2023. <em>Stochastic Differential Equations for
+Science and Engineering</em>. Taylor; Francis. <a href="http://uffe-h-thygesen.github.io" class="external-link">http://uffe-h-thygesen.github.io</a>.
+</div>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 

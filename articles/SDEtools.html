@@ -56,6 +56,9 @@
       <a href="../articles/BrownianMotion.html">Brownian Motion</a>
     </li>
     <li>
+      <a href="../articles/CoxIngersollRoss.html">The Cox-Ingersoll-Ross process</a>
+    </li>
+    <li>
       <a href="../articles/FisheriesManagement.html">Fisheries Management - a Numerical Optimal Control Problem</a>
     </li>
     <li>
@@ -126,9 +129,13 @@ Hidden Markov Model methods.</li>
 <li>Solve optimal control problems numerically, using Markov Decision
 Process machinery.</li>
 </ul>
-<div class="section level3">
-<h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h3>
+<p>The package supports the textbook <span class="citation">Thygesen
+(2023)</span> by implementing algorithms described in the book, so it
+provides the computational framework to accompany the theory. It has
+been used to produce almost all figures in the book.</p>
+<div class="section level4">
+<h4 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h4>
 <p>To install the package, open R and run</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"Uffe-H-Thygesen/SDEtools"</span><span class="op">)</span></span></code></pre></div>
@@ -138,9 +145,9 @@ install” it, if you are familiar with make and makefiles.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Uffe-H-Thygesen/SDEtools" class="external-link">SDEtools</a></span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
-</h2>
+<div class="section level3">
+<h3 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h3>
 <p>This is a basic example which shows you how to simulate a sample
 path, and compute the transition probability, for a double well
 model:</p>
@@ -174,10 +181,20 @@ model:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="fl">20</span><span class="op">*</span><span class="va">rho</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">rho</span><span class="op">)</span>,<span class="va">xc</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SDEtools_files/figure-html/unnamed-chunk-2-1.png" width="768"></p>
 </div>
-<div class="section level2">
-<h2 id="tour-of-features">Tour of features<a class="anchor" aria-label="anchor" href="#tour-of-features"></a>
-</h2>
+<div class="section level3">
+<h3 id="tour-of-features">Tour of features<a class="anchor" aria-label="anchor" href="#tour-of-features"></a>
+</h3>
 <p>Please see the vignettes which showcase functionality.</p>
+</div>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Thygesen2023sde" class="csl-entry">
+Thygesen, Uffe Høgsbro. 2023. <em>Stochastic Differential Equations for
+Science and Engineering</em>. Taylor; Francis. <a href="http://uffe-h-thygesen.github.io" class="external-link">http://uffe-h-thygesen.github.io</a>.
+</div>
+</div>
 </div>
   </div>
 

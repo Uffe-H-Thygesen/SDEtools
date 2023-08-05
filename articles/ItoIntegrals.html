@@ -56,6 +56,9 @@
       <a href="../articles/BrownianMotion.html">Brownian Motion</a>
     </li>
     <li>
+      <a href="../articles/CoxIngersollRoss.html">The Cox-Ingersoll-Ross process</a>
+    </li>
+    <li>
       <a href="../articles/FisheriesManagement.html">Fisheries Management - a Numerical Optimal Control Problem</a>
     </li>
     <li>
@@ -109,7 +112,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-07-11</h4>
+            <h4 data-toc-skip class="date">2023-08-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/ItoIntegrals.Rmd" class="external-link"><code>vignettes/ItoIntegrals.Rmd</code></a></small>
       <div class="hidden name"><code>ItoIntegrals.Rmd</code></div>
@@ -121,6 +124,11 @@ Thygesen</h4>
 <div class="section level2">
 <h2 id="numerical-itô-integration">Numerical Itô integration<a class="anchor" aria-label="anchor" href="#numerical-it%C3%B4-integration"></a>
 </h2>
+<p>The objective of this vignette is to demonstrate how to perform
+(approximate) Itô integration numerically. We do not aim for very high
+accuracy; rather, our purpose is to build intuition for the integral,
+which is helpful when studying the theory of stochastic differential
+equations, in which Itô integratio is an essential element <span class="citation">(Thygesen 2023)</span>.</p>
 <p>We consider an <em>integrator</em> <span class="math inline">\(\{B_t\}\)</span> and an <em>integrand</em> <span class="math inline">\(\{G_t\}\)</span>, which are both stochastic
 processes. Think of <span class="math inline">\(\{B_t\}\)</span> as
 Brownian motion and <span class="math inline">\(\{G_t\}\)</span> as an
@@ -149,7 +157,7 @@ motion w.r.t. itself:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">I</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="fl">0.5</span><span class="op">*</span><span class="op">(</span><span class="va">B</span><span class="op">^</span><span class="fl">2</span><span class="op">-</span><span class="va">t</span><span class="op">)</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
-<p>We have included the analytical result. The agreement is not perfect;
+<p>We have included the analytical result <span class="math inline">\(\int_0^t B_s ~dB_s = (B_t^2 - t)/2\)</span> <span class="citation">(Thygesen 2023)</span>. The agreement is not perfect;
 there is a time discretization error.</p>
 <p>Note that the numerical Itô integration routine does not need to know
 the time grid; only values of the integrator and the integrand at each
@@ -160,7 +168,7 @@ time point. The integral is implemented as follows:</p>
 <span><span class="co">## {</span></span>
 <span><span class="co">##     return(c(0, cumsum(G[-length(G)] * diff(B))))</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x5568708e6df8&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x55d2cd3930a0&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:SDEtools&gt;</span></span></code></pre>
 </div>
 <div class="section level2">
@@ -199,7 +207,7 @@ stochastic differential equation with the numerical Itô integral:</p>
 machine precision:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">X</span><span class="op">-</span><span class="fu"><a href="../reference/itointegral.html">itointegral</a></span><span class="op">(</span><span class="fu">f</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">t</span><span class="op">)</span><span class="op">-</span><span class="fu"><a href="../reference/itointegral.html">itointegral</a></span><span class="op">(</span><span class="fu">g</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">B</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 9.15934e-16</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 1.554312e-15</span></span></code></pre>
 <p>That is, there is no time discretization error because we use the
 same principle for time discretization in the Euler-Maruyama method and
 in the numerical Itô integral.</p>
@@ -262,6 +270,12 @@ I^s_t = I^i_t + \frac 12 \langle G,X\rangle_t .
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Is</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Ii</span> <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="fu"><a href="../reference/CrossVariation.html">CrossVariation</a></span><span class="op">(</span><span class="va">G</span>,<span class="va">X</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Thygesen2023sde" class="csl-entry">
+Thygesen, Uffe Høgsbro. 2023. <em>Stochastic Differential Equations for
+Science and Engineering</em>. Taylor; Francis. <a href="http://uffe-h-thygesen.github.io" class="external-link">http://uffe-h-thygesen.github.io</a>.
+</div>
+</div>
 </div>
   </div>
 

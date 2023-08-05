@@ -56,6 +56,9 @@
       <a href="../articles/BrownianMotion.html">Brownian Motion</a>
     </li>
     <li>
+      <a href="../articles/CoxIngersollRoss.html">The Cox-Ingersoll-Ross process</a>
+    </li>
+    <li>
       <a href="../articles/FisheriesManagement.html">Fisheries Management - a Numerical Optimal Control Problem</a>
     </li>
     <li>
@@ -109,7 +112,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-07-11</h4>
+            <h4 data-toc-skip class="date">2023-08-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/Killing.Rmd" class="external-link"><code>vignettes/Killing.Rmd</code></a></small>
       <div class="hidden name"><code>Killing.Rmd</code></div>
@@ -118,18 +121,18 @@ Thygesen</h4>
 
     
     
-<div class="section level2">
-<h2 id="the-example-an-animal-moving-in-one-dimension-and-subject-to-killing">The example: An animal moving in one dimension and subject to
+<div class="section level3">
+<h3 id="the-example-an-animal-moving-in-one-dimension-and-subject-to-killing">The example: An animal moving in one dimension and subject to
 killing<a class="anchor" aria-label="anchor" href="#the-example-an-animal-moving-in-one-dimension-and-subject-to-killing"></a>
-</h2>
+</h3>
 <p>In this vignette, we consider a process given by the Itô stochastic
 differential equation</p>
 <p><span class="math display">\[
 dX_t = - X_t ~dt + dB_t .
 \]</span></p>
 <p>We interpret this <span class="math inline">\(X_t\)</span> as the
-position of an animal moving in one dimension. We see that so far -
-i.e., without killing - the position is an Ornstein-Uhlenbeck process
+position of an animal moving in one dimension. The position is an
+Ornstein-Uhlenbeck process <span class="citation">(Thygesen 2023)</span>
 with stationary mean 0, variance <span class="math inline">\(1/2\)</span>, and decorrelation time 1. We can
 verify the stationary distribution numerically as follows, introducing
 reflective boundaries at the boundaries of a computational domain. Here
@@ -155,9 +158,9 @@ constant.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">pi</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xgrid</span><span class="op">)</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"P.d.f."</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Killing_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 </div>
-<div class="section level2">
-<h2 id="constructing-the-sub-generator-of-a-diffusion-with-killing">Constructing the sub-generator of a diffusion with killing<a class="anchor" aria-label="anchor" href="#constructing-the-sub-generator-of-a-diffusion-with-killing"></a>
-</h2>
+<div class="section level3">
+<h3 id="constructing-the-sub-generator-of-a-diffusion-with-killing">Constructing the sub-generator of a diffusion with killing<a class="anchor" aria-label="anchor" href="#constructing-the-sub-generator-of-a-diffusion-with-killing"></a>
+</h3>
 <p>We assume that the animal dies with a killing rate <span class="math inline">\(r(x) = \exp(-2x)/2\)</span>. That is, we have a
 stopping (killing) time <span class="math inline">\(\tau\)</span> such
 that the conditional probability of killing in the interval <span class="math inline">\([t,t+h]\)</span> is</p>
@@ -188,9 +191,9 @@ chain jumping between computational grid cells, the row sum is minus the
 rate of leaving the domain, i.e. jumping to the “coffin” state of
 death.</p>
 </div>
-<div class="section level2">
-<h2 id="finding-the-distribution-at-a-later-time">Finding the distribution at a later time<a class="anchor" aria-label="anchor" href="#finding-the-distribution-at-a-later-time"></a>
-</h2>
+<div class="section level3">
+<h3 id="finding-the-distribution-at-a-later-time">Finding the distribution at a later time<a class="anchor" aria-label="anchor" href="#finding-the-distribution-at-a-later-time"></a>
+</h3>
 <p>Assume that the state starts at a given point <span class="math inline">\(X_0=x_0\)</span>. At a later time <span class="math inline">\(t=1\)</span>, the probability is distributed
 partly on the real axis, and partly in the “coffin” state. Here, we
 compute the probability density over the real axis.</p>
@@ -210,9 +213,9 @@ compute the probability density over the real axis.</p>
 probability, in particular from the right part of the distribution,
 where the mortality is higher.</p>
 </div>
-<div class="section level2">
-<h2 id="finding-the-expected-time-spent-in-each-cell">Finding the expected time spent in each cell<a class="anchor" aria-label="anchor" href="#finding-the-expected-time-spent-in-each-cell"></a>
-</h2>
+<div class="section level3">
+<h3 id="finding-the-expected-time-spent-in-each-cell">Finding the expected time spent in each cell<a class="anchor" aria-label="anchor" href="#finding-the-expected-time-spent-in-each-cell"></a>
+</h3>
 <p>Let <span class="math inline">\(\phi(t,x)\)</span> denote the
 probability density that <span class="math inline">\(X_t \approx
 x\)</span> and <span class="math inline">\(\tau &gt; t\)</span>. We can
@@ -233,9 +236,9 @@ discrete formulation:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">rho</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xgrid</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Killing_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
 </div>
-<div class="section level2">
-<h2 id="the-expected-time-to-killing">The expected time to killing<a class="anchor" aria-label="anchor" href="#the-expected-time-to-killing"></a>
-</h2>
+<div class="section level3">
+<h3 id="the-expected-time-to-killing">The expected time to killing<a class="anchor" aria-label="anchor" href="#the-expected-time-to-killing"></a>
+</h3>
 <p>We can find the expected lifetime by integrating the density <span class="math inline">\(\rho\)</span> w.r.t. <span class="math inline">\(x\)</span>:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Etau</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">rho</span><span class="op">)</span></span></code></pre></div>
@@ -256,9 +259,9 @@ survival function:</p>
 <pre><code><span><span class="co">## [1] 1.697609</span></span></code></pre>
 <p>The error is the due to the discretization of time.</p>
 </div>
-<div class="section level2">
-<h2 id="the-quasi-stationary-distribution">The quasi-stationary distribution<a class="anchor" aria-label="anchor" href="#the-quasi-stationary-distribution"></a>
-</h2>
+<div class="section level3">
+<h3 id="the-quasi-stationary-distribution">The quasi-stationary distribution<a class="anchor" aria-label="anchor" href="#the-quasi-stationary-distribution"></a>
+</h3>
 <p>In stationarity, the animal is dead, so the more interesting question
 is the quasi-stationary distribution:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
@@ -271,9 +274,9 @@ relative to the stationary distribution without killing, since the
 surviving animals are found predominantly where the killing rate is
 low.</p>
 </div>
-<div class="section level2">
-<h2 id="simulation-of-a-trajectory">Simulation of a trajectory<a class="anchor" aria-label="anchor" href="#simulation-of-a-trajectory"></a>
-</h2>
+<div class="section level3">
+<h3 id="simulation-of-a-trajectory">Simulation of a trajectory<a class="anchor" aria-label="anchor" href="#simulation-of-a-trajectory"></a>
+</h3>
 <p>We can simulate an individual trajectory starting at a given point in
 space, up to the point of killing, as follows.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
@@ -337,6 +340,16 @@ renormalize and compare with the empirical distribution:</p>
 <span>  <span class="va">fXtau</span> <span class="op">&lt;-</span> <span class="va">fXtau</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">fXtau</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">fXtau</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xgrid</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Killing_files/figure-html/unnamed-chunk-14-1.png" width="768"></p>
+</div>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Thygesen2023sde" class="csl-entry">
+Thygesen, Uffe Høgsbro. 2023. <em>Stochastic Differential Equations for
+Science and Engineering</em>. Taylor; Francis. <a href="http://uffe-h-thygesen.github.io" class="external-link">http://uffe-h-thygesen.github.io</a>.
+</div>
+</div>
 </div>
   </div>
 

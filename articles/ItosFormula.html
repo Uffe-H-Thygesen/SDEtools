@@ -56,6 +56,9 @@
       <a href="../articles/BrownianMotion.html">Brownian Motion</a>
     </li>
     <li>
+      <a href="../articles/CoxIngersollRoss.html">The Cox-Ingersoll-Ross process</a>
+    </li>
+    <li>
       <a href="../articles/FisheriesManagement.html">Fisheries Management - a Numerical Optimal Control Problem</a>
     </li>
     <li>
@@ -109,7 +112,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-07-11</h4>
+            <h4 data-toc-skip class="date">2023-08-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/ItosFormula.Rmd" class="external-link"><code>vignettes/ItosFormula.Rmd</code></a></small>
       <div class="hidden name"><code>ItosFormula.Rmd</code></div>
@@ -118,9 +121,9 @@ Thygesen</h4>
 
     
     
-<div class="section level2">
-<h2 id="verifying-itôs-formula-through-simulation">Verifying Itô’s formula through simulation<a class="anchor" aria-label="anchor" href="#verifying-it%C3%B4s-formula-through-simulation"></a>
-</h2>
+<div class="section level3">
+<h3 id="verifying-itôs-formula-through-simulation">Verifying Itô’s formula through simulation<a class="anchor" aria-label="anchor" href="#verifying-it%C3%B4s-formula-through-simulation"></a>
+</h3>
 <p>Itô’s formula, in its simplest version, states that <span class="math display">\[
 dY_t = h'(X_t) ~dX_t + \frac 12 h''(X_t) (dX_t)^2
 \]</span> when <span class="math inline">\(Y_t=h(X_t)\)</span> and <span class="math inline">\(\{X_t\}\)</span> is an Itô process <span class="math display">\[
@@ -128,17 +131,19 @@ dX_t = F_t ~dt + G_t ~dB_t .
 \]</span> Moreover, the quadratic variation <span class="math inline">\([X]_t\)</span> is given by <span class="math inline">\(d[X]_t = (dX_t)^2 = G_t^2 ~dt\)</span>, so <span class="math display">\[
 dY_t = h'(X_t) F_t ~dt + h'(X_t) G_t ~dB_t + \frac 12
 h''(X_t) G_t^2 ~dt  .
-\]</span> The aim of this vignette is to verify this numerically for a
-specific example, and to discuss discretization errors when we verify
-the formula in discrete time.</p>
+\]</span> See <span class="citation">(Thygesen 2023)</span> for a
+description of this theoretical result.The aim of this vignette is to
+verify this numerically for a specific example, and to discuss
+discretization errors when we verify the formula in discrete time.</p>
 <p>In our example, <span class="math inline">\(\{X_t\}\)</span> is
 stochastic logistic growth given by the Itô stochastic differential
 equation <span class="math display">\[
 dX_t = X_t(1-X_t) ~dt + \sigma X_t ~dB_t
 \]</span> with <span class="math inline">\(\sigma = 0.25\)</span> and
 the initial condition <span class="math inline">\(X_0=x_0=0.01\)</span>.
-We simulate a sample path of <span class="math inline">\(X_t\)</span>
-using the Euler-Maruyama algorithm:</p>
+This is known as stochastic logistic growth <span class="citation">(Thygesen 2023)</span>. We simulate a sample path of
+<span class="math inline">\(X_t\)</span> using the Euler-Maruyama
+algorithm:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Uffe-H-Thygesen/SDEtools" class="external-link">SDEtools</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: SDEtools</span></span></code></pre>
@@ -220,9 +225,9 @@ previous solution:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y4</span>,col<span class="op">=</span><span class="st">"purple"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ItosFormula_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 </div>
-<div class="section level2">
-<h2 id="the-discretization-error">The discretization error<a class="anchor" aria-label="anchor" href="#the-discretization-error"></a>
-</h2>
+<div class="section level3">
+<h3 id="the-discretization-error">The discretization error<a class="anchor" aria-label="anchor" href="#the-discretization-error"></a>
+</h3>
 <p>We now examine the discretization error associated with the numerical
 Itô integration. The first formulation,</p>
 <p><span class="math display">\[
@@ -273,6 +278,16 @@ simulation, even if the variation between realizations are greater.</p>
 <p>This vignette has hopefully illuminated both where Itô’s formula
 comes from, and the errors that may arise when we investigate stochastic
 differential equation in discrete time.</p>
+</div>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Thygesen2023sde" class="csl-entry">
+Thygesen, Uffe Høgsbro. 2023. <em>Stochastic Differential Equations for
+Science and Engineering</em>. Taylor; Francis. <a href="http://uffe-h-thygesen.github.io" class="external-link">http://uffe-h-thygesen.github.io</a>.
+</div>
+</div>
 </div>
   </div>
 

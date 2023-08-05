@@ -56,6 +56,9 @@
       <a href="../articles/BrownianMotion.html">Brownian Motion</a>
     </li>
     <li>
+      <a href="../articles/CoxIngersollRoss.html">The Cox-Ingersoll-Ross process</a>
+    </li>
+    <li>
       <a href="../articles/FisheriesManagement.html">Fisheries Management - a Numerical Optimal Control Problem</a>
     </li>
     <li>
@@ -109,7 +112,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-07-11</h4>
+            <h4 data-toc-skip class="date">2023-08-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/BrownianMotion.Rmd" class="external-link"><code>vignettes/BrownianMotion.Rmd</code></a></small>
       <div class="hidden name"><code>BrownianMotion.Rmd</code></div>
@@ -119,13 +122,14 @@ Thygesen</h4>
     
     
 <p>Brownian motion is the fundamental building block in the theory of
-stochastic differential equations. This vignette explores some basics of
-Brownian motion: How to simulate sample paths, the statistics of
-Brownian motion and how to verify them from simulations, the Brownian
-bridge, and the properties of the maximum and hitting times.</p>
-<div class="section level2">
-<h2 id="simulation-of-brownian-motion">Simulation of Brownian motion<a class="anchor" aria-label="anchor" href="#simulation-of-brownian-motion"></a>
-</h2>
+stochastic differential equations <span class="citation">Thygesen
+(2023)</span>. This vignette explores some basics of Brownian motion:
+How to simulate sample paths, the statistics of Brownian motion and how
+to verify them from simulations, the Brownian bridge, and the properties
+of the maximum and hitting times.</p>
+<div class="section level3">
+<h3 id="simulation-of-brownian-motion">Simulation of Brownian motion<a class="anchor" aria-label="anchor" href="#simulation-of-brownian-motion"></a>
+</h3>
 <p>Given a set of time points, it is straightforward to simulate
 Brownian motion restricted to those time points:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -151,12 +155,12 @@ Brownian motion itself.</p>
 <span><span class="co">##     B &lt;- B0 + cumsum(dB)</span></span>
 <span><span class="co">##     return(B)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x563011e1ad68&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x55d4c78afaa8&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:SDEtools&gt;</span></span></code></pre>
 </div>
-<div class="section level2">
-<h2 id="verifying-the-statistics-of-brownian-motion">Verifying the statistics of Brownian motion<a class="anchor" aria-label="anchor" href="#verifying-the-statistics-of-brownian-motion"></a>
-</h2>
+<div class="section level3">
+<h3 id="verifying-the-statistics-of-brownian-motion">Verifying the statistics of Brownian motion<a class="anchor" aria-label="anchor" href="#verifying-the-statistics-of-brownian-motion"></a>
+</h3>
 <p>Let us generate a large number of sample paths for the same time
 discretization and check the statistics.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -164,11 +168,11 @@ discretization and check the statistics.</p>
 <span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="va">n</span>,<span class="fu"><a href="../reference/rBM.html">rBM</a></span><span class="op">(</span><span class="va">tv</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">B</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##      [,1]     [,2]     [,3]     [,4]</span></span>
-<span><span class="co">## [1,]    0 0.000000 0.000000 0.000000</span></span>
-<span><span class="co">## [2,]    0 1.016003 1.045922 1.004953</span></span>
-<span><span class="co">## [3,]    0 1.045922 2.094070 2.034918</span></span>
-<span><span class="co">## [4,]    0 1.004953 2.034918 4.025439</span></span></code></pre>
+<pre><code><span><span class="co">##      [,1]      [,2]     [,3]     [,4]</span></span>
+<span><span class="co">## [1,]    0 0.0000000 0.000000 0.000000</span></span>
+<span><span class="co">## [2,]    0 0.9721981 1.002212 1.085850</span></span>
+<span><span class="co">## [3,]    0 1.0022117 2.074280 2.111966</span></span>
+<span><span class="co">## [4,]    0 1.0858500 2.111966 4.160834</span></span></code></pre>
 <p>Compare this with the analytical result that the covariance of <span class="math inline">\(B_s\)</span> and <span class="math inline">\(B_t\)</span> is <span class="math inline">\(\min(s,t)\)</span>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">tv</span>,<span class="fu"><a href="https://rdrr.io/r/base/Vectorize.html" class="external-link">Vectorize</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -178,9 +182,9 @@ discretization and check the statistics.</p>
 <span><span class="co">## [3,]    0    1    2    2</span></span>
 <span><span class="co">## [4,]    0    1    2    4</span></span></code></pre>
 </div>
-<div class="section level2">
-<h2 id="scaling-properties-of-brownian-motion">Scaling properties of Brownian motion<a class="anchor" aria-label="anchor" href="#scaling-properties-of-brownian-motion"></a>
-</h2>
+<div class="section level3">
+<h3 id="scaling-properties-of-brownian-motion">Scaling properties of Brownian motion<a class="anchor" aria-label="anchor" href="#scaling-properties-of-brownian-motion"></a>
+</h3>
 <p>Brownian motion scales with the square root of time. We can
 demonstrate this in two ways: First, we show a couple of sample paths
 and see that - roughly - stay inside the borders given by <span class="math inline">\(\pm \sqrt t\)</span> most of the time. Secondly,
@@ -199,9 +203,9 @@ appears identical.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tv</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tv</span><span class="op">)</span>,lty<span class="op">=</span><span class="st">"dashed"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="BrownianMotion_files/figure-html/unnamed-chunk-5-1.png" width="576"></p>
 </div>
-<div class="section level2">
-<h2 id="the-brownian-bridge">The Brownian bridge<a class="anchor" aria-label="anchor" href="#the-brownian-bridge"></a>
-</h2>
+<div class="section level3">
+<h3 id="the-brownian-bridge">The Brownian bridge<a class="anchor" aria-label="anchor" href="#the-brownian-bridge"></a>
+</h3>
 <p>Given two end points, we can simulate a Brownian bridge that connects
 them. That is, we simulate a Brownain motion conditionally on the end
 points. The function rBrownianBridge does this efficiently. Here, we
@@ -227,9 +231,9 @@ quadratic, which vanishes at the end points and has slope <span class="math inli
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">sigma</span><span class="op">^</span><span class="fl">2</span><span class="op">*</span><span class="op">(</span><span class="va">tv</span><span class="op">-</span><span class="va">tv</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">*</span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="op">(</span><span class="va">tv</span><span class="op">-</span><span class="va">tv</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">tv</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="BrownianMotion_files/figure-html/unnamed-chunk-7-1.png" width="576"></p>
 </div>
-<div class="section level2">
-<h2 id="simulation-of-the-maximum-of-brownian-motion">Simulation of the maximum of Brownian motion<a class="anchor" aria-label="anchor" href="#simulation-of-the-maximum-of-brownian-motion"></a>
-</h2>
+<div class="section level3">
+<h3 id="simulation-of-the-maximum-of-brownian-motion">Simulation of the maximum of Brownian motion<a class="anchor" aria-label="anchor" href="#simulation-of-the-maximum-of-brownian-motion"></a>
+</h3>
 <p>We study the maximum of the Brownian motion over a given time
 interval. We have the analytical result:</p>
 <p><span class="math display">\[
@@ -290,6 +294,16 @@ between the continuous-time maximum</p>
 \]</span></p>
 <p>When <span class="math inline">\(t\)</span> is small, this difference
 becomes more important.</p>
+</div>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Thygesen2023sde" class="csl-entry">
+Thygesen, Uffe Høgsbro. 2023. <em>Stochastic Differential Equations for
+Science and Engineering</em>. Taylor; Francis. <a href="http://uffe-h-thygesen.github.io" class="external-link">http://uffe-h-thygesen.github.io</a>.
+</div>
+</div>
 </div>
   </div>
 

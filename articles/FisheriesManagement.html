@@ -56,6 +56,9 @@
       <a href="../articles/BrownianMotion.html">Brownian Motion</a>
     </li>
     <li>
+      <a href="../articles/CoxIngersollRoss.html">The Cox-Ingersoll-Ross process</a>
+    </li>
+    <li>
       <a href="../articles/FisheriesManagement.html">Fisheries Management - a Numerical Optimal Control Problem</a>
     </li>
     <li>
@@ -110,7 +113,7 @@ Control Problem</h1>
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-07-11</h4>
+            <h4 data-toc-skip class="date">2023-08-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/FisheriesManagement.Rmd" class="external-link"><code>vignettes/FisheriesManagement.Rmd</code></a></small>
       <div class="hidden name"><code>FisheriesManagement.Rmd</code></div>
@@ -119,13 +122,13 @@ Thygesen</h4>
 
     
     
-<div class="section level2">
-<h2 id="fisheries-as-optimal-control">Fisheries as optimal control<a class="anchor" aria-label="anchor" href="#fisheries-as-optimal-control"></a>
-</h2>
-<p>Following the textbook, we consider the problem of optimal harvest of
-a fish stock. Our objective in this vignette is to demonstrate the
-numerical solution of the optimal control problem. The controlled system
-dynamics are</p>
+<div class="section level3">
+<h3 id="fisheries-as-optimal-control">Fisheries as optimal control<a class="anchor" aria-label="anchor" href="#fisheries-as-optimal-control"></a>
+</h3>
+<p>Following the textbook <span class="citation">Thygesen (2023)</span>,
+we consider the problem of optimal harvest of a fish stock. Our
+objective in this vignette is to demonstrate the numerical solution of
+the optimal control problem. The controlled system dynamics are</p>
 <p><span class="math display">\[
 dX_t = [ X_t(1-X_t) - U_t] ~dt + \sigma X_t ~dB_t
 \]</span></p>
@@ -135,22 +138,23 @@ The term <span class="math inline">\(X_t(1-X_t)\)</span> is the growth
 without fishing, i.e. logistic growth; we have made time and abundance
 dimensionless. <span class="math inline">\(U_t\)</span> is the harvest
 rate. We aim to maximize <span class="math inline">\(\sqrt{U_t}\)</span>
-in steady state, which leads to the Hamilton-Jacobi-Bellman equation</p>
+in steady state, which leads to the Hamilton-Jacobi-Bellman equation
+<span class="citation">Thygesen (2023)</span></p>
 <p><span class="math display">\[
 \sup_{u\geq 0} \left[ \dot V + x(1-x) V' - uV' + \frac 12
 \sigma^2 x^2 V'' + \sqrt u \right] = 0 .
 \]</span></p>
 <p>The optimal control is found as a stationary point: <span class="math inline">\(u= 1/4/(V')^2\)</span>.</p>
-<p>The analytical steady-state solution to this problem is <span class="math display">\[
+<p>The analytical steady-state solution to this problem is <span class="citation">Thygesen (2023)</span> <span class="math display">\[
   V(x,t) = \frac 12 \log x -\gamma t
 \]</span> where <span class="math inline">\(\gamma = \frac 12
 (1-\sigma^2 /2)\)</span>. This leads to the strategy <span class="math display">\[
 U_t = X_t^2 .
 \]</span></p>
 </div>
-<div class="section level2">
-<h2 id="numerical-analysis-of-the-steady-state-problem">Numerical analysis of the steady-state problem<a class="anchor" aria-label="anchor" href="#numerical-analysis-of-the-steady-state-problem"></a>
-</h2>
+<div class="section level3">
+<h3 id="numerical-analysis-of-the-steady-state-problem">Numerical analysis of the steady-state problem<a class="anchor" aria-label="anchor" href="#numerical-analysis-of-the-steady-state-problem"></a>
+</h3>
 <p>We aim to verify the analytical solution numerically. We first set up
 the model, writing it in advection-diffusion form. We use <span class="math inline">\(D=g^2/2\)</span> as the diffusivity and <span class="math inline">\(v=f-D'\)</span> as the advective field.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -225,9 +229,9 @@ time-invariant control.</p>
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">sol</span><span class="op">$</span><span class="va">pi</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FisheriesManagement_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
 </div>
-<div class="section level2">
-<h2 id="the-time-varying-problem">The time-varying problem<a class="anchor" aria-label="anchor" href="#the-time-varying-problem"></a>
-</h2>
+<div class="section level3">
+<h3 id="the-time-varying-problem">The time-varying problem<a class="anchor" aria-label="anchor" href="#the-time-varying-problem"></a>
+</h3>
 <p>Here, we demonstrate how to solve the time-varying HJB equation by
 time marching. There is no particular reason to do this for this
 problem, but one could imagine extensions where system parameters vary
@@ -302,9 +306,9 @@ fish in the system at the end of time.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/contour.html" class="external-link">contour</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">xc</span>,<span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">U</span><span class="op">)</span>,levels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">3</span>,<span class="fl">0.25</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"x"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FisheriesManagement_files/figure-html/unnamed-chunk-15-1.png" width="672"></p>
 </div>
-<div class="section level2">
-<h2 id="implicit-euler-time-stepping">Implicit Euler time stepping<a class="anchor" aria-label="anchor" href="#implicit-euler-time-stepping"></a>
-</h2>
+<div class="section level3">
+<h3 id="implicit-euler-time-stepping">Implicit Euler time stepping<a class="anchor" aria-label="anchor" href="#implicit-euler-time-stepping"></a>
+</h3>
 <p>The matrix exponential in the previous is expensive for large
 problems. So therefore we give here a variant of the code which uses
 implicit Euler to time step the HJB equation rather than the matrix
@@ -338,6 +342,16 @@ state is the same.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/contour.html" class="external-link">contour</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">xc</span>,<span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">U</span><span class="op">)</span>,levels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">3</span>,<span class="fl">0.25</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"x"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FisheriesManagement_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
+</div>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Thygesen2023sde" class="csl-entry">
+Thygesen, Uffe Høgsbro. 2023. <em>Stochastic Differential Equations for
+Science and Engineering</em>. Taylor; Francis. <a href="http://uffe-h-thygesen.github.io" class="external-link">http://uffe-h-thygesen.github.io</a>.
+</div>
+</div>
 </div>
   </div>
 

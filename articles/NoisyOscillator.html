@@ -56,6 +56,9 @@
       <a href="../articles/BrownianMotion.html">Brownian Motion</a>
     </li>
     <li>
+      <a href="../articles/CoxIngersollRoss.html">The Cox-Ingersoll-Ross process</a>
+    </li>
+    <li>
       <a href="../articles/FisheriesManagement.html">Fisheries Management - a Numerical Optimal Control Problem</a>
     </li>
     <li>
@@ -109,7 +112,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-07-11</h4>
+            <h4 data-toc-skip class="date">2023-08-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/NoisyOscillator.Rmd" class="external-link"><code>vignettes/NoisyOscillator.Rmd</code></a></small>
       <div class="hidden name"><code>NoisyOscillator.Rmd</code></div>
@@ -130,8 +133,10 @@ A = \left[ \begin{array}{rr}
 -\lambda &amp; -\omega \\
 \omega &amp; -\lambda
 \end{array}
-\right]
+\right].
 \]</span></p>
+<p>See [Thygesen2023sde] for underlying theory and further details of
+this system.</p>
 <p>The following code computes and plots the response of the system to
 an initial condition. Since there are two states, there are four
 possible responses. Due to symmetry between state 1 and 2, the response
@@ -220,9 +225,9 @@ Note the similarity with the impulse response.</p>
 compare with the analytical prediction:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##            [,1]       [,2]</span></span>
-<span><span class="co">## [1,] 2.38653834 0.04809668</span></span>
-<span><span class="co">## [2,] 0.04809668 2.40446253</span></span></code></pre>
+<pre><code><span><span class="co">##             [,1]        [,2]</span></span>
+<span><span class="co">## [1,]  2.68659810 -0.01685969</span></span>
+<span><span class="co">## [2,] -0.01685969  2.67743663</span></span></code></pre>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/lyap.html">lyap</a></span><span class="op">(</span><span class="va">A</span>,<span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">s</span><span class="op">^</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##              [,1]          [,2]</span></span>
@@ -272,11 +277,17 @@ spectrum.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">fscale</span><span class="op">*</span><span class="va">S</span><span class="op">$</span><span class="va">freq</span>,<span class="va">S</span><span class="op">$</span><span class="va">spec</span><span class="op">*</span><span class="va">Sscale</span>,pch<span class="op">=</span><span class="st">"."</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">fscale</span><span class="op">*</span><span class="va">S</span><span class="op">$</span><span class="va">freq</span>,<span class="va">Ssmooth</span><span class="op">*</span><span class="va">Sscale</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NoisyOscillator_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 
