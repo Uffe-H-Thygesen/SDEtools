@@ -22,7 +22,7 @@ This [R](https://r-project.org) package provides functionality for stochastic di
 * Estimating states (and parameters) for 1D or 2D equations, using Hidden Markov Model methods.
 * Solve optimal control problems numerically, using Markov Decision Process machinery.
 
-The package supports the textbook @Thygesen2023sde by implementing algorithms described in the book, so it provides the computational framework to accompany the theory. It has been used to produce almost all figures in the book.
+The package supports the textbook [@Thygesen2023sde] by implementing algorithms described in the book, so it provides the computational framework to accompany the theory. It has been used to produce almost all figures in the book.
 
 ### Installation
 

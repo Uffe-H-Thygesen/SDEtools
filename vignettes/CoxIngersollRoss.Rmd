@@ -18,7 +18,7 @@ dX_t = \lambda (\xi - Xt) ~ dt + \gamma \sqrt{X_t} ~ dB_t .
 
 We assume that all parameters ($\lambda$, $\xi$, $\gamma$) are positive, and that the initial condition $X_0=x$ is non-negative. 
 
-The process is interesting from the point of view of SDE theory, due to the state-dependent noise intensity ($\gamma \sqrt{X_t}$). From an applied point of view, the process is popular e.g. to model interest rates. See @Thygesen2023sde for details.
+The process is interesting from the point of view of SDE theory, due to the state-dependent noise intensity ($\gamma \sqrt{X_t}$). From an applied point of view, the process is popular e.g. to model interest rates. See [@Thygesen2023sde] for details.
 
 The process remains non-negative. Its expectation $\mu_t = \mathbb{E} X_t$ satisfies the linear ordinary differential equation 
 \[

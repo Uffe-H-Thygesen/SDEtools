@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-Brownian motion is the fundamental building block in the theory of stochastic differential equations @Thygesen2023sde. This vignette explores some basics of Brownian motion: How to simulate sample paths, the statistics of Brownian motion and how to verify them from simulations, the Brownian bridge, and the properties of the maximum and hitting times.
+Brownian motion is the fundamental building block in the theory of stochastic differential equations [@Thygesen2023sde]. This vignette explores some basics of Brownian motion: How to simulate sample paths, the statistics of Brownian motion and how to verify them from simulations, the Brownian bridge, and the properties of the maximum and hitting times.
 
 ## Simulation of Brownian motion
 
