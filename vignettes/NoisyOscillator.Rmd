@@ -3,6 +3,7 @@ title: "The noisy harmonic oscillator"
 author: "Uffe Høgsbro Thygesen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: references.bib
 vignette: >
   %\VignetteIndexEntry{The noisy harmonic oscillator}
   %\VignetteEngine{knitr::rmarkdown}
@@ -22,8 +23,10 @@ A = \left[ \begin{array}{rr}
 -\lambda & -\omega \\ 
 \omega & -\lambda
 \end{array}
-\right]
+\right].
 \]
+
+See [Thygesen2023sde] for underlying theory and further details of this system.
 
 The following code computes and plots the response of the system to an initial condition. Since there are two states, there are four possible responses. Due to symmetry between state 1 and 2, the response from state 1 to state 1 is identical to that from state 2 to state 2, so we only see three distinct curves. 
 
@@ -133,3 +136,4 @@ Here, we smooth the spectrum using a simple running average. We convert the empi
   
 ```
 
+# References

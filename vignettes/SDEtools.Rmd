@@ -1,6 +1,7 @@
 ---
 title: "SDEtools"
 output: rmarkdown::html_vignette
+bibliography: references.bib
 vignette: >
   %\VignetteIndexEntry{SDEtools}
   %\VignetteEngine{knitr::rmarkdown}
@@ -21,6 +22,8 @@ This [R](https://r-project.org) package provides functionality for stochastic di
 * Estimating states (and parameters) for 1D or 2D equations, using Hidden Markov Model methods.
 * Solve optimal control problems numerically, using Markov Decision Process machinery.
 
+The package supports the textbook @Thygesen2023sde by implementing algorithms described in the book, so it provides the computational framework to accompany the theory. It has been used to produce almost all figures in the book.
+
 ### Installation
 
 To install the package, open R and run 
@@ -36,7 +39,6 @@ Then load the package with
 ```{r setup}
 library(SDEtools)
 ```
-
 
 ## Example
 
@@ -74,3 +76,5 @@ lines(20*rho/max(rho),xc)
 ## Tour of features
 
 Please see the vignettes which showcase functionality. 
+
+# References

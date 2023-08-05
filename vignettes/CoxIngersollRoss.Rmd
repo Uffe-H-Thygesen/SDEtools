@@ -1,0 +1,133 @@
+---
+title: "The Cox-Ingersoll-Ross process"
+author: "Uffe Høgsbro Thygesen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{The Cox-Ingersoll-Ross process}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The Cox-Ingersoll-Ross process is given by the Itô stochastic differential equation 
+
+\[
+dX_t = \lambda (\xi - Xt) ~ dt + \gamma \sqrt{X_t} ~ dB_t .
+\]
+
+We assume that all parameters ($\lambda$, $\xi$, $\gamma$) are positive, and that the initial condition $X_0=x$ is non-negative. 
+
+The process is interesting from the point of view of SDE theory, due to the state-dependent noise intensity ($\gamma \sqrt{X_t}$). From an applied point of view, the process is popular e.g. to model interest rates. See @Thygesen2023sde for details.
+
+The process remains non-negative. Its expectation $\mu_t = \mathbb{E} X_t$ satisfies the linear ordinary differential equation 
+\[
+\dot \mu_t = \lambda (\xi - \mu_t)
+\]
+which has the solution $\mu_t = \xi + (\mu_0-\xi) e^{-\lambda t}$. Its variance $\Sigma_t = \mathbb{V} X_t$ satisifies the equation 
+\[
+\dot \Sigma_t = -2\lambda \Sigma_t + \gamma^2 \mu_t 
+\]
+from which we can derive [@Thygesen2023sde] e.g. that in stationarity the mean is $\xi$, the variance is $\Sigma=\gamma^2 \xi /(2\lambda)$, and the autocovariance function is $\Sigma \exp(-\lambda |t|)$. 
+
+# Functionality in SDEtools for the Cox-Ingersoll-Ross process
+
+The *SDEtools* package has implemented four functions which all relate to the transition probabilities in the Cox-Ingersoll-Ross process. These are *dCIR*, *pCIR*, *qCIR*, *rCIR*. They follow the convention for other distributions such as the Gaussian (normal) distribution; i.e., *dCIR* computes transition probability densities, *pCIR* computes the probability distribution function, *qCIR* computes quantiles, and *rCIR* generates random numbers. 
+
+They all require as parameters the initial point $X_0$, the parameters $\lambda$, $\xi$ and $\gamma$, and the terminal time $t$. By default they use the Itô interpretation, but they can optiionally use the Stratonovich interpretation (see details in the following). Finally, they take the usual arguments for similar distributions in *R*, i.e., probabilities can be natural (default) or logarithmic, and probabilities can concern the lower tail (default) or the upper.
+
+# Basic use of the functions
+
+The help file for the functions has the following example: We first sample a number of random numbers, taking all parameters to 1. We plot the p.d.f., and the c.d.f., and verify the consistency between the c.d.f. and the quantile functions. 
+
+```{r,fig.width=8}
+  require(SDEtools) 
+  example(dCIR)
+```
+
+# Verifying the stationary distribution
+
+The stationary distribution can be obtained numerically by setting the terminal time to $\infty$. 
+
+We have already mentioned that the stationary mean is $\xi$ and that the stationary variance is $\Sigma = \gamma^2 \xi/(2\lambda)$. Theoretically, it can be shown that the stationary distribution is a gamma distribution with shape parameter $k=\xi^2/\Sigma = 2\lambda\xi/\gamma^2$ and rate parameter $r=\xi/\Sigma = 2\lambda/\gamma^2$.
+
+The following code verifies this. Note that the argument x0 is still required, but that it can be chosen arbitrarily, as it does not affect the stationary distribution.
+
+```{r,fig.width=7}
+  lambda <- 1 
+  xi <- 1
+  gamma <- 1
+  x0 <- 1
+  t <- Inf
+  
+  phi <- function(x) dCIR(x,x0,lambda,xi,gamma,t)
+  plot(phi,from=0,to=3)
+  
+  Sigma <- gamma^2*xi/(2*lambda)
+  k <- xi^2/Sigma
+  r <- xi/Sigma
+  phi.theo <- function(x) dgamma(x,shape=k,rate=r)
+  plot(phi.theo,from=0,to=3,col="red",add=TRUE)
+```
+
+# Recursive sampling of a path
+
+We can sample a path of the CIR process recursively, using the Markov property: 
+
+```{r,fig.width=7}
+  dt <- 0.1
+  t <- seq(0,100,dt)
+  X <- numeric(length(t))
+  X[1] <- xi
+  
+  for(i in 2:length(X)) X[i] <- rCIR(1,X[i-1],lambda,xi,gamma,dt)
+  plot(t,X,type="l")
+```
+
+# Verification of the autocovariance function
+
+Here, we compute the empirical autocovariance function based on the simulated sample path. 
+This assumes stationarity, which does not strictly hold, since the initial condition was deterministic ($X_0=\xi$) rather than sampled from the stationary distribution. However, the process decorrelates fairly quickly (in fact, over the time scale $1/\lambda$), so it is a reasonable approximation.
+
+We compare with the analytical expression for the autocovariance function, $\gamma^2 \xi/(2\lambda) \exp(-\lambda |t|)$. Note that the *R* function *acf* by default computes the autocorrelation function (rescaled to have 1 at lag 0), and operates in discrete time (number of samples).
+
+```{r,fig.width=7}
+  acf(X,lag.max = 50,type="covariance")
+  hv <- 0:50  # Number of samples, not continuous time
+  lines(hv,gamma^2/2/lambda*xi*exp(-hv*dt))
+```
+
+# The Stratonovich interpretation
+
+As mentioned, the default interpretation is Itô's. If one wishes the Stratonovich interpretation, this can be supplied by an optional argument: 
+
+```{r}
+  dCIR(1,1,1,1,1,1,Stratonovich = TRUE)
+```
+
+Under the hood, the functions immediately transform to the Itô interpretation. The same process $X_t$ can be written either as a solution to an Itô SDE or a Stratonovich SDE using the general rules for converting between the two formalisms [@Thygesen2023sde]:
+
+\[
+dX_t = \lambda (\xi - X_t) ~dt + \gamma \sqrt{X_t} \circ dB_t = 
+\lambda (\xi - X_t) ~dt + \frac 14 \gamma^2 ~dt + \gamma \sqrt{X_t}  ~dB_t
+\]
+
+Note that the both equations have the same structure, the same rate parameter $\lambda$, and the same noise intensity $\gamma$, but that the constant terms are different. So with the Stratonovich interpretation, the stationary expectation is 
+\[
+\mathbb{E} X_t = \xi + \frac{\gamma^2}{4\lambda }
+\]
+We can verify this by numerical integration, here using the complementary c.d.f.:
+\[
+\mathbb{E} X = \int_0^\infty (1-F(x)) ~dx
+\]
+
+```{r,fig.width=7}
+  G <- function(x) pCIR(x,x0,lambda,xi,gamma,Inf,Stratonovich = TRUE,lower.tail = FALSE)
+  EX <- integrate(G,lower=0,upper=Inf)$value  
+  plot(G,from=0,to=3,main=paste("Integral=",
+                                round(EX,3),"; theoretical=",
+                                round(xi+gamma^2/4/lambda,3)))
+```
+
+
+# References

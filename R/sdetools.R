@@ -237,7 +237,7 @@ CrossVariation <- function(X,Y)
 #'   function(x)diag(c(1,x[1])),times,c(0,0),BM2)$X,xlab="Time",ylab="X",type="l",add=TRUE)
 #' 
 #' @export
-heun <- function(f,g,times,x0,B=NULL,p=function(x)x,h=function(t,x)1)
+heun <- function(f,g,times,x0,B=NULL,p=function(x)x,h=NULL,r=NULL,S0=1,Stau=runif(1))
 {
   nx <- length(x0)
   nt <- length(times)
@@ -256,6 +256,28 @@ heun <- function(f,g,times,x0,B=NULL,p=function(x)x,h=function(t,x)1)
   }else
   {
     ggg <- g
+  }
+
+  ## Check if h is unspecified or specified as a function(x) only, then convert to a function(t,x)
+  if(is.null(h)) h <- function(t,x)1
+  if(length(formals(h))==1){
+    hh <- function(t,x)h(x)
+  }else
+  {
+    hh <- h
+  }
+  
+  ## Check if r is unspecified or specified as a function(x) only, then convert to a function(t,x)
+  if(is.null(r)) {
+      r <- function(t,x)0
+      NO.MORTALITY <- TRUE
+  } else NO.MORTALITY <- FALSE
+  
+  if(length(formals(r))==1){
+    rr <- function(t,x)r(x)
+  }else
+  {
+    rr <- r
   }
 
   ## Find number of dimensions of the Brownian motion. Convert g, if necessary, to something that
@@ -280,28 +302,39 @@ heun <- function(f,g,times,x0,B=NULL,p=function(x)x,h=function(t,x)1)
   dB <- apply(B,2,diff)
 
   X <- array(NA,c(nt,nx))
-  X[1,] <- x0
+  colnames(X) <- names(x0)
+    X[1,] <- x0
 
+  S <- numeric(nt)
+  S[1] <- S0
+  
   dt <- diff(times)
 
   for(i in 1:(nt-1))
   {
-    ## Euler predictor
-    fX <- as.numeric(ff(times[i],X[i,]))
-    gX <- gg(times[i],X[i,])
-    Y <- as.numeric(p(X[i,] + fX*dt[i] + as.numeric(gX %*% as.numeric(dB[i,]))))
+      ## Euler predictor
+      fX <- as.numeric(ff(times[i],as.numeric(X[i,])))
+      gX <- gg(times[i],X[i,])
+      Y <- as.numeric(p(X[i,] + fX*dt[i] + as.numeric(gX %*% as.numeric(dB[i,]))))
 
-    ## Corrector
-    fY <- as.numeric(ff(times[i+1],Y))
-    gY <- gg(times[i+1],Y)
-    X[i+1,] <- as.numeric(p(X[i,] + 0.5*(fX+fY)*dt[i] + as.numeric(0.5*(gX+gY) %*% as.numeric(dB[i,]))))
-
-    if(h(times[i+1],X[i+1,]) <= 0) break
+      ## Corrector
+      fY <- as.numeric(ff(times[i+1],Y))
+      gY <- gg(times[i+1],Y)
+      X[i+1,] <- as.numeric(p(X[i,] + 0.5*(fX+fY)*dt[i] + as.numeric(0.5*(gX+gY) %*% as.numeric(dB[i,]))))
+      
+      if(h(times[i+1],X[i+1,]) <= 0) break
+      S[i+1] <- S[i] * exp(-rr(t,X[i,])*dt[i])
+      if(S[i+1]<Stau) break
   }
 
-  colnames(X) <- names(x0)
-  
-  return(list(times=times,X=X))
+  if(NO.MORTALITY)
+  {
+      return(list(times=times,X=X))
+  }
+  else {
+      tau <- times[i+1]
+      return(list(times=times[1:(i+1)],X=X[1:(i+1),],S=S[1:(i+1)],tau=tau))
+  }      
 }
 
 
@@ -414,7 +447,11 @@ euler <- function(f,g,times,x0,B=NULL,p=function(x)x,h=NULL,r=NULL,S0=1,Stau=run
 
   for(i in 1:(nt-1))
   {
-      X[i+1,] <- p( as.numeric(X[i,]) + as.numeric(ff(times[i],X[i,])*dt[i]) + as.numeric(gg(times[i],X[i,]) %*% as.numeric(dB[i,])) )
+      fX <- as.numeric(ff(times[i],as.numeric(X[i,])))
+      gX <- gg(times[i],as.numeric(X[i,]))
+      
+      X[i+1,] <- as.numeric(p( as.numeric(X[i,]) + fX*dt[i] + as.numeric(gX %*% as.numeric(dB[i,]))))
+
       if(h(times[i+1],X[i+1,]) <= 0) break
       S[i+1] <- S[i] * exp(-rr(t,X[i,])*dt[i])
       if(S[i+1]<Stau) break
@@ -547,4 +584,107 @@ lyap <- function(A,Q)
     X <- -solve(P,as.numeric(Q))
     return(matrix(X,nrow=nrow(A)))
 }
+
+### Functionality for the Cox-Ingersoll-Ross process
+
+## Internal function for converting CIR parameters to the parameters in the 
+## non-central chi-squared distribution
+cir.parameters <- function(x0,lambda,xi,gamma,t,Stratonovich=FALSE)
+{
+  ## If this is for the Stratonovich interpretation,
+  ## convert first to the equivalent Ito equation
+  if(Stratonovich) xi <- xi + gamma^2/4/lambda
+  
+  c <- 2*lambda/gamma^2/(1-exp(-lambda*t))
+  nu <- 2*c*x0*exp(-lambda*t)
+  n <- 4*lambda*xi/gamma^2
+  
+  return(list(c=c,nu=nu,n=n))
+}
+
+#' The Cox-Ingersoll-Ross process
+#'
+#' @description Density, distribution function, quantile function, and random generation 
+#' for the transition probabilities in the Cox-Ingersoll-Ross process given by the 
+#' stochastic differential equation dX = lambda*(xi-X)*dt + gamma*sqrt(X)*dB (interpreted 
+#' in the sense of Ito (default) or Stratonovich (optional))
+#'
+#' @usage 
+#' dCIR(x,x0,lambda,xi,gamma,t,Stratonovich=FALSE,log=FALSE)
+#' 
+#' @param x,q Target state, assumed >= 0
+#' @param p Probability,  assumed >= 0 and <= 1.
+#' @param x0 Initial state, assumed > 0
+#' @param lambda Rate parameter, assumed > 0
+#' @param xi Mean parameter, assumed > 0
+#' @param gamma Noise intensity parameters, assumed > 0
+#' @param t Terminal time, assumed > 0
+#' @param Stratonovich Logical, TRUE for Stratonovich, FALSE (default) for Ito
+#' @param log,log.p Logical, if TRUE, probabilities/densities are given as log(p). Default is FALSE
+#' @param lower.tail Logical; if TRUE (default) probabilities are P(X<=x); otherise, P(X>x).
+#'
+#' @return dCIR gives the transition probability density, pCIR gives the distribution of the transitio probability, qCIR gives the quantiles, and rCIR samples a random terminal point.
+#' 
+#' The length of the result is determined by n for rCIR, and is the maximum of the lengths of the numerical arguments for the other functions. 
+#'
+#' @examples
+#' x <- sort(rCIR(100,1,1,1,1,1))
+#' par(mfrow=c(1,2))
+#' plot(x,dCIR(x,1,1,1,1,1),ylab="p.d.f.")
+#' F <- pCIR(x,1,1,1,1,1)
+#' plot(x,F)
+#' lines(qCIR(F,1,1,1,1,1),F)
+#' @export
+dCIR <- function(x,x0,lambda,xi,gamma,t,Stratonovich=FALSE,log=FALSE)
+{
+  p <- cir.parameters(x0,lambda,xi,gamma,t,Stratonovich)
+  
+  ## The following is the explicit expression
+  ## d <- c*exp(-0.5*(2*c*x+nu))*(2*c*x/nu)^(n/4-0.5)*besselI(sqrt(2*c*nu*x),n/2-1)
+  ## More accurately, and easier, to use the  built-in p.d.f. of the
+  ## non-central chi-squared distribution
+  ld <- log(2*p$c) + dchisq(2*p$c*x,p$n,p$nu,log=TRUE)
+  
+  if(log==TRUE) return(ld) else return(exp(ld))
+}
+
+#' @rdname dCIR
+#' @usage 
+#' pCIR(x,x0,lambda,xi,gamma,t,Stratonovich=FALSE,log.p=FALSE,lower.tail=TRUE)
+#' @export
+pCIR <- function(x,x0,lambda,xi,gamma,t,Stratonovich=FALSE,lower.tail=TRUE,log.p=FALSE)
+{
+  p <- cir.parameters(x0,lambda,xi,gamma,t,Stratonovich)
+  
+  lp <- pchisq(2*p$c*x,p$n,p$nu,lower.tail=lower.tail,log.p=log.p)
+  
+  return(lp)
+}
+
+#' @rdname dCIR
+#' @usage
+#' qCIR(p,x0,lambda,xi,gamma,t,Stratonovich=FALSE,log.p=FALSE,lower.tail=TRUE)
+#' @export
+qCIR <- function(ps,x0,lambda,xi,gamma,t,Stratonovich=FALSE,lower.tail=TRUE,log.p=FALSE)
+{
+  p <- cir.parameters(x0,lambda,xi,gamma,t,Stratonovich)
+  
+  x <- qchisq(ps,p$n,p$nu,lower.tail=lower.tail,log.p=log.p)/2/p$c
+  
+  return(x)
+}
+
+#' @rdname dCIR
+#' @usage
+#' rCIR(n,x0,lambda,xi,gamma,t,Stratonovich=FALSE)
+#' @export
+rCIR <- function(n,x0,lambda,xi,gamma,t,Stratonovich=FALSE)
+{
+  p <- cir.parameters(x0,lambda,xi,gamma,t,Stratonovich)
+  
+  x <- rchisq(n,p$n,p$nu)/2/p$c
+  
+  return(x)
+}
+
 

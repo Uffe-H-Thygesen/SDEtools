@@ -4,7 +4,18 @@
 \alias{heun}
 \title{Heun's method for simulation of a Stratonovich stochastic differential equation dX = f dt + g dB}
 \usage{
-heun(f, g, times, x0, B = NULL, p = function(x) x, h = function(t, x) 1)
+heun(
+  f,
+  g,
+  times,
+  x0,
+  B = NULL,
+  p = function(x) x,
+  h = NULL,
+  r = NULL,
+  S0 = 1,
+  Stau = runif(1)
+)
 }
 \arguments{
 \item{f}{function f(x) or f(t,x) giving the drift term in the SDE}

@@ -3,6 +3,7 @@ title: "A 2D example: The van der Pol oscillator"
 author: "Uffe Høgsbro Thygesen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: references.bib
 vignette: >
   %\VignetteIndexEntry{A 2D example: The van der Pol oscillator}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,6 +17,8 @@ The case is stochastic van der Pol oscillator:
 \[
 dX_t = V_t ~dt , \quad dV_t = [ V_t(\mu-X_t^2) -X_t ]~dt + \sigma ~dB_t
 \]
+
+Without noise, this is the standard van der Pol oscillator, which is a classical example of a non-linear system which has a limit cycle. The noise perturbs the oscillations, so that the system will converge to a stochastic steady state. See @Thygesen2023sde for more details about the model.
 
 ```{r}
 rm(list=ls())
@@ -98,3 +101,4 @@ To compare this with the simulation, it is better to plot the time series as poi
   plot(sim$X[,1],sim$X[,2],pch=".",xlab="x",ylab="v")
 ```
 
+# References

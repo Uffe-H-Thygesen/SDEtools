@@ -3,6 +3,7 @@ title: "SDEs with killing"
 author: "Uffe Høgsbro Thygesen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: references.bib
 vignette: >
   %\VignetteIndexEntry{SDEs with killing}
   %\VignetteEngine{knitr::rmarkdown}
@@ -17,7 +18,7 @@ In this vignette, we consider a process given by the Itô stochastic differentia
 dX_t = - X_t ~dt + dB_t . 
 \]
 
-We interpret this $X_t$ as the position of an animal moving in one dimension. We see that so far - i.e., without killing - the position is an Ornstein-Uhlenbeck process with stationary mean 0, variance $1/2$, and decorrelation time 1. We can verify the stationary distribution numerically as follows, introducing reflective boundaries at the boundaries of a computational domain. Here $D(x) = g^2(x)/2 = 1/2$ is the diffusivity, and  $v(x)=f(x)=-x$ is the advective velocity which equals the drift, since the diffusivity is constant.  
+We interpret this $X_t$ as the position of an animal moving in one dimension. The position is an Ornstein-Uhlenbeck process [@Thygesen2023sde] with stationary mean 0, variance $1/2$, and decorrelation time 1. We can verify the stationary distribution numerically as follows, introducing reflective boundaries at the boundaries of a computational domain. Here $D(x) = g^2(x)/2 = 1/2$ is the diffusivity, and  $v(x)=f(x)=-x$ is the advective velocity which equals the drift, since the diffusivity is constant.  
 
 
 ```{r}
@@ -33,8 +34,6 @@ G0 <- fvade(v,D,xgrid=xgrid,bc='r')
 pi <- StationaryDistribution(G0)
 plot(xc,pi/diff(xgrid),xlab="x",ylab="P.d.f.",type="l")
 ```
-
-
 
 ## Constructing the sub-generator of a diffusion with killing
 
@@ -208,3 +207,4 @@ We next compare with the theoretical prediction: At any point in time, condition
   lines(xc,fXtau / diff(xgrid))
 ```
 
+# References

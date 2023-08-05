@@ -3,6 +3,7 @@ title: "Itô Integrals and the Euler-Maruyama method"
 author: "Uffe Høgsbro Thygesen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: references.bib
 vignette: >
   %\VignetteIndexEntry{Itô Integrals and the Euler-Maruyama method}
   %\VignetteEngine{knitr::rmarkdown}
@@ -10,6 +11,8 @@ vignette: >
 ---
 
 ## Numerical Itô integration
+
+The objective of this vignette is to demonstrate how to perform (approximate) Itô integration numerically. We do not aim for very high accuracy; rather, our purpose is to build intuition for the integral, which is helpful when studying the theory of stochastic differential equations, in which Itô integratio is an essential element [@Thygesen2023sde].
 
 We consider an *integrator* $\{B_t\}$ and an *integrand* $\{G_t\}$, which are both stochastic processes. Think of $\{B_t\}$ as Brownian motion and $\{G_t\}$ as an adapted process, although this is not necessary. We aim to approximate the Itô integral 
 \[
@@ -36,7 +39,7 @@ This approximation is implemented in the function **itointegral**. For example, 
   lines(t,0.5*(B^2-t),col="red")
 ```
 
-We have included the analytical result. The agreement is not perfect; there is a time discretization error. 
+We have included the analytical result $\int_0^t B_s ~dB_s = (B_t^2 - t)/2$ [@Thygesen2023sde]. The agreement is not perfect; there is a time discretization error. 
 
 Note that the numerical Itô integration routine does not need to know the time grid; only values of the integrator and the integrand at each time point. The integral is implemented as follows: 
 

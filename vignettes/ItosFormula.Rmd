@@ -3,6 +3,7 @@ title: "Itô's formula"
 author: "Uffe Høgsbro Thygesen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: references.bib
 vignette: >
   %\VignetteIndexEntry{Itô's formula}
   %\VignetteEngine{knitr::rmarkdown}
@@ -22,14 +23,13 @@ Moreover, the quadratic variation $[X]_t$ is given by  $d[X]_t = (dX_t)^2 = G_t^
 \[
 dY_t = h'(X_t) F_t ~dt + h'(X_t) G_t ~dB_t + \frac 12 h''(X_t) G_t^2 ~dt  .
 \]
-The aim of this vignette is to 
-verify this numerically for a specific example, and to discuss discretization errors when we verify the formula in discrete time.
+See [@Thygesen2023sde] for a description of this theoretical result.The aim of this vignette is to  verify this numerically for a specific example, and to discuss discretization errors when we verify the formula in discrete time.
 
 In our example, $\{X_t\}$ is stochastic logistic growth given by the Itô stochastic differential equation
 \[
 dX_t = X_t(1-X_t) ~dt + \sigma X_t ~dB_t
 \]
-with $\sigma = 0.25$ and the initial condition $X_0=x_0=0.01$. We simulate a sample path of $X_t$ using the Euler-Maruyama algorithm:
+with $\sigma = 0.25$ and the initial condition $X_0=x_0=0.01$. This is known as stochastic logistic growth [@Thygesen2023sde]. We simulate a sample path of $X_t$ using the Euler-Maruyama algorithm:
 
 ```{r}
   require(SDEtools)
@@ -159,3 +159,5 @@ To assess this error coarsely, note that it comes from the term
 and the conditional expectation of this term is $-k^2/2$ per time step during the growth phase, i.e. it grows with rate $-k/2$. So after 5 time units, we expect that this error has grown to 0.025. We see a good agreement with the simulation, even if the variation between realizations are greater.
 
 This vignette has hopefully illuminated both where Itô's formula comes from, and the errors that may arise when we investigate stochastic differential equation in discrete time.
+
+# References

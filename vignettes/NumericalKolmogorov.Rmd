@@ -3,13 +3,16 @@ title: "Numerical Analysis of the Kolmogorov Equations"
 author: "Uffe Høgsbro Thygesen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: references.bib
 vignette: >
   %\VignetteIndexEntry{Numerical Analysis of the Kolmogorov Equations}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-We consider the numerical analysis of the forward and backward Kolmogorov equation, using the *fvade* function (Finite Volume method for Advection-Diffusion Equations).
+The Kolmogorov equationsa are central in the theory of stochastic differential equations, as they govern the transition probabilities of the solutions to these equations. See [@Thygesen2023sde] for background theory, including the derivation of the equations and their application in many types of analysis of stochastic differential equations.
+
+In this vignette, we consider the numerical analysis of the forward and backward Kolmogorov equation, using the *fvade* function (Finite Volume method for Advection-Diffusion Equations).
 
 Let us start with a toy example. We make a uniform grid on the unit interval with four grid cells, i.e. five cell boundaries:
 
@@ -240,3 +243,5 @@ Sometimes it is an advantage to use higher spatial resolution in some regions of
 ```
 
 This grid is a bit coarse, so the spatial discretization error is there, but demonstrates the principle.
+
+# References

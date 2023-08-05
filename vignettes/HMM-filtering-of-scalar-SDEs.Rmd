@@ -2,6 +2,7 @@
 title: "HMM filtering of scalar SDEs"
 author: "Uffe Høgsbro Thygesen"
 date: "`r Sys.Date()`"
+bibliography: references.bib
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{HMM filtering of scalar SDEs}
@@ -12,17 +13,17 @@ vignette: >
 
 ## Overview 
 
-We simulate a sample path from the Ito stochastic differential equation governing the abundance of a bacterial population
+We simulate a sample path from the Ito stochastic differential equation [@Thygesen2023sde] governing the abundance of a bacterial population
 
 \[
 dX_t = (1- X_t) ~dt + \gamma \sqrt{X_t} ~dB_t
 \]
 
-which is the Cox-Ingersoll-Ross model. Then, we simulate random measurements taken at times $0,dt,2~dt, \ldots, T$ so that $Y_i | X_{t_i}$ is Poisson distributed with mean $v `. X_{t_i}$. Then, we pretend that we don't know the states and re-estimate them from these measurements. 
+which is the Cox-Ingersoll-Ross model [@Thygesen2023sde]. Then, we simulate random measurements taken at times $0,dt,2~dt, \ldots, T$ so that $Y_i | X_{t_i}$ is Poisson distributed with mean $v `. X_{t_i}$. Then, we pretend that we don't know the states and re-estimate them from these measurements. 
 
 ## Simulation of states 
 
-We define the model and simulate the states using the Euler-Marruyama method.
+We define the model and simulate the states using the Euler-Maruyama method.
 
 ```{r,fig.width=7}
 require(SDEtools)
@@ -153,3 +154,5 @@ Note that there seems to be a roughly linear relationship (save the first couple
 The function HMMfilterSDE can also gived "smoothed" states, i.e., estimates that are based on all measurements, both past and future. You can compare the performance of the estimates we have shown here, with these smoothed estimates.
 
 You could also estimate the states between the measurements, for example by having a state likelihood function which is constant to 1 whenever no measurement is taken. Then, you could investigate how the posterior variance evolves between times of measurements. 
+
+# References
