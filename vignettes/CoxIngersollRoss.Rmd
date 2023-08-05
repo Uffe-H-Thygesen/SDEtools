@@ -76,12 +76,12 @@ We can sample a path of the CIR process recursively, using the Markov property:
 
 ```{r,fig.width=7}
   dt <- 0.1
-  t <- seq(0,100,dt)
+  t <- seq(0,1000,dt)
   X <- numeric(length(t))
   X[1] <- xi
   
   for(i in 2:length(X)) X[i] <- rCIR(1,X[i-1],lambda,xi,gamma,dt)
-  plot(t,X,type="l")
+  plot(t,X,type="l",xlim=c(0,100))
 ```
 
 # Verification of the autocovariance function
@@ -96,6 +96,8 @@ We compare with the analytical expression for the autocovariance function, $\gam
   hv <- 0:50  # Number of samples, not continuous time
   lines(hv,gamma^2/2/lambda*xi*exp(-hv*dt))
 ```
+
+Note that there is a clear resemblance between the empirical and the theoretical result, but that the agreement is far from perfect: The variability in the process itself implies that also the estimated autocovariance function is uncertain.
 
 # The Stratonovich interpretation
 
