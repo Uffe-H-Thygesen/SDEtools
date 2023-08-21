@@ -112,7 +112,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-08-05</h4>
+            <h4 data-toc-skip class="date">2023-08-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/BrownianMotion.Rmd" class="external-link"><code>vignettes/BrownianMotion.Rmd</code></a></small>
       <div class="hidden name"><code>BrownianMotion.Rmd</code></div>
@@ -155,7 +155,7 @@ Brownian motion itself.</p>
 <span><span class="co">##     B &lt;- B0 + cumsum(dB)</span></span>
 <span><span class="co">##     return(B)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x562d1a054aa8&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x5581657fe7a8&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:SDEtools&gt;</span></span></code></pre>
 </div>
 <div class="section level3">
@@ -168,11 +168,11 @@ discretization and check the statistics.</p>
 <span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="va">n</span>,<span class="fu"><a href="../reference/rBM.html">rBM</a></span><span class="op">(</span><span class="va">tv</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">B</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##      [,1]     [,2]     [,3]     [,4]</span></span>
-<span><span class="co">## [1,]    0 0.000000 0.000000 0.000000</span></span>
-<span><span class="co">## [2,]    0 1.047391 1.026063 1.017756</span></span>
-<span><span class="co">## [3,]    0 1.026063 1.991117 1.970225</span></span>
-<span><span class="co">## [4,]    0 1.017756 1.970225 4.039406</span></span></code></pre>
+<pre><code><span><span class="co">##      [,1]      [,2]      [,3]      [,4]</span></span>
+<span><span class="co">## [1,]    0 0.0000000 0.0000000 0.0000000</span></span>
+<span><span class="co">## [2,]    0 0.9837119 0.9743394 0.9593379</span></span>
+<span><span class="co">## [3,]    0 0.9743394 1.8971035 1.8992330</span></span>
+<span><span class="co">## [4,]    0 0.9593379 1.8992330 3.9766209</span></span></code></pre>
 <p>Compare this with the analytical result that the covariance of <span class="math inline">\(B_s\)</span> and <span class="math inline">\(B_t\)</span> is <span class="math inline">\(\min(s,t)\)</span>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">tv</span>,<span class="fu"><a href="https://rdrr.io/r/base/Vectorize.html" class="external-link">Vectorize</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -301,7 +301,7 @@ becomes more important.</p>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Thygesen2023sde" class="csl-entry">
 Thygesen, Uffe Høgsbro. 2023. <em>Stochastic Differential Equations for
-Science and Engineering</em>. Taylor; Francis. <a href="http://uffe-h-thygesen.github.io" class="external-link">http://uffe-h-thygesen.github.io</a>.
+Science and Engineering</em>. Taylor &amp; Francis. <a href="http://uffe-h-thygesen.github.io" class="external-link">http://uffe-h-thygesen.github.io</a>.
 </div>
 </div>
 </div>
