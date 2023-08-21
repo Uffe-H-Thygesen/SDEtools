@@ -687,4 +687,93 @@ rCIR <- function(n,x0,lambda,xi,gamma,t,Stratonovich=FALSE)
   return(x)
 }
 
+## Internal function for converting OU parameters to the parameters in the 
+## Gaussian distribution
+ou.parameters <- function(x0,lambda,xi,sigma,t)
+{
+  mean <- xi + (x0-xi)*exp(-lambda*t)
+  sd <- if(lambda==0) sd <- sigma*sqrt(t) else sd <- sigma*sqrt((1-exp(-2*lambda*t))/2/lambda)
+  
+  return(list(mean=mean,sd=sd))
+  }
+
+#' The Ornstein-Uhlenbeck process
+#'
+#' @description Density, distribution function, quantile function, and random generation 
+#' for the transition probabilities in the (shifted) Ornstein-Uhlenbeck process given by the 
+#' stochastic differential equation dX = lambda*(xi-X)*dt + sigma*dB 
+#'
+#' @usage 
+#' dOU(x,x0,lambda,xi,sigma,t,log=FALSE)
+#' 
+#' @param x,q Target state, assumed >= 0
+#' @param p Probability,  assumed >= 0 and <= 1.
+#' @param x0 Initial state, assumed > 0
+#' @param lambda Rate parameter, assumed > 0
+#' @param xi Mean parameter, assumed > 0
+#' @param sigma Noise intensity parameters, assumed > 0
+#' @param t Terminal time, assumed > 0
+#' #' @param log,log.p Logical, if TRUE, probabilities/densities are given as log(p). Default is FALSE
+#' @param lower.tail Logical; if TRUE (default) probabilities are P(X<=x); otherise, P(X>x).
+#'
+#' @return dOU gives the transition probability density, pOU gives the distribution of the transitio probability, qOU gives the quantiles, and rOU samples a random terminal point.
+#' 
+#' The length of the result is determined by n for rOU, and is the maximum of the lengths of the numerical arguments for the other functions. 
+#'
+#' @examples
+#' x <- sort(rOU(100,1,1,1,1,1))
+#' par(mfrow=c(1,2))
+#' plot(x,dOU(x,1,1,1,1,1),ylab="p.d.f.")
+#' F <- pOU(x,1,1,1,1,1)
+#' plot(x,F)
+#' lines(qOU(F,1,1,1,1,1),F)
+#' @export
+dOU <- function(x,x0,lambda,xi,sigma,t,log=FALSE)
+{
+  p <- ou.parameters(x0,lambda,xi,sigma,t)
+  
+  ld <- dnorm(x,p$mean,p$sd,log=TRUE)
+  
+  if(log==TRUE) return(ld) else return(exp(ld))
+}
+
+#' @rdname dOU
+#' @usage 
+#' pOU(x,x0,lambda,xi,sigma,t,log.p=FALSE,lower.tail=TRUE)
+#' @export
+pOU <- function(x,x0,lambda,xi,sigma,t,lower.tail=TRUE,log.p=FALSE)
+{
+  p <- ou.parameters(x0,lambda,xi,sigma,t)
+  
+  lp <- pnorm(x,p$mean,p$sd,lower.tail=lower.tail,log.p=log.p)
+  
+  return(lp)
+}
+
+#' @rdname dOU
+#' @usage
+#' qOU(p,x0,lambda,xi,sigma,t,log.p=FALSE,lower.tail=TRUE)
+#' @export
+qOU <- function(ps,x0,lambda,xi,sigma,t,lower.tail=TRUE,log.p=FALSE)
+{
+  p <- ou.parameters(x0,lambda,xi,sigma,t)
+  
+  x <- qnorm(ps,p$mean,p$sd,lower.tail=lower.tail,log.p=log.p)
+  
+  return(x)
+}
+
+#' @rdname dOU
+#' @usage
+#' rOU(n,x0,lambda,xi,sigma,t)
+#' @export
+rOU <- function(n,x0,lambda,xi,sigma,t)
+{
+  p <- ou.parameters(x0,lambda,xi,sigma,t)
+  
+  x <- rnorm(n,p$mean,p$sd)
+  
+  return(x)
+}
+
 
