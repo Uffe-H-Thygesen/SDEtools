@@ -206,7 +206,8 @@ QuasiStationaryDistribution <- function(G)
 #' G <- fvade(u=function(x)-x,D=function(x)1,xgrid=xgrid,bc="r")
 #' modes <- TransientModes(G,3)
 #' par(mfrow=c(3,2))
-#' for(i in 1:3) {
+#' for(i in 1:3)
+#' {
 #'   plot(xc,modes$phi[i,],type="l",main=modes$lambda[i])
 #'   plot(xc,modes$psi[,i],type="l",main=modes$lambda[i])
 #' }
