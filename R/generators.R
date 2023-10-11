@@ -177,6 +177,55 @@ QuasiStationaryDistribution <- function(G)
     return(list(value=Re(-evs$value),vector=pi))
 }
 
+#' Compute the first transient modes (forward and backward) for a terminating Continuous Time Markov Chain
+#'
+#' @description
+#' TransientModes computes the first transient modes for a Continuous Time
+#' Markov Chain generator or sub-generator G. These are given by the equations
+#'
+#'   phi %*% G == lambda*phi, G %*% psi == lambda*psi
+#'
+#' By "first" modes, we mean that the eigenvalues have with the largest real parts
+#'
+#' If G is a generator, then the first mode is the stationary mode. Then the first left mode right mode is
+#' trivial, i.e., the constant function, while the first left mode is the stationary distribution. The
+#' second value is one divided by the decorrelation time.
+#'
+#' @param G (Sub-)generator of a CTMC: A quadratic matrix with non-negative off-diagonal elements and non-positive row sums
+#' @param k Number of modes. 
+#'
+#' @return A list containing:
+#' phi, a matrix so that each of the k rows contains a transient mode of the forward Kolmogorov equation
+#' psi, a matrix so that each of the k columns contains a transient mode of the backward Kolmogorov equation
+#' lambda, a vector of the k eigenvalues
+#'
+#' @examples
+#' ## Modes for the Ornstein-Uhlenbeck process
+#' xgrid <- seq(-3,3,0.01)
+#' xc <- cell.centers(xgrid)
+#' G <- fvade(u=function(x)-x,D=function(x)1,xgrid=xgrid,bc="r")
+#' modes <- TransientModes(G,3)
+#' par(mfrow=c(3,2))
+#' for(i in 1:3) {
+#'   plot(xc,modes$phi[i,],type="l",main=modes$lambda[i])
+#'   plot(xc,modes$psi[,i],type="l",main=modes$lambda[i])
+#' }
+#' @export
+TransientModes <- function(G,k=5)
+{
+    phi <- t(RSpectra::eigs(Matrix::t(G),k,sigma=1e-8)$vector)
+    phi <- phi[k:1,]
+    phi[1,] <- phi[1,] / sum(phi[1,])
+
+    evs <- RSpectra::eigs(G,k,sigma=1e-8)
+    psi <- evs$vector[,k:1]
+    psi[,1] <- psi[,1] / mean(psi[,1])
+
+    lambda <- rev(evs$value)
+
+    return(list(phi=phi,psi=psi,lambda=lambda))
+}
+
 #' Convert cell probabilities to (average) probability densities
 #'
 #' @description
