@@ -26,8 +26,9 @@ which is the Cox-Ingersoll-Ross model [@Thygesen2023sde]. Then, we simulate rand
 We define the model and simulate the states using the Euler-Maruyama method.
 
 ```{r,fig.width=7}
-require(SDEtools)
-
+  require(SDEtools)
+  set.seed(123456) ## For reproducible results
+  
   # Define model. Note abs to handle negative x.
   gamma <- 1
   f = function(x) (1-x)
@@ -115,7 +116,8 @@ We now use the filter to add the information from the process equation. We use t
   ## Specify prior c.d.f. of the initial state, here uniform. Note that it does not have to be normalized.
   phi0 <- function(x)x
   ## Run the filter 
-  filter <- HMMfilterSDE(u,D,xi,bc='r',phi0,tm,ymeas,dl)
+  filter <- HMMfilterSDE(u,D,xi,bc='r',phi0,tm,ymeas,dl,
+                         do.Viterbi=TRUE,do.smooth=TRUE)
 
   ## Show colour plot of posterior c.d.f.
   image(tm,xc,t(apply(filter$psi,1,cumsum)),ylim=c(0,4))
@@ -149,10 +151,34 @@ plot(XestMean,XestVar)
 
 Note that there seems to be a roughly linear relationship (save the first couple of data points, which reflect transients from the initial condition). This linear relationship reflects both process noise and measurement noise: When the state is large, the process noise is increased, and the variance on the measurements is larger. 
 
+## The smoothing filter 
+
+The filter algorithm outputs both the predicted, estimated, and smoothed distributions of the state. 
+
+```{r,fig.width=7}
+  XsmoothMean <- filter$pi %*% xc
+
+  plot(sim$t,sim$X,type="l",xlab="t",ylab="x")
+  lines(tm,XsmoothMean,col="red")
+  lines(tm,XestMean,col="blue")
+  legend("topright",lty=1,col=c("black","red","blue"),legend=c("True","Smooth","Est"))
+```
+
+
+## The most probable path
+
+The output from the filter included the most probable path, that is, the sequence of states which maximize the joint posterior probability. This is found with the Viterbi algorithm. The following figure shows the true state, the posterior expectation (based on the smoothing filter, and the most probable path). 
+
+```{r,fig.width=7}
+plot(sim$t,sim$X,type="l",xlab="t",ylab="x")
+lines(tm,XsmoothMean,col="red")
+lines(tm,xc[filter$X],col="blue")
+legend("topright",lty=1,col=c("black","red","blue"),legend=c("True","Smooth","MPT"))
+```
+
+
 ## Perspectives
 
-The function HMMfilterSDE can also gived "smoothed" states, i.e., estimates that are based on all measurements, both past and future. You can compare the performance of the estimates we have shown here, with these smoothed estimates.
-
-You could also estimate the states between the measurements, for example by having a state likelihood function which is constant to 1 whenever no measurement is taken. Then, you could investigate how the posterior variance evolves between times of measurements. 
+It is possible to estimate the states between the measurements, for example by having a state likelihood function which is constant to 1 whenever no measurement is taken. Then, you could investigate how the posterior variance evolves between times of measurements.
 
 # References

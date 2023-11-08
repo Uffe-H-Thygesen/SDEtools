@@ -27,7 +27,7 @@ HMMfilterSDE(
 
 \item{bc}{String indicating boundary conditions. See details.}
 
-\item{x0dist}{Prior distribution of the initial state, specified as a c.d.f. or as a vector of same length as xi, start}
+\item{x0dist}{Prior distribution of the initial state. See details.}
 
 \item{tvec}{Vector of (increasing) time points where observations are taken}
 
@@ -47,9 +47,18 @@ phi A tabulation of the predicitive probability densities
 psi A tabulation of the estimated probability densities
 pi  (If do.smooth==TRUE) A tabulation of the smoothed probability densities
 c   A vector containing the normalization constants at each time step
+X A vector containing the most probabile path (if do.Viterbi==TRUE)
+U A vector containint the pseudo-prediction residuals (if pfun is supplied)
 }
 \description{
 HMMfilterSDE computes the state estimation for a discretely observed stochastic differential equation
+}
+\details{
+The distribution of the initial condition x0 can be specified in a number of ways: 
+  . If x0dist is a function, it is interpreted as the c.d.f. of the initial state
+  . If x0dist is a single number, it is interpreted as a deterministic initial state
+  . If x0dist is a numeric vector of the same length as xi, then it is interpreted as a c.d.f.
+  . If x0dist is a numeric vector with one less element than xi, then it is interpreted as cell probabilities.
 }
 \author{
 Uffe Høgsbro Thygesen
