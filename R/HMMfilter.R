@@ -147,7 +147,6 @@ HMMfilterSDE <-
 
         ## Forward loop, finding the path
         X <- numeric(nt)
-        print(V[,1])
         
         X[1] <- which.max(V[,1])
         for(t in 2:nt) X[t] <- U[X[t-1],t-1]
