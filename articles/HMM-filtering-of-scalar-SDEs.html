@@ -112,7 +112,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-10-11</h4>
+            <h4 data-toc-skip class="date">2023-11-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/HMM-filtering-of-scalar-SDEs.Rmd" class="external-link"><code>vignettes/HMM-filtering-of-scalar-SDEs.Rmd</code></a></small>
       <div class="hidden name"><code>HMM-filtering-of-scalar-SDEs.Rmd</code></div>
@@ -142,10 +142,12 @@ don’t know the states and re-estimate them from these measurements.</p>
 <p>We define the model and simulate the states using the Euler-Maruyama
 method.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Uffe-H-Thygesen/SDEtools" class="external-link">SDEtools</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Uffe-H-Thygesen/SDEtools" class="external-link">SDEtools</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: SDEtools</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>  <span class="co"># Define model. Note abs to handle negative x.</span></span>
+<code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123456</span><span class="op">)</span> <span class="co">## For reproducible results</span></span>
+<span>  </span>
+<span>  <span class="co"># Define model. Note abs to handle negative x.</span></span>
 <span>  <span class="va">gamma</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span>  <span class="va">f</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">x</span><span class="op">)</span></span>
 <span>  <span class="va">g</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">gamma</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>;</span>
@@ -244,9 +246,28 @@ estimation, not future measurements.</p>
 <span>  <span class="co">## Specify prior c.d.f. of the initial state, here uniform. Note that it does not have to be normalized.</span></span>
 <span>  <span class="va">phi0</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="va">x</span></span>
 <span>  <span class="co">## Run the filter </span></span>
-<span>  <span class="va">filter</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HMMfilterSDE.html">HMMfilterSDE</a></span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,bc<span class="op">=</span><span class="st">'r'</span>,<span class="va">phi0</span>,<span class="va">tm</span>,<span class="va">ymeas</span>,<span class="va">dl</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="va">filter</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HMMfilterSDE.html">HMMfilterSDE</a></span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,bc<span class="op">=</span><span class="st">'r'</span>,<span class="va">phi0</span>,<span class="va">tm</span>,<span class="va">ymeas</span>,<span class="va">dl</span>,</span>
+<span>                         do.Viterbi<span class="op">=</span><span class="cn">TRUE</span>,do.smooth<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: Matrix</span></span></code></pre>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">##   [1] -819.0754 -819.0719 -819.0627 -819.0494 -819.0338 -819.0159 -818.9851</span></span>
+<span><span class="co">##   [8] -818.9581 -818.9169 -818.8839 -818.8461 -818.8108 -818.7691 -818.7279</span></span>
+<span><span class="co">##  [15] -818.6915 -818.6518 -818.6201 -818.5939 -818.5704 -818.5505 -818.5360</span></span>
+<span><span class="co">##  [22] -818.5187 -818.5149 -818.5166 -818.5209 -818.5336 -818.5527 -818.5704</span></span>
+<span><span class="co">##  [29] -818.6014 -818.6378 -818.6757 -818.7158 -818.7646 -818.8226 -818.8804</span></span>
+<span><span class="co">##  [36] -818.9478 -819.0209 -819.1003 -819.1851 -819.2786 -819.3775 -819.4779</span></span>
+<span><span class="co">##  [43] -819.5780 -819.6920 -819.8145 -819.9418 -820.0710 -820.2042 -820.3419</span></span>
+<span><span class="co">##  [50] -820.4853 -820.6405 -820.8002 -820.9659 -821.1334 -821.3076 -821.4862</span></span>
+<span><span class="co">##  [57] -821.6736 -821.8621 -822.0532 -822.2549 -822.4632 -822.6718 -822.8913</span></span>
+<span><span class="co">##  [64] -823.1130 -823.3438 -823.5750 -823.8171 -824.0661 -824.3168 -824.5689</span></span>
+<span><span class="co">##  [71] -824.8301 -825.0972 -825.3712 -825.6487 -825.9281 -826.2110 -826.5050</span></span>
+<span><span class="co">##  [78] -826.8000 -827.1054 -827.4137 -827.7272 -828.0435 -828.3626 -828.6904</span></span>
+<span><span class="co">##  [85] -829.0273 -829.3646 -829.7068 -830.0591 -830.4159 -830.7741 -831.1389</span></span>
+<span><span class="co">##  [92] -831.5079 -831.8870 -832.2692 -832.6570 -833.0497 -833.4455 -833.8448</span></span>
+<span><span class="co">##  [99] -834.2469 -834.6606 -835.0805 -835.5006 -835.9249 -836.3571 -836.7970</span></span>
+<span><span class="co">## [106] -837.2390 -837.6864 -838.1370 -838.5960 -839.0554 -839.5174 -839.9885</span></span>
+<span><span class="co">## [113] -840.4642 -840.9430 -841.4289 -841.9194 -842.4048 -842.8735 -843.2909</span></span>
+<span><span class="co">## [120] -843.6097</span></span></code></pre>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="co">## Show colour plot of posterior c.d.f.</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xc</span>,<span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">filter</span><span class="op">$</span><span class="va">psi</span>,<span class="fl">1</span>,<span class="va">cumsum</span><span class="op">)</span><span class="op">)</span>,ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
@@ -255,7 +276,7 @@ estimation, not future measurements.</p>
 <h3 id="filtering-results">Filtering results<a class="anchor" aria-label="anchor" href="#filtering-results"></a>
 </h3>
 <p>We compare the true states with the estimated ones:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="co">## Plot true state at times of measurements</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">ymean</span><span class="op">/</span><span class="va">vsample</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"x"</span><span class="op">)</span></span>
 <span></span>
@@ -268,11 +289,11 @@ that some of the fast fluctuations in the true states do not reflect in
 the estimated ones. These features are as expected.</p>
 <p>We can compare the expectation and the variance in the posterior
 distribution:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">XestVar</span> <span class="op">&lt;-</span> <span class="va">filter</span><span class="op">$</span><span class="va">psi</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">xc</span><span class="op">^</span><span class="fl">2</span> <span class="op">-</span> <span class="va">XestMean</span><span class="op">^</span><span class="fl">2</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XestVar</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">XestMean</span>,<span class="va">XestVar</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
 <p>Note that there seems to be a roughly linear relationship (save the
@@ -282,13 +303,38 @@ measurement noise: When the state is large, the process noise is
 increased, and the variance on the measurements is larger.</p>
 </div>
 <div class="section level3">
+<h3 id="the-smoothing-filter">The smoothing filter<a class="anchor" aria-label="anchor" href="#the-smoothing-filter"></a>
+</h3>
+<p>The filter algorithm outputs both the predicted, estimated, and
+smoothed distributions of the state.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span>  <span class="va">XsmoothMean</span> <span class="op">&lt;-</span> <span class="va">filter</span><span class="op">$</span><span class="va">pi</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">xc</span></span>
+<span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">t</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"x"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XsmoothMean</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XestMean</span>,col<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>,lty<span class="op">=</span><span class="fl">1</span>,col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>,<span class="st">"red"</span>,<span class="st">"blue"</span><span class="op">)</span>,legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"True"</span>,<span class="st">"Smooth"</span>,<span class="st">"Est"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
+</div>
+<div class="section level3">
+<h3 id="the-most-probable-path">The most probable path<a class="anchor" aria-label="anchor" href="#the-most-probable-path"></a>
+</h3>
+<p>The output from the filter included the most probable path, that is,
+the sequence of states which maximize the joint posterior probability.
+This is found with the Viterbi algorithm. The following figure shows the
+true state, the posterior expectation (based on the smoothing filter,
+and the most probable path).</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">t</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"x"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XsmoothMean</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xc</span><span class="op">[</span><span class="va">filter</span><span class="op">$</span><span class="va">X</span><span class="op">]</span>,col<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>,lty<span class="op">=</span><span class="fl">1</span>,col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>,<span class="st">"red"</span>,<span class="st">"blue"</span><span class="op">)</span>,legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"True"</span>,<span class="st">"Smooth"</span>,<span class="st">"MPT"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
+</div>
+<div class="section level3">
 <h3 id="perspectives">Perspectives<a class="anchor" aria-label="anchor" href="#perspectives"></a>
 </h3>
-<p>The function HMMfilterSDE can also gived “smoothed” states, i.e.,
-estimates that are based on all measurements, both past and future. You
-can compare the performance of the estimates we have shown here, with
-these smoothed estimates.</p>
-<p>You could also estimate the states between the measurements, for
+<p>It is possible to estimate the states between the measurements, for
 example by having a state likelihood function which is constant to 1
 whenever no measurement is taken. Then, you could investigate how the
 posterior variance evolves between times of measurements.</p>
