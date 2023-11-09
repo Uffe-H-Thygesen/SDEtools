@@ -112,7 +112,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-11-08</h4>
+            <h4 data-toc-skip class="date">2023-11-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/HMM-filtering-of-scalar-SDEs.Rmd" class="external-link"><code>vignettes/HMM-filtering-of-scalar-SDEs.Rmd</code></a></small>
       <div class="hidden name"><code>HMM-filtering-of-scalar-SDEs.Rmd</code></div>
@@ -134,7 +134,9 @@ dX_t = (1- X_t) ~dt + \gamma \sqrt{X_t} ~dB_t
 measurements taken at times <span class="math inline">\(0,dt,2~dt,
 \ldots, T\)</span> so that <span class="math inline">\(Y_i |
 X_{t_i}\)</span> is Poisson distributed with mean <span class="math inline">\(v `. X_{t_i}\)</span>. Then, we pretend that we
-don’t know the states and re-estimate them from these measurements.</p>
+don’t know the states and re-estimate them from these measurements. We
+do this with the function , so that this vignette is essentially a
+demonstration of this function and its use.</p>
 </div>
 <div class="section level3">
 <h3 id="simulation-of-states">Simulation of states<a class="anchor" aria-label="anchor" href="#simulation-of-states"></a>
@@ -145,7 +147,7 @@ method.</p>
 <code class="sourceCode R"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Uffe-H-Thygesen/SDEtools" class="external-link">SDEtools</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: SDEtools</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123456</span><span class="op">)</span> <span class="co">## For reproducible results</span></span>
+<code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span> <span class="co">## For reproducible results</span></span>
 <span>  </span>
 <span>  <span class="co"># Define model. Note abs to handle negative x.</span></span>
 <span>  <span class="va">gamma</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
@@ -195,19 +197,22 @@ small sample from the environment.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">times</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"Time"</span>,ylab<span class="op">=</span><span class="st">'Abundance'</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">ymeas</span><span class="op">/</span><span class="va">vsample</span>,pch<span class="op">=</span><span class="st">'o'</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-2-1.png" width="672"></p>
+<p>Notice that the data is very noisy and, when plotted in this fashion,
+does not seem to hold very accurate information about the state.</p>
 </div>
 <div class="section level3">
-<h3 id="specification-of-the-likelihood-function">Specification of the likelihood function<a class="anchor" aria-label="anchor" href="#specification-of-the-likelihood-function"></a>
+<h3 id="specification-of-the-state-likelihood-function">Specification of the state likelihood function<a class="anchor" aria-label="anchor" href="#specification-of-the-state-likelihood-function"></a>
 </h3>
-<p>To run the filter, we must first specify the likelihood function. We
-first define this for a general measurement and general state:</p>
+<p>To run the filter, we must first specify the state likelihood
+function. We first define this for a general measurement and general
+state:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="co">## State likelihood   </span></span>
 <span>  <span class="va">dl</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">dpois</a></span><span class="op">(</span><span class="va">y</span>,lambda<span class="op">=</span><span class="va">vsample</span><span class="op">*</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
 <p>We can now inspect the state likelihood on its own, i.e., without
-using the process equation. We choose a discretization of state space.
-We choose to use a grid that has higher resolution near 0, and tabulate
-the likelihood function.</p>
+using the process equation. We choose a discretization of state space
+which has higher resolution near 0, and tabulate the likelihood
+function.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="co">## Choose discretization of state space</span></span>
 <span>  <span class="va">xi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">3</span>,<span class="fl">0.025</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>                                <span class="co"># Cell Interfaces</span></span>
@@ -222,22 +227,23 @@ the true states:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xtrue</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xc</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">ltab</span>,<span class="fl">2</span>,<span class="va">which.max</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
-<p>There is very little information in the individual observation,
-because the counts are so low. Therefore, there is a potential gain from
-estimating the state not just using the measurement taken at the same
-time, but also the neighbouring measurements. This is particularly so
-because the measurements are taken quite frequently: The sample interval
-is 0.1 time unit, while the mean relaxes over a time scale of 1.</p>
+<p>Again, there is very little information in the individual
+observation, because the counts are so low. Therefore, there is a
+potential gain from estimating the state not just using the measurement
+taken at the same time, but also the neighbouring measurements. This is
+particularly so because the measurements are taken quite frequently: The
+sample interval is 0.1 time unit, while the mean relaxes over a time
+scale of 1.</p>
 </div>
 <div class="section level3">
 <h3 id="running-the-filter">Running the filter<a class="anchor" aria-label="anchor" href="#running-the-filter"></a>
 </h3>
 <p>We now use the filter to add the information from the process
-equation. We use the function HMMfilterSDE, which require a process
-model as well as a likelihood function. In addition, it needs a
-distribution of the initial state. We focus on real-time state
-estimation; i.e., we use only the current and past measurements in the
-estimation, not future measurements.</p>
+equation. We use the function , which requires a process model as well
+as a state likelihood function. In addition, it needs a distribution of
+the initial state. We focus first on real-time state estimation; i.e.,
+we use only the current and past measurements in the estimation, not
+future measurements.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="co"># Advection-diffusion form of the Kolmogorov equations</span></span>
 <span>  <span class="va">D</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">0.5</span><span class="op">*</span><span class="va">gamma</span><span class="op">^</span><span class="fl">2</span><span class="op">*</span><span class="va">x</span>;</span>
@@ -266,15 +272,19 @@ estimation, not future measurements.</p>
 <span>  <span class="va">XestMean</span> <span class="op">&lt;-</span> <span class="va">filter</span><span class="op">$</span><span class="va">psi</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">xc</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XestMean</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
-<p>Notice that the estimated states lag a bit behind the true ones, and
-that some of the fast fluctuations in the true states do not reflect in
-the estimated ones. These features are as expected.</p>
-<p>We can compare the expectation and the variance in the posterior
-distribution:</p>
+<p>Notice how, as anticipated, the estimated states lag a bit behind the
+true ones, and that some of the fast fluctuations in the true states do
+not reflect in the estimated ones.</p>
+<p>We compute the variance in the posterior distribution, at each point
+in time:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">XestVar</span> <span class="op">&lt;-</span> <span class="va">filter</span><span class="op">$</span><span class="va">psi</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">xc</span><span class="op">^</span><span class="fl">2</span> <span class="op">-</span> <span class="va">XestMean</span><span class="op">^</span><span class="fl">2</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XestVar</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
+<p>Notice how the variance fluctuates significantly in time. This
+reflects that both the process equation and the measurement equation has
+a variance, which depends on the state. To pursue this further, we can
+compare the mean and the variance in the posterior distribution:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">XestMean</span>,<span class="va">XestVar</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
@@ -288,15 +298,49 @@ increased, and the variance on the measurements is larger.</p>
 <h3 id="the-smoothing-filter">The smoothing filter<a class="anchor" aria-label="anchor" href="#the-smoothing-filter"></a>
 </h3>
 <p>The filter algorithm outputs both the predicted, estimated, and
-smoothed distributions of the state.</p>
+smoothed distributions of the state. We now compare how different
+information yield different estimates.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>  <span class="va">XsmoothMean</span> <span class="op">&lt;-</span> <span class="va">filter</span><span class="op">$</span><span class="va">pi</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">xc</span></span>
+<code class="sourceCode R"><span>  <span class="va">XpredMean</span> <span class="op">&lt;-</span> <span class="va">filter</span><span class="op">$</span><span class="va">phi</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">xc</span></span>
+<span>  <span class="va">XpredVar</span> <span class="op">&lt;-</span> <span class="va">filter</span><span class="op">$</span><span class="va">phi</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">xc</span><span class="op">^</span><span class="fl">2</span> <span class="op">-</span> <span class="va">XpredMean</span><span class="op">^</span><span class="fl">2</span></span>
+<span></span>
+<span>  <span class="va">XsmoothMean</span> <span class="op">&lt;-</span> <span class="va">filter</span><span class="op">$</span><span class="va">pi</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">xc</span></span>
+<span>  <span class="va">XsmoothVar</span> <span class="op">&lt;-</span> <span class="va">filter</span><span class="op">$</span><span class="va">pi</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">xc</span><span class="op">^</span><span class="fl">2</span> <span class="op">-</span> <span class="va">XsmoothMean</span><span class="op">^</span><span class="fl">2</span></span>
 <span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">t</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"x"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XsmoothMean</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XestMean</span>,col<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>,lty<span class="op">=</span><span class="fl">1</span>,col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>,<span class="st">"red"</span>,<span class="st">"blue"</span><span class="op">)</span>,legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"True"</span>,<span class="st">"Smooth"</span>,<span class="st">"Est"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
+<p>Notice that the difference between the estimated state and the
+smoothed state is not very large. In the time interval <span class="math inline">\(t\in[7,10]\)</span>, the smoother is a bit ahead
+of the estimator. This is because the true state largely keeps
+increasing over this time interval, which keeps surprising the
+estimator, but which the smoother takes into account.</p>
+<p>We can compare the time-averaged variances between the three state
+estimates (predicted, estimated, smoothed). We do this in two ways:
+First, we compute the variance in the posterior distributions - this is
+the way one would assess variance in e real situation, where the true
+states are not available. Second, we compute the time averaged square
+deviation between the estimated states and the true ones. This is
+clearly only possible since this is a simulation exercise where we know
+the truth.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">Theo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Pred <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">XpredVar</span><span class="op">)</span>,Est <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">XestVar</span><span class="op">)</span>,Smooth <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">XsmoothVar</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">Emp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">XpredMean</span><span class="op">-</span><span class="va">xtrue</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>,</span>
+<span>             <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">XestMean</span><span class="op">-</span><span class="va">xtrue</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>,</span>
+<span>             <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">XsmoothMean</span><span class="op">-</span><span class="va">xtrue</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">Vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">Theo</span>,<span class="va">Emp</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">Vars</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##           Pred       Est    Smooth</span></span>
+<span><span class="co">## Theo 0.2954795 0.2082373 0.1449298</span></span>
+<span><span class="co">## Emp  0.3369900 0.1850625 0.1118570</span></span></code></pre>
+<p>The different between the theoretical variances and the empirical
+ones are reasonable and do not show a clear pattern. The difference
+between predictions, estimates, and smoothed estimates reflect that more
+data points are being used to form the estimates, resulting in a lower
+variance.</p>
 </div>
 <div class="section level3">
 <h3 id="the-most-probable-path">The most probable path<a class="anchor" aria-label="anchor" href="#the-most-probable-path"></a>
@@ -306,12 +350,16 @@ the sequence of states which maximize the joint posterior probability.
 This is found with the Viterbi algorithm. The following figure shows the
 true state, the posterior expectation (based on the smoothing filter,
 and the most probable path).</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">t</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"x"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XsmoothMean</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xc</span><span class="op">[</span><span class="va">filter</span><span class="op">$</span><span class="va">X</span><span class="op">]</span>,col<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>,lty<span class="op">=</span><span class="fl">1</span>,col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>,<span class="st">"red"</span>,<span class="st">"blue"</span><span class="op">)</span>,legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"True"</span>,<span class="st">"Smooth"</span>,<span class="st">"MPT"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
+<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
+<p>In this example, there is not a very pronounced difference between
+the smoothed mean and the most probable track. However, conceptually
+there is quite a big difference in the way they are formed, and if they
+differ significantly, this should lead to a closer inspection.</p>
 </div>
 <div class="section level3">
 <h3 id="perspectives">Perspectives<a class="anchor" aria-label="anchor" href="#perspectives"></a>
@@ -320,6 +368,16 @@ and the most probable path).</p>
 example by having a state likelihood function which is constant to 1
 whenever no measurement is taken. Then, you could investigate how the
 posterior variance evolves between times of measurements.</p>
+<p>The function gives various output that can be used to assess model
+fit: The total log-likelihood can be used in an “outer loop” to estimate
+model parameters using the Maximum Likelihood principle, and describes
+how well, on average, the model does one-step predictions. The
+normalization constants <span class="math inline">\(c\)</span> apply to
+each time step, and can be used to identify observations that were very
+unexpected, and therefore potential outliers. This can be refined using
+the prediction pseudo-residuals <span class="math inline">\(U\)</span>,
+which theoretically should be independent and uniformly distributed on
+[0,1]; this can be used for model validation.</p>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
