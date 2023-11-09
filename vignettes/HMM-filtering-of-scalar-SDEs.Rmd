@@ -19,7 +19,7 @@ We simulate a sample path from the Ito stochastic differential equation [@Thyges
 dX_t = (1- X_t) ~dt + \gamma \sqrt{X_t} ~dB_t
 \]
 
-which is the Cox-Ingersoll-Ross model [@Thygesen2023sde]. Then, we simulate random measurements taken at times $0,dt,2~dt, \ldots, T$ so that $Y_i | X_{t_i}$ is Poisson distributed with mean $v `. X_{t_i}$. Then, we pretend that we don't know the states and re-estimate them from these measurements. 
+which is the Cox-Ingersoll-Ross model [@Thygesen2023sde]. Then, we simulate random measurements taken at times $0,dt,2~dt, \ldots, T$ so that $Y_i | X_{t_i}$ is Poisson distributed with mean $v `. X_{t_i}$. Then, we pretend that we don't know the states and re-estimate them from these measurements. We do this with the function \texttt{HMMfilterSDE}, so that this vignette is essentially a demonstration of this function and its use. 
 
 ## Simulation of states 
 
@@ -27,7 +27,7 @@ We define the model and simulate the states using the Euler-Maruyama method.
 
 ```{r,fig.width=7}
   require(SDEtools)
-  set.seed(123456) ## For reproducible results
+  set.seed(1234) ## For reproducible results
   
   # Define model. Note abs to handle negative x.
   gamma <- 1
@@ -74,9 +74,11 @@ Next, we generate some random measurements. Measurements are taken at regular po
   points(tm,ymeas/vsample,pch='o')
 ```
 
-## Specification of the likelihood function
+Notice that the data is very noisy and, when plotted in this fashion, does not seem to hold very accurate information about the state. 
 
-To run the filter, we must first specify the likelihood function. We first define this for a general measurement and general state:
+## Specification of the state likelihood function
+
+To run the filter, we must first specify the state likelihood function. We first define this for a general measurement and general state:
 
 ```{r,fig.width=7}
   ## State likelihood	
@@ -84,7 +86,7 @@ To run the filter, we must first specify the likelihood function. We first defin
 
 ```
 
-We can now inspect the state likelihood on its own, i.e., without using the process equation. We choose a discretization of state space. We choose to use a grid that has higher resolution near 0, and tabulate the likelihood function.
+We can now inspect the state likelihood on its own, i.e., without using the process equation. We choose a discretization of state space which has higher resolution near 0, and tabulate the likelihood function.
 
 ```{r,fig.width=7}
   ## Choose discretization of state space
@@ -102,11 +104,11 @@ plot(tm,xtrue,type="l")
 points(tm,xc[apply(ltab,2,which.max)])
 ```
 
-There is very little information in the individual observation, because the counts are so low. Therefore, there is a potential gain from estimating the state not just using the measurement taken at the same time, but also the neighbouring measurements. This is particularly so because the measurements are taken quite frequently: The sample interval is 0.1 time unit, while the mean relaxes over a time scale of 1.
+Again, there is very little information in the individual observation, because the counts are so low. Therefore, there is a potential gain from estimating the state not just using the measurement taken at the same time, but also the neighbouring measurements. This is particularly so because the measurements are taken quite frequently: The sample interval is 0.1 time unit, while the mean relaxes over a time scale of 1.
 
 ## Running the filter
 
-We now use the filter to add the information from the process equation. We use the function HMMfilterSDE, which require a process model as well as a likelihood function. In addition, it needs a distribution of the initial state. We focus on real-time state estimation; i.e., we use only the current and past measurements in the estimation, not future measurements.
+We now use the filter to add the information from the process equation. We use the function \textt{HMMfilterSDE}, which requires a process model as well as a state likelihood function. In addition, it needs a distribution of the initial state. We focus first on real-time state estimation; i.e., we use only the current and past measurements in the estimation, not future measurements.
 
 ```{r,fig.width=7}
   # Advection-diffusion form of the Kolmogorov equations
@@ -136,14 +138,17 @@ We compare the true states with the estimated ones:
   points(tm,XestMean)
 ```
 
-Notice that the estimated states lag a bit behind the true ones, and that some of the fast fluctuations in the true states do not reflect in the estimated ones. These features are as expected. 
+Notice how, as anticipated, the estimated states lag a bit behind the true ones, and that some of the fast fluctuations in the true states do not reflect in the estimated ones.
 
-We can compare the expectation and the variance in the posterior distribution:
+We compute the variance in the posterior distribution, at each point in time:
 
 ```{r,fig.width=7}
 XestVar <- filter$psi %*% xc^2 - XestMean^2
 plot(tm,XestVar)
 ```
+
+Notice how the variance fluctuates significantly in time. This reflects that both the process equation and the measurement equation has a variance, which depends on the state. To pursue this further, we can compare the mean and the variance in the posterior distribution: 
+
 
 ```{r,fig.width=7}
 plot(XestMean,XestVar)
@@ -153,10 +158,14 @@ Note that there seems to be a roughly linear relationship (save the first couple
 
 ## The smoothing filter 
 
-The filter algorithm outputs both the predicted, estimated, and smoothed distributions of the state. 
+The filter algorithm outputs both the predicted, estimated, and smoothed distributions of the state. We now compare how different information yield different estimates. 
 
 ```{r,fig.width=7}
+  XpredMean <- filter$phi %*% xc
+  XpredVar <- filter$phi %*% xc^2 - XpredMean^2
+
   XsmoothMean <- filter$pi %*% xc
+  XsmoothVar <- filter$pi %*% xc^2 - XsmoothMean^2
 
   plot(sim$t,sim$X,type="l",xlab="t",ylab="x")
   lines(tm,XsmoothMean,col="red")
@@ -164,6 +173,21 @@ The filter algorithm outputs both the predicted, estimated, and smoothed distrib
   legend("topright",lty=1,col=c("black","red","blue"),legend=c("True","Smooth","Est"))
 ```
 
+Notice that the difference between the estimated state and the smoothed state is not very large.  In the time interval  $t\in[7,10]$, the smoother is a bit ahead of the estimator. This is because the true state largely keeps increasing over this time interval, which keeps surprising the estimator, but which the smoother takes into account. 
+
+We can compare the time-averaged variances between the three state estimates (predicted, estimated, smoothed). We do this in two ways: First, we compute the variance in the posterior distributions - this is the way one would assess variance in e real situation, where the true states are not available. Second, we compute the time averaged square deviation between the estimated states and the true ones. This is clearly only possible since this is a simulation exercise where we know the truth. 
+
+```{r}
+Theo <- c(Pred = mean(XpredVar),Est = mean(XestVar),Smooth = mean(XsmoothVar))
+Emp <- c(mean((XpredMean-xtrue)^2),
+             mean((XestMean-xtrue)^2),
+             mean((XsmoothMean-xtrue)^2))
+
+Vars <- rbind(Theo,Emp)
+print(Vars)
+```
+
+The different between the theoretical variances and the empirical ones are reasonable and do not show a clear pattern. The difference between predictions, estimates, and smoothed estimates reflect that more data points are being used to form the estimates, resulting in a lower variance. 
 
 ## The most probable path
 
@@ -176,9 +200,12 @@ lines(tm,xc[filter$X],col="blue")
 legend("topright",lty=1,col=c("black","red","blue"),legend=c("True","Smooth","MPT"))
 ```
 
+In this example, there is not a very pronounced difference between the smoothed mean and the most probable track. However, conceptually there is quite a big difference in the way they are formed, and if they differ significantly, this should lead to a closer inspection. 
 
 ## Perspectives
 
 It is possible to estimate the states between the measurements, for example by having a state likelihood function which is constant to 1 whenever no measurement is taken. Then, you could investigate how the posterior variance evolves between times of measurements.
+
+The function \textt{HMMfilterSDE} gives various output that can be used to assess model fit: The total log-likelihood \texttt{loglik} can be used in an "outer loop" to estimate model parameters using the Maximum Likelihood principle, and describes how well, on average, the model does one-step predictions. The normalization constants $c$ apply to each time step, and can be used to identify observations that were very unexpected, and therefore potential outliers. This can be refined using the prediction pseudo-residuals $U$, which theoretically should be independent and uniformly distributed on [0,1]; this can be used for model validation. 
 
 # References

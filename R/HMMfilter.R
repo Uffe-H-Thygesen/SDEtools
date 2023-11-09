@@ -28,6 +28,7 @@
 ##' psi A tabulation of the estimated probability densities
 ##' pi  (If do.smooth==TRUE) A tabulation of the smoothed probability densities
 ##' c   A vector containing the normalization constants at each time step
+##' loglik The total log-likelihood of the model
 ##' X A vector containing the most probabile path (if do.Viterbi==TRUE)
 ##' U A vector containint the pseudo-prediction residuals (if pfun is supplied)
 ##' 
@@ -98,8 +99,9 @@ HMMfilterSDE <-
     psi[i,] = phi[i,] * ltab[,i];      # Data update
     c[i] <- sum(psi[i,])
     psi[i,] = psi[i,] / c[i]           # Normalize
-
-    ans <- list(phi=phi,psi=psi,c=c)
+    loglik = sum(log(c))
+    
+    ans <- list(phi=phi,psi=psi,c=c,loglik=loglik)
 
     if(do.smooth) {
         mu <- array(NA,c(length(xc),length(tvec)))
