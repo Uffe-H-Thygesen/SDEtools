@@ -12,7 +12,8 @@
 ##' @param tvec Vector of (increasing) time points where observations are taken
 ##' @param yvec Vector of observations at each time point
 ##' @param lfun Likelihood function so that lfun(x,y) gives the likelihood of y given x
-##' @param do.smooth Do want smoothing, or only predictive filtering / estimation?
+##' @param do.smooth Do we want smoothing, or only predictive filtering / estimation?
+##' @param N.sample Number of "typical tracks" sampled (defaults to 0)
 ##' @param do.Viterbi Do we want the most probable state sequence, found with the Viterbi algorithm?
 ##' @param pfun C.d.f. of observations given states, i.e. pfun(x,y) gives P(Y<=y | X = x). If supplied, pseudo-prediction residuals will be computed
 ##' 
@@ -29,14 +30,14 @@
 ##' pi  (If do.smooth==TRUE) A tabulation of the smoothed probability densities
 ##' c   A vector containing the normalization constants at each time step
 ##' loglik The total log-likelihood of the model
-##' X A vector containing the most probabile path (if do.Viterbi==TRUE)
+##' Xmpt A vector containing the most probabile path (if do.Viterbi==TRUE)
 ##' U A vector containint the pseudo-prediction residuals (if pfun is supplied)
 ##' 
 ##' @author Uffe Høgsbro Thygesen
 ##'
 ##' @export
 HMMfilterSDE <-
-    function(u,D,xi,bc,x0dist,tvec,yvec,lfun,do.smooth=FALSE,do.Viterbi=FALSE,pfun=NULL)
+    function(u,D,xi,bc,x0dist,tvec,yvec,lfun,do.smooth=FALSE,N.sample=0,do.Viterbi=FALSE,pfun=NULL)
 {
     G <- fvade(u,D,xi,bc);
 
@@ -153,10 +154,30 @@ HMMfilterSDE <-
         X[1] <- which.max(V[,1])
         for(t in 2:nt) X[t] <- U[X[t-1],t-1]
 
-        ans <- c(ans,list(X=X))
+        ans <- c(ans,list(Xmpt=xc[X]))
     }
 
 
+    if(N.sample>0)
+    {
+        Xtyp <- array(NA,c(nt,N.sample))
+
+        for(j in 1:N.sample)
+        {
+            Xtyp[nt,j] <- sample.int(nx,size=1,prob=psi[nt,])
+            for(t in nt:2)
+            {
+                prob <- as.numeric(psi[t-1,]) * as.numeric(P[,Xtyp[t,j]])
+                prob <- prob / sum(prob)
+                Xtyp[t-1,j] <- sample.int(nx,size=1,prob=prob)
+            }
+        }
+        
+        Xtyp <- apply(Xtyp,2,function(x)xc[x])
+
+        ans <- c(ans,list(Xtyp = Xtyp))
+    }
+    
     if(!is.null(pfun))
     {
         U <- numeric(length(tvec))

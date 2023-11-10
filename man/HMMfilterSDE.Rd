@@ -14,6 +14,7 @@ HMMfilterSDE(
   yvec,
   lfun,
   do.smooth = FALSE,
+  N.sample = 0,
   do.Viterbi = FALSE,
   pfun = NULL
 )
@@ -35,7 +36,9 @@ HMMfilterSDE(
 
 \item{lfun}{Likelihood function so that lfun(x,y) gives the likelihood of y given x}
 
-\item{do.smooth}{Do want smoothing, or only predictive filtering / estimation?}
+\item{do.smooth}{Do we want smoothing, or only predictive filtering / estimation?}
+
+\item{N.sample}{Number of "typical tracks" sampled (defaults to 0)}
 
 \item{do.Viterbi}{Do we want the most probable state sequence, found with the Viterbi algorithm?}
 
@@ -48,7 +51,7 @@ psi A tabulation of the estimated probability densities
 pi  (If do.smooth==TRUE) A tabulation of the smoothed probability densities
 c   A vector containing the normalization constants at each time step
 loglik The total log-likelihood of the model
-X A vector containing the most probabile path (if do.Viterbi==TRUE)
+Xmpt A vector containing the most probabile path (if do.Viterbi==TRUE)
 U A vector containint the pseudo-prediction residuals (if pfun is supplied)
 }
 \description{

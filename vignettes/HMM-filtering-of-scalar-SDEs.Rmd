@@ -119,7 +119,7 @@ We now use the filter to add the information from the process equation. We use t
   phi0 <- function(x)x
   ## Run the filter 
   filter <- HMMfilterSDE(u,D,xi,bc='r',phi0,tm,ymeas,dl,
-                         do.Viterbi=TRUE,do.smooth=TRUE)
+                         do.Viterbi=TRUE,do.smooth=TRUE,N.sample = 3)
 
   ## Show colour plot of posterior c.d.f.
   image(tm,xc,t(apply(filter$psi,1,cumsum)),ylim=c(0,4))
@@ -196,11 +196,25 @@ The output from the filter included the most probable path, that is, the sequenc
 ```{r,fig.width=7}
 plot(sim$t,sim$X,type="l",xlab="t",ylab="x")
 lines(tm,XsmoothMean,col="red")
-lines(tm,xc[filter$X],col="blue")
+lines(tm,filter$Xmpt,col="blue")
 legend("topright",lty=1,col=c("black","red","blue"),legend=c("True","Smooth","MPT"))
 ```
 
-In this example, there is not a very pronounced difference between the smoothed mean and the most probable track. However, conceptually there is quite a big difference in the way they are formed, and if they differ significantly, this should lead to a closer inspection. 
+In this example, there is not a very pronounced difference between the smoothed mean and the most probable track. The most probable track is systematically slightly below the mean, which is unsurprising given the skewness in the posterior distributions. However, conceptually there is quite a big difference in the way they are formed, and if they differ significantly, this should lead to a closer inspection. 
+
+## Sampling typical tracks 
+
+It is often useful to sample "typical tracks" from the posterior, i.e., entire state sequences from their joint distribution. These can be used both to communicate the filter results, and in particular, the uncertainty on the estimated tracks. Non-specialists often find such simulated tracks more informative than confidence intervals. Also, the simulated tracks hold information about conditional autocovariance which is not captured by the marginal posterior distributions provided by the smoothing filter, so they can be used for Monte Carlo estimation of statistics such as the posterior probability that the state enters a given region. 
+
+The following code compares the true track with the Most Probable Track and a few (3) simulated typical tracks from the posterior. 
+
+```{r,fig.width=7}
+plot(sim$t,sim$X,type="l",xlab="t",ylab="x")
+matplot(tm,filter$Xtyp,col="red",type="l",add=TRUE)
+lines(tm,filter$Xmpt,col="blue")
+legend("topright",lty=1,col=c("black","red","blue"),legend=c("True","Typical","MPT"))
+
+```
 
 ## Perspectives
 
