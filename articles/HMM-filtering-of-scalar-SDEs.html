@@ -112,7 +112,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-11-09</h4>
+            <h4 data-toc-skip class="date">2023-11-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/HMM-filtering-of-scalar-SDEs.Rmd" class="external-link"><code>vignettes/HMM-filtering-of-scalar-SDEs.Rmd</code></a></small>
       <div class="hidden name"><code>HMM-filtering-of-scalar-SDEs.Rmd</code></div>
@@ -253,7 +253,7 @@ future measurements.</p>
 <span>  <span class="va">phi0</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="va">x</span></span>
 <span>  <span class="co">## Run the filter </span></span>
 <span>  <span class="va">filter</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HMMfilterSDE.html">HMMfilterSDE</a></span><span class="op">(</span><span class="va">u</span>,<span class="va">D</span>,<span class="va">xi</span>,bc<span class="op">=</span><span class="st">'r'</span>,<span class="va">phi0</span>,<span class="va">tm</span>,<span class="va">ymeas</span>,<span class="va">dl</span>,</span>
-<span>                         do.Viterbi<span class="op">=</span><span class="cn">TRUE</span>,do.smooth<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span>                         do.Viterbi<span class="op">=</span><span class="cn">TRUE</span>,do.smooth<span class="op">=</span><span class="cn">TRUE</span>,N.sample <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: Matrix</span></span></code></pre>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="co">## Show colour plot of posterior c.d.f.</span></span>
@@ -353,13 +353,37 @@ and the most probable path).</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">t</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"x"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XsmoothMean</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xc</span><span class="op">[</span><span class="va">filter</span><span class="op">$</span><span class="va">X</span><span class="op">]</span>,col<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">filter</span><span class="op">$</span><span class="va">Xmpt</span>,col<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>,lty<span class="op">=</span><span class="fl">1</span>,col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>,<span class="st">"red"</span>,<span class="st">"blue"</span><span class="op">)</span>,legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"True"</span>,<span class="st">"Smooth"</span>,<span class="st">"MPT"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
 <p>In this example, there is not a very pronounced difference between
-the smoothed mean and the most probable track. However, conceptually
-there is quite a big difference in the way they are formed, and if they
-differ significantly, this should lead to a closer inspection.</p>
+the smoothed mean and the most probable track. The most probable track
+is systematically slightly below the mean, which is unsurprising given
+the skewness in the posterior distributions. However, conceptually there
+is quite a big difference in the way they are formed, and if they differ
+significantly, this should lead to a closer inspection.</p>
+</div>
+<div class="section level3">
+<h3 id="sampling-typical-tracks">Sampling typical tracks<a class="anchor" aria-label="anchor" href="#sampling-typical-tracks"></a>
+</h3>
+<p>It is often useful to sample “typical tracks” from the posterior,
+i.e., entire state sequences from their joint distribution. These can be
+used both to communicate the filter results, and in particular, the
+uncertainty on the estimated tracks. Non-specialists often find such
+simulated tracks more informative than confidence intervals. Also, the
+simulated tracks hold information about conditional autocovariance which
+is not captured by the marginal posterior distributions provided by the
+smoothing filter, so they can be used for Monte Carlo estimation of
+statistics such as the posterior probability that the state enters a
+given region.</p>
+<p>The following code compares the true track with the Most Probable
+Track and a few (3) simulated typical tracks from the posterior.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">t</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"x"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/matplot.html" class="external-link">matplot</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">filter</span><span class="op">$</span><span class="va">Xtyp</span>,col<span class="op">=</span><span class="st">"red"</span>,type<span class="op">=</span><span class="st">"l"</span>,add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">filter</span><span class="op">$</span><span class="va">Xmpt</span>,col<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>,lty<span class="op">=</span><span class="fl">1</span>,col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>,<span class="st">"red"</span>,<span class="st">"blue"</span><span class="op">)</span>,legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"True"</span>,<span class="st">"Typical"</span>,<span class="st">"MPT"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-13-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="perspectives">Perspectives<a class="anchor" aria-label="anchor" href="#perspectives"></a>

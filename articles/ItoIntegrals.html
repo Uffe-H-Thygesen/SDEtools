@@ -112,7 +112,7 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-11-09</h4>
+            <h4 data-toc-skip class="date">2023-11-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/ItoIntegrals.Rmd" class="external-link"><code>vignettes/ItoIntegrals.Rmd</code></a></small>
       <div class="hidden name"><code>ItoIntegrals.Rmd</code></div>
@@ -168,7 +168,7 @@ time point. The integral is implemented as follows:</p>
 <span><span class="co">## {</span></span>
 <span><span class="co">##     return(c(0, cumsum(G[-length(G)] * diff(B))))</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x55e13ec01898&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x55ebdbc79ae0&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:SDEtools&gt;</span></span></code></pre>
 </div>
 <div class="section level2">
@@ -207,7 +207,7 @@ stochastic differential equation with the numerical Itô integral:</p>
 machine precision:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">X</span><span class="op">-</span><span class="fu"><a href="../reference/itointegral.html">itointegral</a></span><span class="op">(</span><span class="fu">f</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">t</span><span class="op">)</span><span class="op">-</span><span class="fu"><a href="../reference/itointegral.html">itointegral</a></span><span class="op">(</span><span class="fu">g</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">B</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 8.881784e-16</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 1.387779e-16</span></span></code></pre>
 <p>That is, there is no time discretization error because we use the
 same principle for time discretization in the Euler-Maruyama method and
 in the numerical Itô integral.</p>
@@ -232,7 +232,7 @@ motion:</p>
 discretization error:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">B</span><span class="op">-</span><span class="va">W</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 4.440892e-16</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 2.775558e-16</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="numerical-stratonovich-integration">Numerical Stratonovich integration<a class="anchor" aria-label="anchor" href="#numerical-stratonovich-integration"></a>

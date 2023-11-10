@@ -103,6 +103,7 @@
 <span>  <span class="va">yvec</span>,</span>
 <span>  <span class="va">lfun</span>,</span>
 <span>  do.smooth <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  N.sample <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  do.Viterbi <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  pfun <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -143,7 +144,11 @@
 
 
 <dt>do.smooth</dt>
-<dd><p>Do want smoothing, or only predictive filtering / estimation?</p></dd>
+<dd><p>Do we want smoothing, or only predictive filtering / estimation?</p></dd>
+
+
+<dt>N.sample</dt>
+<dd><p>Number of "typical tracks" sampled (defaults to 0)</p></dd>
 
 
 <dt>do.Viterbi</dt>
@@ -164,7 +169,7 @@ psi A tabulation of the estimated probability densities
 pi  (If do.smooth==TRUE) A tabulation of the smoothed probability densities
 c   A vector containing the normalization constants at each time step
 loglik The total log-likelihood of the model
-X A vector containing the most probabile path (if do.Viterbi==TRUE)
+Xmpt A vector containing the most probabile path (if do.Viterbi==TRUE)
 U A vector containint the pseudo-prediction residuals (if pfun is supplied)</p>
     </div>
     <div id="details">
