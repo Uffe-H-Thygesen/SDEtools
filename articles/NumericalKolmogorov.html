@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Numerical Analysis of the Kolmogorov Equations • SDEtools</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -113,7 +113,7 @@ Equations</h1>
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2023-11-10</h4>
+            <h4 data-toc-skip class="date">2024-05-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/HEAD/vignettes/NumericalKolmogorov.Rmd" class="external-link"><code>vignettes/NumericalKolmogorov.Rmd</code></a></small>
       <div class="hidden name"><code>NumericalKolmogorov.Rmd</code></div>
@@ -222,7 +222,7 @@ but is expensive for large matrices.</p>
 <span>  <span class="va">x0</span> <span class="op">&lt;-</span> <span class="fl">0.25</span></span>
 <span>  <span class="va">phi0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xi</span> <span class="op">&gt;</span> <span class="va">x0</span><span class="op">)</span></span>
 <span>  </span>
-<span>  <span class="va">phit</span> <span class="op">&lt;-</span> <span class="va">phi0</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/expm.html" class="external-link">expm</a></span><span class="op">(</span><span class="va">G</span><span class="op">*</span><span class="va">t</span><span class="op">)</span> </span>
+<span>  <span class="va">phit</span> <span class="op">&lt;-</span> <span class="va">phi0</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/expm-methods.html" class="external-link">expm</a></span><span class="op">(</span><span class="va">G</span><span class="op">*</span><span class="va">t</span><span class="op">)</span> </span>
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">phit</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
@@ -258,7 +258,7 @@ forward equation.</p>
 <p>We can repeat the study with periodic boundary conditions:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">G</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fvade.html">fvade</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">0</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">1</span>,<span class="va">xi</span>,<span class="st">'p'</span><span class="op">)</span></span>
-<span>  <span class="va">phit</span> <span class="op">&lt;-</span> <span class="va">phi0</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/expm.html" class="external-link">expm</a></span><span class="op">(</span><span class="va">G</span><span class="op">*</span><span class="va">t</span><span class="op">)</span> </span>
+<span>  <span class="va">phit</span> <span class="op">&lt;-</span> <span class="va">phi0</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/expm-methods.html" class="external-link">expm</a></span><span class="op">(</span><span class="va">G</span><span class="op">*</span><span class="va">t</span><span class="op">)</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">phit</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p>Note that there now is a flux from the left boundary to the
@@ -281,7 +281,7 @@ two boundary states). In the following, in stead we omit the
 boundary.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">G</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fvade.html">fvade</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">0</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">1</span>,<span class="va">xi</span>,<span class="st">'a'</span><span class="op">)</span></span>
-<span>  <span class="va">phit</span> <span class="op">&lt;-</span> <span class="va">phi0</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/expm.html" class="external-link">expm</a></span><span class="op">(</span><span class="va">G</span><span class="op">*</span><span class="va">t</span><span class="op">)</span> </span>
+<span>  <span class="va">phit</span> <span class="op">&lt;-</span> <span class="va">phi0</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/expm-methods.html" class="external-link">expm</a></span><span class="op">(</span><span class="va">G</span><span class="op">*</span><span class="va">t</span><span class="op">)</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">phit</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 <p>With absorbing boundaries, the probability inside the domain is not
@@ -292,7 +292,7 @@ distribution, but a quasistationary distribution:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">rho</span><span class="op">$</span><span class="va">vector</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"l"</span>,main<span class="op">=</span><span class="va">rho</span><span class="op">$</span><span class="va">value</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"q.s.d."</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>Theoretically, this should be <span class="math inline">\(\sin \pi
-x\)</span> (normalized) and the corresponding eigenvalue is <span class="math inline">\(-\pi^2 \approx -9.87\)</span>, i.e., the expected
+x\)</span> (normalized) and the corresponding eigenvalue is <span class="math inline">\(-\pi^2  \approx -9.87\)</span>, i.e., the expected
 time to absorption is roughly 0.1 time units, in the quasistationary
 state.</p>
 </div>
@@ -357,7 +357,7 @@ For example, we can find the expected value of <span class="math inline">\(X_t\)
 condition <span class="math inline">\(X_0=x\)</span>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">psit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">xc</span><span class="op">)</span></span>
-<span>  <span class="va">psi0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/expm.html" class="external-link">expm</a></span><span class="op">(</span><span class="va">G</span><span class="op">*</span><span class="va">t</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">psit</span></span>
+<span>  <span class="va">psi0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/expm-methods.html" class="external-link">expm</a></span><span class="op">(</span><span class="va">G</span><span class="op">*</span><span class="va">t</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">psit</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">psi0</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">psi</span><span class="op">[</span><span class="fl">0</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 </div>
@@ -418,7 +418,7 @@ there, but demonstrates the principle.</p>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-Thygesen2023sde" class="csl-entry">
 Thygesen, Uffe Høgsbro. 2023. <em>Stochastic Differential Equations for
 Science and Engineering</em>. Taylor &amp; Francis. <a href="http://uffe-h-thygesen.github.io" class="external-link">http://uffe-h-thygesen.github.io</a>.
@@ -444,7 +444,7 @@ Science and Engineering</em>. Taylor &amp; Francis. <a href="http://uffe-h-thyge
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
 </div>
 
       </footer>
