@@ -511,7 +511,7 @@ dLinSDE <- function(A,G,t,x0=NULL,u=NULL,S0=0*A)
     GG <- G %*% t(G)
 
     nx <- nrow(A)
-    nu <- ncol(G)
+    nB <- ncol(G)
 
     eAt <- as.matrix(Matrix::expm(A*t))
 
@@ -537,23 +537,32 @@ dLinSDE <- function(A,G,t,x0=NULL,u=NULL,S0=0*A)
     }
 
     ## Zero order hold
-    if(length(u)==nu){
-      AA <- rbind(cbind(A,G),array(0,c(nu,nu+nx)))
-      uEx <- Matrix::expm(AA*t) %*% c(x0,u)
-      return(list(EX=uEx[nx+(1:nx)],St=St))
+    if(length(u)==nx){
+        I <- Matrix::Diagonal(n=nx,x=1)
+
+        ## Extended state: (X,U)
+        AA <- rbind(cbind(A,I),array(0,c(nx,2*nx)))
+        Exu <- Matrix::expm(AA*t) %*% c(x0,u)
+        EX <- Exu[1:nx]
+        return(list(EX=EX,St=St))
     }
 
+    ## If we reach this point, it must be first order hold
     u = as.matrix(u)
 
     ## First order hold
-    if(all(dim(u)==c(nu,2))){
-      O <- array(0,c(nx,nx))
-      AAA <- rbind(numeric(2*nu+nx),
-                   cbind(diag(nrow=nu),array(0,c(nu,nu+nx))),
-                   cbind(array(0,c(nx,nu)),G,A))
+    if(all(dim(u)==c(nx,2))){
+        O <- array(0,c(nx,nx))
+        I <- Matrix::Diagonal(n=nx,x=1)
 
-      duuEx <- Matrix::expm(AAA*t) %*% c((u[,2]-u[,1])/t,u[,1],x0)
-      return(list(EX=duuEx[2*nx+(1:nx)],St=St))
+        ## Extended state: (dU/dt,U,X)
+        AAA <- rbind(cbind(O,O,O),
+                     cbind(I,O,O),
+                     cbind(O,I,A))
+
+        Exuu <- Matrix::expm(AAA*t) %*% c((u[,2]-u[,1])/t,u[,1],x0)
+        EX <- tail(Exuu,nx)
+        return(list(EX=EX,St=St))
     }
 }
 
