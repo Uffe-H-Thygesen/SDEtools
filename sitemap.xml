@@ -1,126 +1,46 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/articles/BrownianMotion.html</loc>
-  </url>
-  <url>
-    <loc>/articles/CoxIngersollRoss.html</loc>
-  </url>
-  <url>
-    <loc>/articles/FisheriesManagement.html</loc>
-  </url>
-  <url>
-    <loc>/articles/HMM-filtering-of-scalar-SDEs.html</loc>
-  </url>
-  <url>
-    <loc>/articles/ItoIntegrals.html</loc>
-  </url>
-  <url>
-    <loc>/articles/ItosFormula.html</loc>
-  </url>
-  <url>
-    <loc>/articles/Killing.html</loc>
-  </url>
-  <url>
-    <loc>/articles/NoisyOscillator.html</loc>
-  </url>
-  <url>
-    <loc>/articles/NumericalKolmogorov.html</loc>
-  </url>
-  <url>
-    <loc>/articles/SDEtools.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/vanderPol.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/CrossVariation.html</loc>
-  </url>
-  <url>
-    <loc>/reference/HMMfilterSDE.html</loc>
-  </url>
-  <url>
-    <loc>/reference/PolicyIterationRegular.html</loc>
-  </url>
-  <url>
-    <loc>/reference/PolicyIterationSingular.html</loc>
-  </url>
-  <url>
-    <loc>/reference/QuadraticVariation.html</loc>
-  </url>
-  <url>
-    <loc>/reference/QuasiStationaryDistribution.html</loc>
-  </url>
-  <url>
-    <loc>/reference/StationaryDistribution.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cell.centers.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dCIR.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dLinSDE.html</loc>
-  </url>
-  <url>
-    <loc>/reference/euler.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fvade.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fvade2d.html</loc>
-  </url>
-  <url>
-    <loc>/reference/heun.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/itointegral.html</loc>
-  </url>
-  <url>
-    <loc>/reference/lqr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/lyap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pack.field.html</loc>
-  </url>
-  <url>
-    <loc>/reference/prob2pdf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rBM.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rBrownianBridge.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rvBM.html</loc>
-  </url>
-  <url>
-    <loc>/reference/stochint.html</loc>
-  </url>
-  <url>
-    <loc>/reference/unpack.field.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/articles/BrownianMotion.html</loc></url>
+<url><loc>/articles/CoxIngersollRoss.html</loc></url>
+<url><loc>/articles/FisheriesManagement.html</loc></url>
+<url><loc>/articles/HMM-filtering-of-scalar-SDEs.html</loc></url>
+<url><loc>/articles/ItoIntegrals.html</loc></url>
+<url><loc>/articles/ItosFormula.html</loc></url>
+<url><loc>/articles/Killing.html</loc></url>
+<url><loc>/articles/NoisyOscillator.html</loc></url>
+<url><loc>/articles/NumericalKolmogorov.html</loc></url>
+<url><loc>/articles/SDEtools.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/articles/vanderPol.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/CrossVariation.html</loc></url>
+<url><loc>/reference/HMMfilterSDE.html</loc></url>
+<url><loc>/reference/PolicyIterationRegular.html</loc></url>
+<url><loc>/reference/PolicyIterationSingular.html</loc></url>
+<url><loc>/reference/QuadraticVariation.html</loc></url>
+<url><loc>/reference/QuasiStationaryDistribution.html</loc></url>
+<url><loc>/reference/StationaryDistribution.html</loc></url>
+<url><loc>/reference/TransientModes.html</loc></url>
+<url><loc>/reference/cell.centers.html</loc></url>
+<url><loc>/reference/dCIR.html</loc></url>
+<url><loc>/reference/dLinSDE.html</loc></url>
+<url><loc>/reference/dOU.html</loc></url>
+<url><loc>/reference/euler.html</loc></url>
+<url><loc>/reference/fvade.html</loc></url>
+<url><loc>/reference/fvade2d.html</loc></url>
+<url><loc>/reference/heun.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/itointegral.html</loc></url>
+<url><loc>/reference/lqr.html</loc></url>
+<url><loc>/reference/lyap.html</loc></url>
+<url><loc>/reference/pack.field.html</loc></url>
+<url><loc>/reference/prob2pdf.html</loc></url>
+<url><loc>/reference/rBM.html</loc></url>
+<url><loc>/reference/rBrownianBridge.html</loc></url>
+<url><loc>/reference/rvBM.html</loc></url>
+<url><loc>/reference/stochint.html</loc></url>
+<url><loc>/reference/unpack.field.html</loc></url>
 </urlset>
+
