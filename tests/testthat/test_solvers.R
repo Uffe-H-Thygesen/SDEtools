@@ -26,7 +26,7 @@ test_that("Linear SDEs",{
   G <- diag(c(1,1))
   sol <- dLinSDE(A,G,2*pi,x0=c(1,0))
   expect_equal(as.numeric(sol$EX),c(1,0))
-  expect_equal(sol$St,diag(rep(2*pi,2)))
+  expect_equal(as.numeric(sol$St),as.numeric(diag(rep(2*pi,2))))
 
   sol <- dLinSDE(-1,1,2,x0=1,u=1)
   expect_equal(as.numeric(sol$EX),1)

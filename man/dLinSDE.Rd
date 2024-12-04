@@ -46,5 +46,7 @@ The computations are not optimized for large systems, since they rely on the vec
 (dLinSDE(-1,1,1))
 # A scalar equation with constant input, starting in steady-state
 (dLinSDE(A=-1,G=1,t=3,x0=1,u=1,S0=0.5))
+# A 2D system which has no stationary variance
+(dLinSDE(A=diag(c(0,-1)),G=diag(2),t=1))
 
 }

@@ -501,6 +501,8 @@ euler <- function(f,g,times,x0,B=NULL,p=function(x)x,h=NULL,r=NULL,S0=1,Stau=run
 #' (dLinSDE(-1,1,1))
 #' # A scalar equation with constant input, starting in steady-state
 #' (dLinSDE(A=-1,G=1,t=3,x0=1,u=1,S0=0.5))
+#' # A 2D system which has no stationary variance
+#' (dLinSDE(A=diag(c(0,-1)),G=diag(2),t=1))
 #' 
 #' @export
 dLinSDE <- function(A,G,t,x0=NULL,u=NULL,S0=0*A)
@@ -521,11 +523,14 @@ dLinSDE <- function(A,G,t,x0=NULL,u=NULL,S0=0*A)
             St <- Sinf - eAt %*% (Sinf - S0) %*% t(eAt)            
         },
         error = function(e){
-            I <- Matrix::Diagonal(n=nx,x=1)
-            M <- A %x% I + I %x% A
-            P <- rbind(array(0,c(nx^2,2*nx^2)),cbind(diag(rep(1,nx^2)),M))
-            gs <- Matrix::expm(P*t) %*% c(as.numeric(GG),rep(0,nx^2))
-            St <-eAt %*% S0 %*% t(eAt) + matrix(gs[nx^2+(1:(nx^2))],nrow=nx)
+            O <- Matrix::sparseMatrix(i=integer(0),j=integer(0),dims=c(nx,nx))
+            I <- Matrix::Diagonal(nx)
+            H <- rbind(cbind(-t(A), O), cbind(GG,A))
+            eH <- Matrix::expm(H*t)
+            XY <- eH %*% rbind(I,S0)
+            X <- XY[1:nx,]
+            Y <- XY[nx+(1:nx),]
+            St <- Y %*% solve(X)
         })
 
     if(is.null(x0)){
