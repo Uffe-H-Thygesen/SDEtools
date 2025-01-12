@@ -1,0 +1,46 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: SDEtools
+message: 'R tools for stochastic differential equations '
+type: software
+authors:
+  - given-names: Uffe Høgsbro
+    family-names: Thygesen
+    email: uhth@dtu.dk
+    affiliation: DTU
+    orcid: 'https://orcid.org/0000-0002-4311-6324'
+identifiers:
+  - type: doi
+    value: 10.1201/9781003277569
+    description: >-
+      Textbook which uses the software and covers underlying
+      theory
+repository-code: 'https://github.com/Uffe-H-Thygesen/SDEtools'
+url: 'https://uffe-h-thygesen.github.io/SDEtools/'
+abstract: >-
+  R package for numerical analysis of stochastic
+  differential equations. Features: 
+
+
+  . Simulation of Brownian motion
+
+  . Solution of SDE's as initial vaiue problems by basic
+  numerical methods
+
+  . Discretization of generators for 1- and 2-D SDEs
+
+  . Algorithms for state estimation 
+
+  . Algorithms for optimal control (e.g., policy iteration) 
+
+  . Analytical transition probabilities for some SDEs 
+keywords:
+  - Stochastic differential equation
+  - Ito integration
+  - Stratonovich integration
+  - Finite-volume discretization of PDEs
+  - Recursive state estimation (Hidden Markov Models)
+  - Optimal control (policy iteration)
+license: GPL-3.0+
