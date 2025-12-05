@@ -111,9 +111,9 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2025-01-12</h4>
+            <h4 data-toc-skip class="date">2025-12-05</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/v1.0.0/vignettes/HMM-filtering-of-scalar-SDEs.Rmd" class="external-link"><code>vignettes/HMM-filtering-of-scalar-SDEs.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/main/vignettes/HMM-filtering-of-scalar-SDEs.Rmd" class="external-link"><code>vignettes/HMM-filtering-of-scalar-SDEs.Rmd</code></a></small>
       <div class="hidden name"><code>HMM-filtering-of-scalar-SDEs.Rmd</code></div>
 
     </div>
@@ -173,7 +173,7 @@ method.</p>
 <span>  <span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="va">f</span>,<span class="va">g</span>,<span class="va">tvec</span>,<span class="va">x0</span>,p<span class="op">=</span><span class="va">p</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">times</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"Time"</span>,ylab<span class="op">=</span><span class="st">'Abundance'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-1-1.png" width="672"></p>
+<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-1-1.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="simulation-of-measurements">Simulation of measurements<a class="anchor" aria-label="anchor" href="#simulation-of-measurements"></a>
@@ -198,7 +198,7 @@ small sample from the environment.</p>
 <span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">times</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"Time"</span>,ylab<span class="op">=</span><span class="st">'Abundance'</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">ymeas</span><span class="op">/</span><span class="va">vsample</span>,pch<span class="op">=</span><span class="st">'o'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-2-1.png" width="672"></p>
+<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" width="672"></p>
 <p>Notice that the data is very noisy and, when plotted in this fashion,
 does not seem to hold very accurate information about the state.</p>
 </div>
@@ -222,13 +222,13 @@ function.</p>
 <span></span>
 <span>  <span class="va">ltab</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">ymeas</span>,<span class="va">dl</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xc</span>,<span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">ltab</span><span class="op">)</span>,xlab<span class="op">=</span><span class="st">"Time"</span>,ylab<span class="op">=</span><span class="st">"State"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
+<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" width="672"></p>
 <p>We plot the most likely state, given just the measurements, on top of
 the true states:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xtrue</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xc</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">ltab</span>,<span class="fl">2</span>,<span class="va">which.max</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
+<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" width="672"></p>
 <p>Again, there is very little information in the individual
 observation, because the counts are so low. Therefore, there is a
 potential gain from estimating the state not just using the measurement
@@ -260,7 +260,7 @@ future measurements.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="co">## Show colour plot of posterior c.d.f.</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">xc</span>,<span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">filter</span><span class="op">$</span><span class="va">psi</span>,<span class="fl">1</span>,<span class="va">cumsum</span><span class="op">)</span><span class="op">)</span>,ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
+<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="filtering-results">Filtering results<a class="anchor" aria-label="anchor" href="#filtering-results"></a>
@@ -273,7 +273,7 @@ future measurements.</p>
 <span>  <span class="co">## Compute and plot posterior mean</span></span>
 <span>  <span class="va">XestMean</span> <span class="op">&lt;-</span> <span class="va">filter</span><span class="op">$</span><span class="va">psi</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">xc</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XestMean</span><span class="op">)</span></span></code></pre></div>
-<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
+<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" width="672"></p>
 <p>Notice how, as anticipated, the estimated states lag a bit behind the
 true ones, and that some of the fast fluctuations in the true states do
 not reflect in the estimated ones.</p>
@@ -282,14 +282,14 @@ in time:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">XestVar</span> <span class="op">&lt;-</span> <span class="va">filter</span><span class="op">$</span><span class="va">psi</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">xc</span><span class="op">^</span><span class="fl">2</span> <span class="op">-</span> <span class="va">XestMean</span><span class="op">^</span><span class="fl">2</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XestVar</span><span class="op">)</span></span></code></pre></div>
-<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
+<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" width="672"></p>
 <p>Notice how the variance fluctuates significantly in time. This
 reflects that both the process equation and the measurement equation has
 a variance, which depends on the state. To pursue this further, we can
 compare the mean and the variance in the posterior distribution:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">XestMean</span>,<span class="va">XestVar</span><span class="op">)</span></span></code></pre></div>
-<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
+<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" width="672"></p>
 <p>Note that there seems to be a roughly linear relationship (save the
 first couple of data points, which reflect transients from the initial
 condition). This linear relationship reflects both process noise and
@@ -313,7 +313,7 @@ information yield different estimates.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XsmoothMean</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XestMean</span>,col<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>,lty<span class="op">=</span><span class="fl">1</span>,col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>,<span class="st">"red"</span>,<span class="st">"blue"</span><span class="op">)</span>,legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"True"</span>,<span class="st">"Smooth"</span>,<span class="st">"Est"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
+<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" width="672"></p>
 <p>Notice that the difference between the estimated state and the
 smoothed state is not very large. In the time interval
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>∈</mo><mrow><mo stretchy="true" form="prefix">[</mo><mn>7</mn><mo>,</mo><mn>10</mn><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">t\in[7,10]</annotation></semantics></math>,
@@ -358,7 +358,7 @@ and the most probable path).</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">XsmoothMean</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">filter</span><span class="op">$</span><span class="va">Xmpt</span>,col<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>,lty<span class="op">=</span><span class="fl">1</span>,col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>,<span class="st">"red"</span>,<span class="st">"blue"</span><span class="op">)</span>,legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"True"</span>,<span class="st">"Smooth"</span>,<span class="st">"MPT"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
+<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" width="672"></p>
 <p>In this example, there is not a very pronounced difference between
 the smoothed mean and the most probable track. The most probable track
 is systematically slightly below the mean, which is unsurprising given
@@ -386,7 +386,7 @@ Track and a few (3) simulated typical tracks from the posterior.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/matplot.html" class="external-link">matplot</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">filter</span><span class="op">$</span><span class="va">Xtyp</span>,col<span class="op">=</span><span class="st">"red"</span>,type<span class="op">=</span><span class="st">"l"</span>,add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">tm</span>,<span class="va">filter</span><span class="op">$</span><span class="va">Xmpt</span>,col<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>,lty<span class="op">=</span><span class="fl">1</span>,col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>,<span class="st">"red"</span>,<span class="st">"blue"</span><span class="op">)</span>,legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"True"</span>,<span class="st">"Typical"</span>,<span class="st">"MPT"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-13-1.png" width="672"></p>
+<p><img src="HMM-filtering-of-scalar-SDEs_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="perspectives">Perspectives<a class="anchor" aria-label="anchor" href="#perspectives"></a>
@@ -435,7 +435,7 @@ Science and Engineering</em>. Taylor &amp; Francis. <a href="http://uffe-h-thyge
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

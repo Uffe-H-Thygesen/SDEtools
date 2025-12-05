@@ -112,9 +112,9 @@ Equations</h1>
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2025-01-12</h4>
+            <h4 data-toc-skip class="date">2025-12-05</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/v1.0.0/vignettes/NumericalKolmogorov.Rmd" class="external-link"><code>vignettes/NumericalKolmogorov.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/main/vignettes/NumericalKolmogorov.Rmd" class="external-link"><code>vignettes/NumericalKolmogorov.Rmd</code></a></small>
       <div class="hidden name"><code>NumericalKolmogorov.Rmd</code></div>
 
     </div>
@@ -142,7 +142,7 @@ interval with four grid cells, i.e. five cell boundaries:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xi</span>,<span class="fl">0</span><span class="op">*</span><span class="va">xi</span>,pch<span class="op">=</span><span class="st">"+"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">""</span>,main<span class="op">=</span><span class="st">"The grid"</span><span class="op">)</span></span>
 <span>  <span class="kw">for</span><span class="op">(</span><span class="va">x</span> <span class="kw">in</span> <span class="va">xi</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>v<span class="op">=</span><span class="va">x</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">xc</span>,<span class="fl">0</span><span class="op">*</span><span class="va">xc</span>,pch<span class="op">=</span><span class="st">"o"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
+<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-1-1.png" class="r-plt" width="700"></p>
 <p>We consider standard Brownian motion on this interval, i.e. 
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>ϕ</mi><mo accent="true">̇</mo></mover><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>ϕ</mi><mi>″</mi></mrow><annotation encoding="application/x-tex">
   \dot \phi = \frac 12 \phi''
@@ -231,7 +231,7 @@ from time discretization, but is expensive for large matrices.</p>
 <span>  <span class="va">phit</span> <span class="op">&lt;-</span> <span class="va">phi0</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/expm-methods.html" class="external-link">expm</a></span><span class="op">(</span><span class="va">G</span><span class="op">*</span><span class="va">t</span><span class="op">)</span> </span>
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">phit</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" width="700"></p>
 <p>Note that a probability vector
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ϕ</mi><annotation encoding="application/x-tex">\phi</annotation></semantics></math>
 must be multiplied on
@@ -255,7 +255,7 @@ implicit Euler step:</p>
 <span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="va">n</span><span class="op">)</span> <span class="va">phitEuler</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/solve-methods.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">IGt</span>,<span class="va">phitEuler</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">phitEuler</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">phit</span>,lty<span class="op">=</span><span class="st">"dashed"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" width="700"></p>
 <p>The solver uses the sparsity of the system, so it is quite effective.
 Note that the time step we used the Euler method here is quite large, so
 that the time discretization error is visible.</p>
@@ -272,7 +272,7 @@ forward equation.</p>
 <code class="sourceCode R"><span>  <span class="va">G</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fvade.html">fvade</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">0</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">1</span>,<span class="va">xi</span>,<span class="st">'p'</span><span class="op">)</span></span>
 <span>  <span class="va">phit</span> <span class="op">&lt;-</span> <span class="va">phi0</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/expm-methods.html" class="external-link">expm</a></span><span class="op">(</span><span class="va">G</span><span class="op">*</span><span class="va">t</span><span class="op">)</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">phit</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" width="700"></p>
 <p>Note that there now is a flux from the left boundary to the
 right.</p>
 <p>Whether we use periodic or reflecting boundaries, we can find the
@@ -280,7 +280,7 @@ stationary distribution:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/StationaryDistribution.html">StationaryDistribution</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">rho</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"l"</span>,ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1.2</span><span class="op">)</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" width="700"></p>
 <p>As expected, the stationary distribution is uniform.</p>
 </div>
 <div class="section level3">
@@ -295,14 +295,14 @@ boundary.</p>
 <code class="sourceCode R"><span>  <span class="va">G</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fvade.html">fvade</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">0</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fl">1</span>,<span class="va">xi</span>,<span class="st">'a'</span><span class="op">)</span></span>
 <span>  <span class="va">phit</span> <span class="op">&lt;-</span> <span class="va">phi0</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/expm-methods.html" class="external-link">expm</a></span><span class="op">(</span><span class="va">G</span><span class="op">*</span><span class="va">t</span><span class="op">)</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">phit</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" width="700"></p>
 <p>With absorbing boundaries, the probability inside the domain is not
 conserved, but will eventually vanish. So there is no stationary
 distribution, but a quasistationary distribution:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/QuasiStationaryDistribution.html">QuasiStationaryDistribution</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">rho</span><span class="op">$</span><span class="va">vector</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"l"</span>,main<span class="op">=</span><span class="va">rho</span><span class="op">$</span><span class="va">value</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"q.s.d."</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" width="700"></p>
 <p>Theoretically, this should be
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>sin</mo><mi>π</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">\sin \pi x</annotation></semantics></math>
 (normalized) and the corresponding eigenvalue is
@@ -351,7 +351,7 @@ the consequences of this are.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/StationaryDistribution.html">StationaryDistribution</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">rho</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" width="700"></p>
 <p>Without boundaries, this would be a Gaussian with mean 0.5 and
 variance
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mn>16</mn></mrow><annotation encoding="application/x-tex">1/16</annotation></semantics></math>,
@@ -380,7 +380,7 @@ as a function of the initial condition
 <code class="sourceCode R"><span>  <span class="va">psit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">xc</span><span class="op">)</span></span>
 <span>  <span class="va">psi0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/expm-methods.html" class="external-link">expm</a></span><span class="op">(</span><span class="va">G</span><span class="op">*</span><span class="va">t</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">psit</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">psi0</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">psi</span><span class="op">[</span><span class="fl">0</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="varying-diffusivity">Varying diffusivity<a class="anchor" aria-label="anchor" href="#varying-diffusivity"></a>
@@ -431,7 +431,7 @@ and
 <span>  </span>
 <span>  <span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/StationaryDistribution.html">StationaryDistribution</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">rho</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
+<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="non-equidistant-grids">Non-equidistant grids<a class="anchor" aria-label="anchor" href="#non-equidistant-grids"></a>
@@ -448,7 +448,7 @@ densities:</p>
 <span>  <span class="va">rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/StationaryDistribution.html">StationaryDistribution</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">rho</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xi</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">xi</span>,<span class="fl">0</span><span class="op">*</span><span class="va">xi</span>,pch<span class="op">=</span><span class="st">"+"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<p><img src="NumericalKolmogorov_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" width="700"></p>
 <p>This grid is a bit coarse, so the spatial discretization error is
 there, but demonstrates the principle.</p>
 </div>
@@ -479,7 +479,7 @@ Science and Engineering</em>. Taylor &amp; Francis. <a href="http://uffe-h-thyge
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

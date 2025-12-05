@@ -111,9 +111,9 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2025-01-12</h4>
+            <h4 data-toc-skip class="date">2025-12-05</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/v1.0.0/vignettes/ItosFormula.Rmd" class="external-link"><code>vignettes/ItosFormula.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/main/vignettes/ItosFormula.Rmd" class="external-link"><code>vignettes/ItosFormula.Rmd</code></a></small>
       <div class="hidden name"><code>ItosFormula.Rmd</code></div>
 
     </div>
@@ -174,7 +174,7 @@ using the Euler-Maruyama algorithm:</p>
 <span>  <span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="va">f</span>,<span class="va">g</span>,<span class="va">t</span>,<span class="va">x0</span>,<span class="va">B</span><span class="op">)</span><span class="op">$</span><span class="va">X</span></span>
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ItosFormula_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
+<p><img src="ItosFormula_files/figure-html/unnamed-chunk-1-1.png" class="r-plt" width="700"></p>
 <p>We now map this process through the function
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mo>log</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">h(x)=\log x</annotation></semantics></math>
 to generate
@@ -186,7 +186,7 @@ to generate
 <span></span>
 <span>  <span class="va">Y</span> <span class="op">=</span> <span class="fu">h</span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ItosFormula_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
+<p><img src="ItosFormula_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" width="700"></p>
 <p>We now verify the first variant of Itô’s formula, viz.
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>t</mi></msub><mo>=</mo><msub><mi>Y</mi><mn>0</mn></msub><mo>+</mo><msubsup><mo>∫</mo><mn>0</mn><mi>t</mi></msubsup><mi>h</mi><mi>′</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.222em"></mspace><mi>d</mi><msub><mi>X</mi><mi>s</mi></msub><mo>+</mo><msubsup><mo>∫</mo><mn>0</mn><mi>t</mi></msubsup><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>h</mi><mi>″</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.222em"></mspace><mi>d</mi><msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>X</mi><mo stretchy="true" form="postfix">]</mo></mrow><mi>s</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
 Y_t = Y_0 + \int_0^t h'(X_s) ~dX_s + \int_0^t \frac 12 h''(X_s) ~d[X]_s.
@@ -200,7 +200,7 @@ and then perform numerical Itô integration:</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y1</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ItosFormula_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="ItosFormula_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" width="700"></p>
 <p>The two lines lie nicely on top of each other, but there is some
 discretization error. We will look at this error later.</p>
 <p>We now do the same for the second formulation, where we use the
@@ -211,7 +211,7 @@ result
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y2</span>,col<span class="op">=</span><span class="st">"green"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ItosFormula_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="ItosFormula_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" width="700"></p>
 <p>Again we see that the two lines lie on top of each other, although
 the discretization error in this case appears to be a little more
 visible.</p>
@@ -234,7 +234,7 @@ dY_t = (1-X_t) ~dt + \sigma ~dB_t - \frac 12 \sigma^2 ~dt
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y3</span>,col<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ItosFormula_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><img src="ItosFormula_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" width="700"></p>
 <p>Finally, we can substitute
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>X</mi><mi>t</mi></msub><mo>=</mo><mo>exp</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Y</mi><mi>t</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">X_t = \exp(Y_t)</annotation></semantics></math>
 in this expression, thus obtaining an Itô stochastic differential
@@ -253,7 +253,7 @@ previous solution:</p>
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y4</span>,col<span class="op">=</span><span class="st">"purple"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ItosFormula_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p><img src="ItosFormula_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="the-discretization-error">The discretization error<a class="anchor" aria-label="anchor" href="#the-discretization-error"></a>
@@ -274,7 +274,7 @@ Y_{t+k} = h(X_{t+k}) = h(X_t) + h'(X_t) (X_{t+k}-X_t) + \frac 12 h''(X_t) (X_{t+
 We can compute the error:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span><span class="op">-</span><span class="va">Y1</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ItosFormula_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="ItosFormula_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" width="700"></p>
 <p>To estimate the error, note from Taylor’s formula that the leading
 error term is
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>6</mn></mfrac><mi>h</mi><mi>‴</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mi>t</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.222em"></mspace><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>t</mi><mo>+</mo><mi>k</mi></mrow></msub><mo>−</mo><msub><mi>X</mi><mi>t</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">\frac 16 h'''(X_t) ~(X_{t+k}-X_t)^3</annotation></semantics></math>.
@@ -313,7 +313,7 @@ this error turns out to be larger than the one we examined
 previously:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Y</span><span class="op">-</span><span class="va">Y2</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ItosFormula_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p><img src="ItosFormula_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" width="700"></p>
 <p>To assess this error coarsely, note that it comes from the term
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>h</mi><mi>″</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mi>t</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">[</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mrow><mi>t</mi><mo>+</mo><mi>k</mi></mrow></msub><mo>−</mo><msub><mi>X</mi><mi>t</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>−</mo><msup><mi>g</mi><mn>2</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mi>t</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.222em"></mspace><mi>k</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
 \frac 12 h''(X_t) [ (X_{t+k}-X_t)^2 - g^2(X_t) ~k]
@@ -356,7 +356,7 @@ Science and Engineering</em>. Taylor &amp; Francis. <a href="http://uffe-h-thyge
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

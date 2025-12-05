@@ -112,9 +112,9 @@ Control Problem</h1>
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2025-01-12</h4>
+            <h4 data-toc-skip class="date">2025-12-05</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/v1.0.0/vignettes/FisheriesManagement.Rmd" class="external-link"><code>vignettes/FisheriesManagement.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/main/vignettes/FisheriesManagement.Rmd" class="external-link"><code>vignettes/FisheriesManagement.Rmd</code></a></small>
       <div class="hidden name"><code>FisheriesManagement.Rmd</code></div>
 
     </div>
@@ -235,12 +235,12 @@ analytical results:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">sol</span><span class="op">$</span><span class="va">V</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="fu">V</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">xc</span>,<span class="fl">0.5</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">xc</span><span class="op">)</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">xc</span><span class="op">[</span><span class="fl">50</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> <span class="va">sol</span><span class="op">$</span><span class="va">V</span><span class="op">[</span><span class="fl">50</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p><img src="FisheriesManagement_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
+<p><img src="FisheriesManagement_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" width="672"></p>
 <p>Note the excellent agreement. Similarly, for the control:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">sol</span><span class="op">$</span><span class="va">u</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="fu">mu</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">xc</span><span class="op">^</span><span class="fl">2</span>,lty<span class="op">=</span><span class="st">"dashed"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="FisheriesManagement_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
+<p><img src="FisheriesManagement_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" width="672"></p>
 <p>Note that there is some discrepancy at the upper boundary, where the
 discretized problem fishes really hard to avoid the risk of hitting the
 boundary, which would be wasteful.</p>
@@ -248,7 +248,7 @@ boundary, which would be wasteful.</p>
 time-invariant control.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">sol</span><span class="op">$</span><span class="va">pi</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"p.d.f."</span><span class="op">)</span></span></code></pre></div>
-<p><img src="FisheriesManagement_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
+<p><img src="FisheriesManagement_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="the-time-varying-problem">The time-varying problem<a class="anchor" aria-label="anchor" href="#the-time-varying-problem"></a>
@@ -337,14 +337,14 @@ from the steady-state problem.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/matplot.html" class="external-link">matplot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">V</span>,type<span class="op">=</span><span class="st">"l"</span>,col<span class="op">=</span><span class="fl">1</span>,lty<span class="op">=</span><span class="fl">1</span>,xlab<span class="op">=</span><span class="st">"x"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">xc</span>,<span class="fl">0.5</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">xc</span><span class="op">)</span><span class="op">-</span><span class="fl">0.5</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">xc</span><span class="op">[</span><span class="fl">50</span><span class="op">]</span><span class="op">)</span><span class="op">+</span><span class="va">V</span><span class="op">[</span><span class="fl">50</span>,<span class="fl">1</span><span class="op">]</span>,lty<span class="op">=</span><span class="st">"dashed"</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="FisheriesManagement_files/figure-html/unnamed-chunk-14-1.png" width="672"></p>
+<p><img src="FisheriesManagement_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" width="672"></p>
 <p>The following contour plot shows the optimal control as a function of
 time and state. Note that we fish hard when we are close to the terminal
 time, since this problem does not include a terminal reward for leaving
 fish in the system at the end of time.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/contour.html" class="external-link">contour</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">xc</span>,<span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">U</span><span class="op">)</span>,levels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">3</span>,<span class="fl">0.25</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"x"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="FisheriesManagement_files/figure-html/unnamed-chunk-15-1.png" width="672"></p>
+<p><img src="FisheriesManagement_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="implicit-euler-time-stepping">Implicit Euler time stepping<a class="anchor" aria-label="anchor" href="#implicit-euler-time-stepping"></a>
@@ -378,10 +378,10 @@ state is the same.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/matplot.html" class="external-link">matplot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">V</span>,type<span class="op">=</span><span class="st">"l"</span>,col<span class="op">=</span><span class="fl">1</span>,lty<span class="op">=</span><span class="fl">1</span>,xlab<span class="op">=</span><span class="st">"x"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">xc</span>,<span class="fl">0.5</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">xc</span><span class="op">)</span><span class="op">-</span><span class="fl">0.5</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">xc</span><span class="op">[</span><span class="fl">50</span><span class="op">]</span><span class="op">)</span><span class="op">+</span><span class="va">V</span><span class="op">[</span><span class="fl">50</span>,<span class="fl">1</span><span class="op">]</span>,lty<span class="op">=</span><span class="st">"dashed"</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="FisheriesManagement_files/figure-html/unnamed-chunk-17-1.png" width="672"></p>
+<p><img src="FisheriesManagement_files/figure-html/unnamed-chunk-17-1.png" class="r-plt" width="672"></p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/contour.html" class="external-link">contour</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">xc</span>,<span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">U</span><span class="op">)</span>,levels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">3</span>,<span class="fl">0.25</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"x"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="FisheriesManagement_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
+<p><img src="FisheriesManagement_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -410,7 +410,7 @@ Science and Engineering</em>. Taylor &amp; Francis. <a href="http://uffe-h-thyge
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

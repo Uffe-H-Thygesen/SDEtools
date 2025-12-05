@@ -111,9 +111,9 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2025-01-12</h4>
+            <h4 data-toc-skip class="date">2025-12-05</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/v1.0.0/vignettes/CoxIngersollRoss.Rmd" class="external-link"><code>vignettes/CoxIngersollRoss.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/main/vignettes/CoxIngersollRoss.Rmd" class="external-link"><code>vignettes/CoxIngersollRoss.Rmd</code></a></small>
       <div class="hidden name"><code>CoxIngersollRoss.Rmd</code></div>
 
     </div>
@@ -205,7 +205,7 @@ c.d.f. and the quantile functions.</p>
 <span><span class="co">## dCIR&gt; F &lt;- pCIR(x,1,1,1,1,1)</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## dCIR&gt; plot(x,F)</span></span></code></pre>
-<p><img src="CoxIngersollRoss_files/figure-html/unnamed-chunk-1-1.png" width="768"></p>
+<p><img src="CoxIngersollRoss_files/figure-html/unnamed-chunk-1-1.png" class="r-plt" width="768"></p>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## dCIR&gt; lines(qCIR(F,1,1,1,1,1),F)</span></span></code></pre>
 </div>
@@ -242,7 +242,7 @@ the stationary distribution.</p>
 <span>  <span class="va">r</span> <span class="op">&lt;-</span> <span class="va">xi</span><span class="op">/</span><span class="va">Sigma</span></span>
 <span>  <span class="va">phi.theo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">dgamma</a></span><span class="op">(</span><span class="va">x</span>,shape<span class="op">=</span><span class="va">k</span>,rate<span class="op">=</span><span class="va">r</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">phi.theo</span>,from<span class="op">=</span><span class="fl">0</span>,to<span class="op">=</span><span class="fl">3</span>,col<span class="op">=</span><span class="st">"red"</span>,add<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="CoxIngersollRoss_files/figure-html/unnamed-chunk-2-1.png" width="672"></p>
+<p><img src="CoxIngersollRoss_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="recursive-sampling-of-a-path">Recursive sampling of a path<a class="anchor" aria-label="anchor" href="#recursive-sampling-of-a-path"></a>
@@ -257,7 +257,7 @@ property:</p>
 <span>  </span>
 <span>  <span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span> <span class="va">X</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dCIR.html">rCIR</a></span><span class="op">(</span><span class="fl">1</span>,<span class="va">X</span><span class="op">[</span><span class="va">i</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,<span class="va">lambda</span>,<span class="va">xi</span>,<span class="va">gamma</span>,<span class="va">dt</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span>,xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">100</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="CoxIngersollRoss_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
+<p><img src="CoxIngersollRoss_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="verification-of-the-autocovariance-function">Verification of the autocovariance function<a class="anchor" aria-label="anchor" href="#verification-of-the-autocovariance-function"></a>
@@ -280,7 +280,7 @@ discrete time (number of samples).</p>
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/acf.html" class="external-link">acf</a></span><span class="op">(</span><span class="va">X</span>,lag.max <span class="op">=</span> <span class="fl">50</span>,type<span class="op">=</span><span class="st">"covariance"</span><span class="op">)</span></span>
 <span>  <span class="va">hv</span> <span class="op">&lt;-</span> <span class="fl">0</span><span class="op">:</span><span class="fl">50</span>  <span class="co"># Number of samples, not continuous time</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">hv</span>,<span class="va">gamma</span><span class="op">^</span><span class="fl">2</span><span class="op">/</span><span class="fl">2</span><span class="op">/</span><span class="va">lambda</span><span class="op">*</span><span class="va">xi</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="op">-</span><span class="va">hv</span><span class="op">*</span><span class="va">dt</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="CoxIngersollRoss_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
+<p><img src="CoxIngersollRoss_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" width="672"></p>
 <p>Note that there is a clear resemblance between the empirical and the
 theoretical result, but that the agreement is far from perfect: The
 variability in the process itself implies that also the estimated
@@ -324,7 +324,7 @@ integration, here using the complementary c.d.f.:
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G</span>,from<span class="op">=</span><span class="fl">0</span>,to<span class="op">=</span><span class="fl">3</span>,main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Integral="</span>,</span>
 <span>                                <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">EX</span>,<span class="fl">3</span><span class="op">)</span>,<span class="st">"; theoretical="</span>,</span>
 <span>                                <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">xi</span><span class="op">+</span><span class="va">gamma</span><span class="op">^</span><span class="fl">2</span><span class="op">/</span><span class="fl">4</span><span class="op">/</span><span class="va">lambda</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="CoxIngersollRoss_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
+<p><img src="CoxIngersollRoss_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" width="672"></p>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -353,7 +353,7 @@ Science and Engineering</em>. Taylor &amp; Francis. <a href="http://uffe-h-thyge
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

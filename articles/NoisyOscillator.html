@@ -111,9 +111,9 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2025-01-12</h4>
+            <h4 data-toc-skip class="date">2025-12-05</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/v1.0.0/vignettes/NoisyOscillator.Rmd" class="external-link"><code>vignettes/NoisyOscillator.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/main/vignettes/NoisyOscillator.Rmd" class="external-link"><code>vignettes/NoisyOscillator.Rmd</code></a></small>
       <div class="hidden name"><code>NoisyOscillator.Rmd</code></div>
 
     </div>
@@ -160,7 +160,7 @@ we only see three distinct curves.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/matplot.html" class="external-link">matplot</a></span><span class="op">(</span><span class="va">tt</span>,<span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">eAt</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"Time"</span>,ylab<span class="op">=</span><span class="st">"Impulse response"</span>,ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>,lty<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>,col<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1-&gt;1"</span>,<span class="st">"1-&gt;2"</span>,<span class="st">"2-&gt;1"</span>,<span class="st">"2-&gt;2"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NoisyOscillator_files/figure-html/unnamed-chunk-1-1.png" width="672"></p>
+<p><img src="NoisyOscillator_files/figure-html/unnamed-chunk-1-1.png" class="r-plt" width="672"></p>
 <p>The following code computes the transition probabilities of the
 process for a given time step.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -216,14 +216,14 @@ matrix/vector multiplication.</p>
 <span></span>
 <span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="va">Nt</span><span class="op">)</span> <span class="va">X</span><span class="op">[</span><span class="va">i</span>,<span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">tp</span><span class="op">$</span><span class="va">eAt</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">X</span><span class="op">[</span><span class="va">i</span><span class="op">-</span><span class="fl">1</span>,<span class="op">]</span> <span class="op">+</span> <span class="va">G</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/matplot.html" class="external-link">matplot</a></span><span class="op">(</span><span class="va">X</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>,<span class="op">]</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NoisyOscillator_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
+<p><img src="NoisyOscillator_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" width="672"></p>
 <p>We can plot the empirical a.c.f.:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">acfX</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/acf.html" class="external-link">acf</a></span><span class="op">(</span><span class="va">X</span>,lag.max<span class="op">=</span><span class="fl">200</span>,plot<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">acfX</span><span class="op">$</span><span class="va">lag</span><span class="op">[</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">]</span>,<span class="va">acfX</span><span class="op">$</span><span class="va">acf</span><span class="op">[</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">]</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"a.c.f.[1,1]"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">acfX</span><span class="op">$</span><span class="va">lag</span><span class="op">[</span>,<span class="fl">1</span>,<span class="fl">2</span><span class="op">]</span>,<span class="va">acfX</span><span class="op">$</span><span class="va">acf</span><span class="op">[</span>,<span class="fl">1</span>,<span class="fl">2</span><span class="op">]</span>,xlab<span class="op">=</span><span class="st">"t"</span>,ylab<span class="op">=</span><span class="st">"a.c.f.[1,2]"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NoisyOscillator_files/figure-html/unnamed-chunk-5-1.png" width="672">
+<p><img src="NoisyOscillator_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" width="672">
 Note the similarity with the impulse response.</p>
 <p>We can estimate the stationary variance from the time series and
 compare with the analytical prediction:</p>
@@ -243,7 +243,7 @@ package.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">S</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/spectrum.html" class="external-link">spectrum</a></span><span class="op">(</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,plot<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">freq</span>,<span class="va">S</span><span class="op">$</span><span class="va">spec</span>,log<span class="op">=</span><span class="st">"xy"</span>,pch<span class="op">=</span><span class="st">"."</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NoisyOscillator_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
+<p><img src="NoisyOscillator_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" width="672"></p>
 <p>This should be compared with the theoretical spectrum:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">I</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
@@ -255,7 +255,7 @@ package.</p>
 <span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Vectorize.html" class="external-link">Vectorize</a></span><span class="op">(</span><span class="va">Stheo</span><span class="op">)</span>,from<span class="op">=</span><span class="fl">1e-1</span>,to<span class="op">=</span><span class="fl">1e1</span>,log<span class="op">=</span><span class="st">"xy"</span>,</span>
 <span>       xlab<span class="op">=</span><span class="st">"Frequency"</span>,ylab<span class="op">=</span><span class="st">"Variance spectrum"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NoisyOscillator_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
+<p><img src="NoisyOscillator_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" width="672"></p>
 <p>We see a reasonable agreement, qualitatively. To get a more
 quantitative agreement, we need to address three issues: First,
 empirical spectra are always very noisy. Second, the frequency axis
@@ -280,7 +280,7 @@ spectrum.</p>
 <span>  <span class="va">Sscale</span> <span class="op">&lt;-</span> <span class="va">dt</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">fscale</span><span class="op">*</span><span class="va">S</span><span class="op">$</span><span class="va">freq</span>,<span class="va">S</span><span class="op">$</span><span class="va">spec</span><span class="op">*</span><span class="va">Sscale</span>,pch<span class="op">=</span><span class="st">"."</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">fscale</span><span class="op">*</span><span class="va">S</span><span class="op">$</span><span class="va">freq</span>,<span class="va">Ssmooth</span><span class="op">*</span><span class="va">Sscale</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NoisyOscillator_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
+<p><img src="NoisyOscillator_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" width="672"></p>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
@@ -302,7 +302,7 @@ spectrum.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

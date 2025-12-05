@@ -111,9 +111,9 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2025-01-12</h4>
+            <h4 data-toc-skip class="date">2025-12-05</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/v1.0.0/vignettes/ItoIntegrals.Rmd" class="external-link"><code>vignettes/ItoIntegrals.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/main/vignettes/ItoIntegrals.Rmd" class="external-link"><code>vignettes/ItoIntegrals.Rmd</code></a></small>
       <div class="hidden name"><code>ItoIntegrals.Rmd</code></div>
 
     </div>
@@ -164,7 +164,7 @@ motion w.r.t. itself:</p>
 <span>  <span class="va">I</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/itointegral.html">itointegral</a></span><span class="op">(</span><span class="va">B</span>,<span class="va">B</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">I</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span>  </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="fl">0.5</span><span class="op">*</span><span class="op">(</span><span class="va">B</span><span class="op">^</span><span class="fl">2</span><span class="op">-</span><span class="va">t</span><span class="op">)</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
+<p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-1-1.png" class="r-plt" width="700"></p>
 <p>We have included the analytical result
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∫</mo><mn>0</mn><mi>t</mi></msubsup><msub><mi>B</mi><mi>s</mi></msub><mspace width="0.222em"></mspace><mi>d</mi><msub><mi>B</mi><mi>s</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>B</mi><mi>t</mi><mn>2</mn></msubsup><mo>−</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">\int_0^t B_s ~dB_s = (B_t^2 - t)/2</annotation></semantics></math><span class="citation">(Thygesen 2023)</span>. The agreement is not
 perfect; there is a time discretization error.</p>
@@ -177,7 +177,7 @@ time point. The integral is implemented as follows:</p>
 <span><span class="co">## {</span></span>
 <span><span class="co">##     return(c(0, cumsum(G[-length(G)] * diff(B))))</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x55b38db02b50&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x55a12e3b0310&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:SDEtools&gt;</span></span></code></pre>
 </div>
 <div class="section level2">
@@ -206,7 +206,7 @@ and
 <span>  <span class="va">X</span> <span class="op">&lt;-</span> <span class="fu">SDEtools</span><span class="fu">::</span><span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="va">f</span>,<span class="va">g</span>,<span class="va">t</span>,<span class="fl">0</span>,B<span class="op">=</span><span class="va">B</span><span class="op">)</span><span class="op">$</span><span class="va">X</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
+<p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" width="768"></p>
 <p>For this solution, we have
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>X</mi><mi>t</mi></msub><mo>=</mo><msubsup><mo>∫</mo><mn>0</mn><mi>t</mi></msubsup><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.222em"></mspace><mi>d</mi><mi>s</mi><mo>+</mo><msubsup><mo>∫</mo><mn>0</mn><mi>t</mi></msubsup><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.222em"></mspace><mi>d</mi><msub><mi>B</mi><mi>s</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
 X_t = \int_0^t f(X_s) ~ds + \int_0^t g(X_s) ~dB_s . 
@@ -216,7 +216,7 @@ stochastic differential equation with the numerical Itô integral:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">X</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="fu"><a href="../reference/itointegral.html">itointegral</a></span><span class="op">(</span><span class="fu">f</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">t</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="../reference/itointegral.html">itointegral</a></span><span class="op">(</span><span class="fu">g</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">B</span><span class="op">)</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" width="700"></p>
 <p>Note that they seem to fit perfectly. In fact, the error is roughly
 machine precision:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -241,7 +241,7 @@ motion:</p>
 <code class="sourceCode R"><span>  <span class="va">W</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/itointegral.html">itointegral</a></span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fu">g</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">X</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="../reference/itointegral.html">itointegral</a></span><span class="op">(</span><span class="fu">f</span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">/</span><span class="fu">g</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="va">t</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">W</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">B</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" width="700"></p>
 <p>Again, the error is machine precision so there is no time
 discretization error:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -260,7 +260,7 @@ motion with respect to itself:</p>
 <code class="sourceCode R"><span><span class="va">Is</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stochint.html">stochint</a></span><span class="op">(</span><span class="va">B</span>,<span class="va">B</span>,rule<span class="op">=</span><span class="st">"c"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Is</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="fl">0.6</span><span class="op">*</span><span class="va">B</span><span class="op">^</span><span class="fl">2</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" width="700"></p>
 <p>Again, we see a reasonable agreement between the numerical and
 analytical result, even if it is not perfect, due to the time
 discretization.</p>
@@ -287,7 +287,7 @@ I^s_t = I^i_t + \frac 12 \langle G,X\rangle_t .
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Ii</span>,type<span class="op">=</span><span class="st">"l"</span>,ylim<span class="op">=</span><span class="va">ylim</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Is</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">t</span>,<span class="va">Ii</span> <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="fu"><a href="../reference/CrossVariation.html">CrossVariation</a></span><span class="op">(</span><span class="va">G</span>,<span class="va">X</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<p><img src="ItoIntegrals_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" width="700"></p>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-Thygesen2023sde" class="csl-entry">
 Thygesen, Uffe Høgsbro. 2023. <em>Stochastic Differential Equations for
@@ -312,7 +312,7 @@ Science and Engineering</em>. Taylor &amp; Francis. <a href="http://uffe-h-thyge
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

@@ -111,9 +111,9 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2025-01-12</h4>
+            <h4 data-toc-skip class="date">2025-12-05</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/v1.0.0/vignettes/Killing.Rmd" class="external-link"><code>vignettes/Killing.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/main/vignettes/Killing.Rmd" class="external-link"><code>vignettes/Killing.Rmd</code></a></small>
       <div class="hidden name"><code>Killing.Rmd</code></div>
 
     </div>
@@ -159,7 +159,7 @@ is constant.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/StationaryDistribution.html">StationaryDistribution</a></span><span class="op">(</span><span class="va">G0</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">pi</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xgrid</span><span class="op">)</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"P.d.f."</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Killing_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
+<p><img src="Killing_files/figure-html/unnamed-chunk-1-1.png" class="r-plt" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="constructing-the-sub-generator-of-a-diffusion-with-killing">Constructing the sub-generator of a diffusion with killing<a class="anchor" aria-label="anchor" href="#constructing-the-sub-generator-of-a-diffusion-with-killing"></a>
@@ -197,7 +197,7 @@ the killing rate:</p>
 <code class="sourceCode R"><span><span class="va">xc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cell.centers.html">cell.centers</a></span><span class="op">(</span><span class="va">xgrid</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">xc</span>,<span class="fu">r</span><span class="op">(</span><span class="va">xc</span><span class="op">)</span>,col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Killing_files/figure-html/unnamed-chunk-3-1.png" width="768"></p>
+<p><img src="Killing_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" width="768"></p>
 <p>Recall that for the discretized system, a continuous-time Markov
 chain jumping between computational grid cells, the row sum is minus the
 rate of leaving the domain, i.e. jumping to the “coffin” state of
@@ -224,7 +224,7 @@ real axis.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">rhot</span>,type<span class="op">=</span><span class="st">"l"</span>,lty<span class="op">=</span><span class="st">"dashed"</span>,main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Probability of survival"</span>,<span class="va">psurv</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">phit</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>,legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"With killing"</span>,<span class="st">"Without killing"</span><span class="op">)</span>,lty<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Killing_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
+<p><img src="Killing_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" width="768"></p>
 <p>Notice that the killing removes a significant fraction of the
 probability, in particular from the right part of the distribution,
 where the mortality is higher.</p>
@@ -255,7 +255,7 @@ with killing. In discrete formulation:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rho</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,<span class="va">phi0</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">rho</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xgrid</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Killing_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
+<p><img src="Killing_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" width="768"></p>
 </div>
 <div class="section level3">
 <h3 id="the-expected-time-to-killing">The expected time to killing<a class="anchor" aria-label="anchor" href="#the-expected-time-to-killing"></a>
@@ -273,7 +273,7 @@ w.r.t.
 <span>  <span class="va">Gt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">tv</span>,<span class="kw">function</span><span class="op">(</span><span class="va">t</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">phi0</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu">expm</span><span class="op">(</span><span class="va">G</span><span class="op">*</span><span class="va">t</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tv</span>,<span class="va">Gt</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>v<span class="op">=</span><span class="va">Etau</span>,lty<span class="op">=</span><span class="st">"dashed"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Killing_files/figure-html/unnamed-chunk-7-1.png" width="768"></p>
+<p><img src="Killing_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" width="768"></p>
 <p>Finally we compare the total expected life time as found from
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>h</mi><mi>o</mi></mrow><annotation encoding="application/x-tex">rho</annotation></semantics></math>,
 with that found by integrating the survival function:</p>
@@ -294,7 +294,7 @@ is the quasi-stationary distribution:</p>
 <code class="sourceCode R"><span>  <span class="va">pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/QuasiStationaryDistribution.html">QuasiStationaryDistribution</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">pi</span><span class="op">$</span><span class="va">vector</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xgrid</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"l"</span>,</span>
 <span>       main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Expected life time"</span>,<span class="fl">1</span><span class="op">/</span><span class="va">pi</span><span class="op">$</span><span class="va">value</span><span class="op">)</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"P.d.f."</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Killing_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<p><img src="Killing_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" width="700"></p>
 <p>Notice that the quasi-stationary density is shifted to the left,
 relative to the stationary distribution without killing, since the
 surviving animals are found predominantly where the killing rate is
@@ -316,7 +316,7 @@ space, up to the point of killing, as follows.</p>
 <span><span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu">SDEtools</span><span class="fu">::</span><span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="va">f</span>,<span class="va">g</span>,<span class="va">times</span>,<span class="va">x0</span>,r<span class="op">=</span><span class="va">r</span>,Stau<span class="op">=</span><span class="va">Stau</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">X</span><span class="op">~</span><span class="va">times</span>,data<span class="op">=</span><span class="va">sim</span>,type<span class="op">=</span><span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Killing_files/figure-html/unnamed-chunk-10-1.png" width="768">
+<p><img src="Killing_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" width="768">
 Let us use this to verify that the distribution of the life time matches
 the exponential distribution, when the initial condition is chosen from
 the quasi-stationary distribution.</p>
@@ -328,7 +328,7 @@ quasi-stationary distribution.</p>
 <span>  <span class="va">x0s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span>,<span class="va">simulate.x0</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">x0s</span>,freq<span class="op">=</span><span class="cn">FALSE</span>,breaks<span class="op">=</span><span class="fl">50</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">pi</span><span class="op">$</span><span class="va">vector</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xgrid</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Killing_files/figure-html/unnamed-chunk-11-1.png" width="768"></p>
+<p><img src="Killing_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" width="768"></p>
 <p>We next simulate a trajectory from each initial position, until death
 - or
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t=1</annotation></semantics></math>,
@@ -347,7 +347,7 @@ quasi-stationary distribution.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">res</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span>,freq<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">times</span>,<span class="fu"><a href="https://rdrr.io/r/stats/Exponential.html" class="external-link">dexp</a></span><span class="op">(</span><span class="va">times</span>,rate<span class="op">=</span><span class="va">pi</span><span class="op">$</span><span class="va">value</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Killing_files/figure-html/unnamed-chunk-13-1.png" width="768">
+<p><img src="Killing_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" width="768">
 Finally, what is the position at depth? We first assess this from the
 simulation, excluding those realizations which do not result in death
 before the simulation time is over.</p>
@@ -373,7 +373,7 @@ distribution:</p>
 <span>  <span class="va">fXtau</span> <span class="op">&lt;-</span> <span class="va">pi</span><span class="op">$</span><span class="va">vector</span> <span class="op">*</span> <span class="fu">r</span><span class="op">(</span><span class="va">xc</span><span class="op">)</span></span>
 <span>  <span class="va">fXtau</span> <span class="op">&lt;-</span> <span class="va">fXtau</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">fXtau</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">fXtau</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">xgrid</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Killing_files/figure-html/unnamed-chunk-14-1.png" width="768"></p>
+<p><img src="Killing_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" width="768"></p>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -402,7 +402,7 @@ Science and Engineering</em>. Taylor &amp; Francis. <a href="http://uffe-h-thyge
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

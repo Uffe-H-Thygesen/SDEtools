@@ -111,9 +111,9 @@
                         <h4 data-toc-skip class="author">Uffe Høgsbro
 Thygesen</h4>
             
-            <h4 data-toc-skip class="date">2025-01-12</h4>
+            <h4 data-toc-skip class="date">2025-12-05</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/v1.0.0/vignettes/vanderPol.Rmd" class="external-link"><code>vignettes/vanderPol.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Uffe-H-Thygesen/SDEtools/blob/main/vignettes/vanderPol.Rmd" class="external-link"><code>vignettes/vanderPol.Rmd</code></a></small>
       <div class="hidden name"><code>vanderPol.Rmd</code></div>
 
     </div>
@@ -164,11 +164,11 @@ are:</p>
 <span><span class="va">sim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/euler.html">euler</a></span><span class="op">(</span><span class="va">f</span>,<span class="va">g</span>,<span class="va">times</span>,<span class="va">xv0</span>,<span class="va">B</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">times</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"Time t"</span>,ylab<span class="op">=</span><span class="st">"Position X"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="vanderPol_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="vanderPol_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" width="700"></p>
 <p>We can plot the solution in the phase plane:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>,type<span class="op">=</span><span class="st">"l"</span>,xlab<span class="op">=</span><span class="st">"Position X"</span>,ylab<span class="op">=</span><span class="st">"Velocity V"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="vanderPol_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="vanderPol_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" width="700"></p>
 <p>We can also compute the stationary distribution analytically. To this
 end, we first define a grid.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -184,7 +184,7 @@ end, we first define a grid.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">xmax</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>,<span class="va">vmax</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>,type<span class="op">=</span><span class="st">"n"</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"v"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>h<span class="op">=</span><span class="va">vgrid</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>v<span class="op">=</span><span class="va">xgrid</span><span class="op">)</span></span></code></pre></div>
-<p><img src="vanderPol_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
+<p><img src="vanderPol_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" width="672"></p>
 <p>We next pose the advection/diffusion form of the Kolmogorov
 equations. Note that the advective field equals the drift, since the
 noise intensity is state independent. We discretize the equation using
@@ -202,12 +202,12 @@ just a vector, so it must be transformed to a field</p>
 <code class="sourceCode R"><span><span class="va">pi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/unpack.field.html">unpack.field</a></span><span class="op">(</span><span class="fu"><a href="../reference/StationaryDistribution.html">StationaryDistribution</a></span><span class="op">(</span><span class="va">G</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">xc</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">vc</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">xc</span>,<span class="va">vc</span>,<span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="../reference/prob2pdf.html">prob2pdf</a></span><span class="op">(</span><span class="va">pi</span>,<span class="va">xgrid</span>,<span class="va">vgrid</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="vanderPol_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="vanderPol_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" width="700"></p>
 <p>To compare this with the simulation, it is better to plot the time
 series as points in the phase plane:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sim</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,<span class="va">sim</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>,pch<span class="op">=</span><span class="st">"."</span>,xlab<span class="op">=</span><span class="st">"x"</span>,ylab<span class="op">=</span><span class="st">"v"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="vanderPol_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p><img src="vanderPol_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" width="700"></p>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
@@ -235,7 +235,7 @@ Science and Engineering</em>. Taylor &amp; Francis. <a href="http://uffe-h-thyge
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>
