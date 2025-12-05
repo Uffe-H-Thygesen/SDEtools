@@ -109,8 +109,10 @@ fvade <- function(u,D,xgrid,bc,sparse=TRUE,diagonals=FALSE,r=NULL)
 
 #' Compute the stationary distribution for a Continuous Time Markov Chain
 #'
+#' @name StationaryDistribution
+#' 
 #' @description
-#' StationaryDistribution compute the stationary distribution phi for a Continuous Time
+#' StationaryDistribution computes the stationary distribution phi for a Continuous Time
 #' Markov Chain given by a generator G, which is given by the equations
 #'
 #'   phi %*% G == 0, sum(phi) == 1
@@ -150,6 +152,8 @@ StationaryDistribution <- function(G,tol=1e-12)
 
 #' Compute the quasi-stationary distribution for a terminating Continuous Time Markov Chain
 #'
+#' @name QuasiStationaryDistribution
+#' 
 #' @description
 #' QuasiStationaryDistribution compute the quasi-stationary distribution phi for a Continuous Time
 #' Markov Chain given by a sub-generator G, which is given by the equations
@@ -229,6 +233,8 @@ TransientModes <- function(G,k=5)
 
 #' Convert cell probabilities to (average) probability densities
 #'
+#' @name prob2pdf
+#' 
 #' @description
 #' prob2pdf takes a vector of probabilities and a spatial grid (given by end-points and interfaces)
 #' and computes the average p.d.f. in each grid cell

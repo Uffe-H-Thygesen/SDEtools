@@ -67,36 +67,58 @@ lqr <- function(times,A,F,G,Q,R,P=NULL)
 #' @param  G0 The sub-generator of the uncontrolled system 
 #' @param  G1 A list of (sub-)generators for each control
 #' @param  k The running cost 
-#' @param  uopt A list of functions returning optional controls as function of 
+#' @param  uopt A list of functions returning optional controls in each state. See details. 
 #' @param  iter.max = 1000 Maximum number of iterations
 #' @param  tol = 1e-12 Tolerance for convergence 
-#' @param  do.minimize=TRUE
+#' @param  do.minimize=TRUE Is the optimization problem one of minimization (and not maximization)?
 #' @param  do.return.QSD=FALSE Compute and return the quasi-stationary distribution 
 #' @return A list containing
+#' 
 #' V: The value function, as a vector with an element for each state
+#' 
 #' u: The optimal controls, as a matrix with a row for each state and a column for each control
 #'
-#' and, if do.return.QSD==TRUE,
-#' qsd.value: The decay rate of the quasi-stationary distribution (decay rate)
+#' If do.return.QSD==TRUE, also:
+#' 
+#' qsd.value: The decay rate of the quasi-stationary distribution
+#' 
 #' qsd.vector: The quasi-stationary distribution
+#'
+#' @details Specifying optimal controls: Each control variable has an element in the list G1
+#' of (sub)generators, and an element in the list uopt of optimal controls.
+#'
+#' The function uopt[[i]] is applied to G1[[i]]*V, where V is the value function. The result
+#' is the optimal value of the control, in each possible state.
+#'
+#' The final generator for the controlled system is obtain as G0 + sum(Diagonal(u[[i]])*G1[[i]])
+#' where the sum is over the controls i.
 #' 
 #' @examples
 #' ## Controlling a system to the boundary with minimum effort
-#' xi <- seq(-2,2,length=101)
+#' H <- 2
+#' xi <- seq(-H,H,length=201)
 #' xc <- as.numeric(cell.centers(xi,c(0,1))$x)
 #' dx <- diff(xi)
 #' 
-#' G0 <- fvade(function(x)-x,function(x)1,xi,'a')
-#' Gp <- fvade(function(x)1,function(x)0,xi,'a')
-#' Gn <- fvade(function(x)-1,function(x)0,xi,'a')
-#' 
+#' G0 <- fvade(function(x)0,function(x)0.5,xi,'a')
+#' Gp <- fvade(function(x)1,function(x)0,xi,'a')   # Going right 
+#' Gn <- fvade(function(x)-1,function(x)0,xi,'a')  # Going left
+#'
+#' # The payoff - time plus control effort
+#' k <- function(u) 0.5 + 0.5*u[,1]^2 + 0.5*u[,2]^2
+#'
+#' # For each control, the optimal u maximizes Li V*u + k over [0,Inf)
+#' # Here, going right corresponds to Lp V = V' while going left corresponds to
+#' # Ln V = -V'
 #' uopt <- function(dV)pmax(0,-dV)
-#' k <- function(u) 1 + 0.5*u[,1]^2 + 0.5*u[,2]^2
+#'
 #' sol <- PolicyIterationRegular(G0,list(Gp,Gn),k,list(uopt,uopt),do.return.QSD=TRUE)
 #' 
 #' par(mfrow=c(1,3))
-#' plot(xc,sol$V,xlab="x",ylab="Value function",type="l")
-#' plot(xc,sol$u[,1]-sol$u[,2],type="l",xlab="x",ylab="Optimal control")
+#' plot(xc,sol$V,xlab="x",ylab="Value function")
+#' lines(xc,log(cosh(H)/cosh(xc)))
+#' plot(xc,sol$u[,1]-sol$u[,2],xlab="x",ylab="Optimal control")
+#' lines(xc,tanh(xc))
 #' plot(xc,sol$qsd.vector/dx,type="l",xlab="x",ylab="QSD",main=sol$qsd.value)
 #' @export
 PolicyIterationRegular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,
@@ -149,7 +171,7 @@ PolicyIterationRegular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,
 #' @param  G0 The generator of the uncontrolled system 
 #' @param  G1 A list of generators for each control
 #' @param  k The running cost 
-#' @param  uopt A list of functions returning optional controls as function of 
+#' @param  uopt A list of functions returning optional controls. See details. 
 #' @param  iter.max = 1000 Maximum number of iterations
 #' @param  tol = 1e-12 Tolerance for convergence 
 #' @param  do.minimize=TRUE
@@ -159,30 +181,49 @@ PolicyIterationRegular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,
 #' pi: The stationary distribution for the controlled system
 #' gamma: The expected running cost in stationarity
 #'
+#' @details Specifying optimal controls: Each control variable has an element in the list G1
+#' of generators, and an element in the list uopt of optimal controls.
+#'
+#' The function uopt[[i]] is applied to G1[[i]]*V, where V is the value function. The result
+#' is the optimal value of the control, in each possible state.
+#'
+#' The final generator for the controlled system is obtain as G0 + sum(Diagonal(u[[i]])*G1[[i]])
+#' where the sum is over the controls i.
+#'
 #' @examples
 #' require(SDEtools)
+#'
+#' ## Fisheries management dX = X*(1-X)*dt - U*dt + sigma*X*dB
+#' sigma <- 0.5
+#' ## Rewrite in advection-diffusion form
+#' D <- function(x) 0.5*sigma^2*x^2
+#' Dp <- function(x) sigma^2*x
+#' u <- function(x) x*(1-x) - Dp(x)
 #' 
-#' u <- function(x)0*x
-#' D <- function(x) 0*x + 0.25
-#' 
-#' 
-#' xi <- seq(-2,2,length=201)
+#' # Spatial grid - concentrated around 0
+#' xi <- seq(0,sqrt(3),length=201)^2
 #' xc <- 0.5*(head(xi,-1) + tail(xi,-1))
 #' 
+#' # Generator for the unfished system, and for fishing
 #' G0 <- fvade(u,D,xi,'r')
-#' Gp <- fvade(function(x)1,function(x)0,xi,'r')
-#' Gn <- fvade(function(x)-1,function(x)0,xi,'r')
+#' G1 <- fvade(function(x)-1,function(x)0,xi,'r')
+#'
+#' # Pay-off function
+#' k <- function(u) sqrt(u)
 #' 
-#' uopt <- function(Wp) pmax(0,-Wp)
-#' k <- function(u) 0.5*xc^2 + 0.5*u[,1]^2 + 0.5*u[,2]^2
-#' 
-#' sol <- PolicyIterationSingular(G0,list(Gp,Gn),k,list(uopt,uopt))
-#' 
+#' # Optimal control - really 1/4/V'(x)^2, but avoid V'<=0, and do not
+#' # fish in the lowest element in state space, to avoid degeneracies
+#' uopt <- function(dV) { u <- 0.25/pmax(1e-6,-dV)^2; u[1] <- 0 ; return(u)}
+#'
+#' sol <- PolicyIterationSingular(G0,list(G1),k,list(uopt),do.minimize=FALSE)
+#'
+#' # Plots comparing with analytical solution: V(x) = 0.5*log(x), u(x)=x^2
 #' par(mfrow=c(1,2))
-#' plot(xc,sol$V,type="l",xlab="x",ylab="Value function")
-#' plot(function(x)0.5*x^2+min(sol$V),from=-2,to=2,lty="dashed",add=TRUE)
-#' plot(xc,sol$u[,1]-sol$u[,2],type="l",xlab="x",ylab="Control")
-#' abline(0,-1,lty="dashed")
+#' i1 <- sum(xi<1) # Identify state corresponding to x=1, for shifting V
+#' plot(xc,0.5*log(xc),type="l",ylim=c(-2,0.6),xlab="x",ylab="Value function")
+#' points(xc,sol$V - sol$V[i1])
+#' plot(xc,xc^2,type="l",xlab="x",ylab="Control")
+#' points(xc,sol$u)
 #' @export
 PolicyIterationSingular <- function(G0,G1,k,uopt,iter.max = 1000,tol = 1e-12,do.minimize=TRUE)
 {

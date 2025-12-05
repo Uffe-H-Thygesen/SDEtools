@@ -15,7 +15,7 @@ StationaryDistribution(G, tol = 1e-12)
 phi, a vector with as many elements as rows in G, containing the stationary distribution.
 }
 \description{
-StationaryDistribution compute the stationary distribution phi for a Continuous Time
+StationaryDistribution computes the stationary distribution phi for a Continuous Time
 Markov Chain given by a generator G, which is given by the equations
 
   phi %*% G == 0, sum(phi) == 1

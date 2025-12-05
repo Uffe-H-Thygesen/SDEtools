@@ -24,23 +24,27 @@ PolicyIterationRegular(
 
 \item{k}{The running cost}
 
-\item{uopt}{A list of functions returning optional controls as function of}
+\item{uopt}{A list of functions returning optional controls in each state. See details.}
 
 \item{iter.max}{= 1000 Maximum number of iterations}
 
 \item{tol}{= 1e-12 Tolerance for convergence}
 
-\item{do.minimize=TRUE}{}
+\item{do.minimize=TRUE}{Is the optimization problem one of minimization (and not maximization)?}
 
 \item{do.return.QSD=FALSE}{Compute and return the quasi-stationary distribution}
 }
 \value{
 A list containing
+
 V: The value function, as a vector with an element for each state
+
 u: The optimal controls, as a matrix with a row for each state and a column for each control
 
-and, if do.return.QSD==TRUE,
-qsd.value: The decay rate of the quasi-stationary distribution (decay rate)
+If do.return.QSD==TRUE, also:
+
+qsd.value: The decay rate of the quasi-stationary distribution
+
 qsd.vector: The quasi-stationary distribution
 }
 \description{
@@ -48,22 +52,41 @@ Solve the optimal control problem using policy iteration, i.e. find the optimal 
 and value function for the case where the uncontrolled system is given by a subgenerator G0
 (either due to discounting or due to absorbing boundaries)
 }
+\details{
+Specifying optimal controls: Each control variable has an element in the list G1
+of (sub)generators, and an element in the list uopt of optimal controls.
+
+The function uopt[[i]] is applied to G1[[i]]*V, where V is the value function. The result
+is the optimal value of the control, in each possible state.
+
+The final generator for the controlled system is obtain as G0 + sum(Diagonal(u[[i]])*G1[[i]])
+where the sum is over the controls i.
+}
 \examples{
 ## Controlling a system to the boundary with minimum effort
-xi <- seq(-2,2,length=101)
+H <- 2
+xi <- seq(-H,H,length=201)
 xc <- as.numeric(cell.centers(xi,c(0,1))$x)
 dx <- diff(xi)
 
-G0 <- fvade(function(x)-x,function(x)1,xi,'a')
-Gp <- fvade(function(x)1,function(x)0,xi,'a')
-Gn <- fvade(function(x)-1,function(x)0,xi,'a')
+G0 <- fvade(function(x)0,function(x)0.5,xi,'a')
+Gp <- fvade(function(x)1,function(x)0,xi,'a')   # Going right 
+Gn <- fvade(function(x)-1,function(x)0,xi,'a')  # Going left
 
+# The payoff - time plus control effort
+k <- function(u) 0.5 + 0.5*u[,1]^2 + 0.5*u[,2]^2
+
+# For each control, the optimal u maximizes Li V*u + k over [0,Inf)
+# Here, going right corresponds to Lp V = V' while going left corresponds to
+# Ln V = -V'
 uopt <- function(dV)pmax(0,-dV)
-k <- function(u) 1 + 0.5*u[,1]^2 + 0.5*u[,2]^2
+
 sol <- PolicyIterationRegular(G0,list(Gp,Gn),k,list(uopt,uopt),do.return.QSD=TRUE)
 
 par(mfrow=c(1,3))
-plot(xc,sol$V,xlab="x",ylab="Value function",type="l")
-plot(xc,sol$u[,1]-sol$u[,2],type="l",xlab="x",ylab="Optimal control")
+plot(xc,sol$V,xlab="x",ylab="Value function")
+lines(xc,log(cosh(H)/cosh(xc)))
+plot(xc,sol$u[,1]-sol$u[,2],xlab="x",ylab="Optimal control")
+lines(xc,tanh(xc))
 plot(xc,sol$qsd.vector/dx,type="l",xlab="x",ylab="QSD",main=sol$qsd.value)
 }
